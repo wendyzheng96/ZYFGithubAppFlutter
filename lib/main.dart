@@ -1,6 +1,29 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:io';
 
-void main() => runApp(MyApp());
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/navigator_utils.dart';
+import 'package:github_app_flutter/page/home_page.dart';
+import 'package:github_app_flutter/page/login_page.dart';
+import 'package:github_app_flutter/page/welcome_page.dart';
+
+void main() {
+  runZoned(() {
+    runApp(MyApp());
+  }, onError: (Object obj, StackTrace stack) {
+    print(obj);
+    print(stack);
+  });
+
+//  // 透明状态栏
+//  if (Platform.isAndroid) {
+//    SystemUiOverlayStyle systemUiOverlayStyle =
+//    SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+//    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+//  }
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -8,62 +31,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'GithubFlutter',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Color(ZColors.primaryValue),
+        primarySwatch: ZColors.primarySwatch,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
+      routes: {
+        WelcomePage.sName: (context) => WelcomePage(),
+        HomePage.sName: (context) => NavigatorUtils.pageContainer(HomePage()),
+        LoginPage.sName: (context) => LoginPage(),
+      },
     );
   }
 }

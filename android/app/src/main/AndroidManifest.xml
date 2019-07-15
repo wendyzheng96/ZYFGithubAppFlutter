@@ -9,7 +9,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="GithubFlutter"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_github">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
