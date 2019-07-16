@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 ///颜色
 class ZColors {
-  static const String primaryValueString = "#24292E";
+  static const String primaryValueString = "#5098d4";
   static const String primaryLightValueString = "#42464b";
   static const String primaryDarkValueString = "#121917";
   static const String miWhiteString = "#ececec";

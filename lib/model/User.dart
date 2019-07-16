@@ -43,6 +43,9 @@ class User {
       this.collaborators,
       this.two_factor_authentication);
 
+
+  User.name(this.login);
+
   String login;
   int id;
   String node_id;
