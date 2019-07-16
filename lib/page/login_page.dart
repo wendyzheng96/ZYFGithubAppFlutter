@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/local/local_storage.dart';
 import 'package:github_app_flutter/common/style/style.dart';
@@ -21,6 +22,8 @@ class _LoginPageState extends State<LoginPage> {
 
   final TextEditingController userController = TextEditingController();
   final TextEditingController pwdController = TextEditingController();
+
+  bool _isObscure = true;
 
   _LoginPageState() : super();
 
@@ -87,58 +90,57 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget loginUserInput() {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, 0, 50, 5),
-      child: Stack(
-        alignment: Alignment(1.0, 1.0),
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(15),
-                child: Icon(
-                  Icons.person,
-                  color: Color(ZColors.primaryValue),
-                  size: 20,
-                ),
-              ),
-              Expanded(
-                  child: TextField(
-                controller: userController,
-                decoration: InputDecoration(
-                  hintText: '请输入用户名',
-                ),
-              )),
-            ],
-          )
-        ],
+      padding: EdgeInsets.fromLTRB(35, 0, 50, 5),
+      child: TextField(
+        controller: userController,
+        decoration: InputDecoration(
+          hintText: '请输入用户名',
+          icon: Icon(
+            Icons.person,
+            color: Color(ZColors.primaryValue),
+            size: 20,
+          ),
+        ),
+        onChanged: (String value) {
+          _username = value;
+        },
       ),
     );
   }
 
   Widget loginPwdInput() {
+    Color primaryColor = Color(ZColors.primaryValue);
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, 10, 50, 0),
-      child: new Stack(
-        alignment: Alignment(1.0, 1.0),
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.all(15.0),
-                  child: Icon(
-                    Icons.lock,
-                    color: Color(ZColors.primaryValue),
+      padding: EdgeInsets.fromLTRB(35, 10, 50, 0),
+      child: TextField(
+        controller: pwdController,
+        decoration: InputDecoration(
+            hintText: "请输入密码",
+            icon: Icon(
+              Icons.lock,
+              color: primaryColor,
+              size: 20,
+            ),
+            suffixIcon: Container(
+              width: 48,
+              padding: EdgeInsets.only(left: 20),
+              child: IconButton(
+                  icon: Icon(
+                    _isObscure ? Icons.visibility_off : Icons.visibility,
                     size: 20,
-                  )),
-              Expanded(
-                  child: new TextField(
-                controller: pwdController,
-                decoration: new InputDecoration(hintText: "请输入密码"),
-                obscureText: true,
-              )),
-            ],
-          ),
-        ],
+                    color: primaryColor,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  }),
+            )),
+        keyboardType: TextInputType.text,
+        obscureText: _isObscure,
+        onChanged: (String value) {
+          _password = value;
+        },
       ),
     );
   }
@@ -158,8 +160,27 @@ class _LoginPageState extends State<LoginPage> {
           shape: StadiumBorder(),
           textColor: Colors.white,
           onPressed: () {
+            if (_username == null || _username.isEmpty) {
+              _showToast('用户名不能为空');
+              return;
+            }
+            if (_password == null || _password.isEmpty) {
+              _showToast('密码不能为空');
+              return;
+            }
+            LocalStorage.save(Config.USERNAME, _username);
+            LocalStorage.save(Config.PWD, _password);
             NavigatorUtils.pushReplaceNamed(context, HomePage.sName);
           }),
+    );
+  }
+
+  _showToast(String msg) {
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      timeInSecForIos: 1,
+      backgroundColor: Color(0x99000000),
     );
   }
 }
