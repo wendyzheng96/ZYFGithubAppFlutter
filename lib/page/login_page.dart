@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/local/local_storage.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/page/home_page.dart';
 
@@ -161,11 +162,11 @@ class _LoginPageState extends State<LoginPage> {
           textColor: Colors.white,
           onPressed: () {
             if (_username == null || _username.isEmpty) {
-              _showToast('用户名不能为空');
+              CommonUtils.showToast('用户名不能为空');
               return;
             }
             if (_password == null || _password.isEmpty) {
-              _showToast('密码不能为空');
+              CommonUtils.showToast('密码不能为空');
               return;
             }
             LocalStorage.save(Config.USERNAME, _username);
@@ -175,12 +176,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _showToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      timeInSecForIos: 1,
-      backgroundColor: Color(0x99000000),
-    );
-  }
 }

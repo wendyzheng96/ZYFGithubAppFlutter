@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 
 /// 通用工具方法
@@ -10,5 +11,14 @@ class CommonUtils {
         ZColors.primaryValueString.replaceAll("#", "") +
         "/" +
         username;
+  }
+
+  static void showToast(String msg) {
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      timeInSecForIos: 1,
+      backgroundColor: Color(0x99000000),
+    );
   }
 }

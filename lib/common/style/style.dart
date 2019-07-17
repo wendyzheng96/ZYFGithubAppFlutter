@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 ///颜色
 class ZColors {
   static const String primaryValueString = "#5098d4";
-  static const String primaryLightValueString = "#42464b";
-  static const String primaryDarkValueString = "#121917";
+  static const String primaryLightValueString = "#9bcdf0";
+  static const String primaryDarkValueString = "#437fb1";
   static const String miWhiteString = "#ececec";
   static const String actionBlueString = "#267aff";
   static const String webDraculaBackgroundColorString = "#282a36";
@@ -17,6 +17,11 @@ class ZColors {
   static const int primaryLightValue = 0xFF9bcdf0;
   static const int primaryDarkValue = 0xFF437fb1;
 
+  static const int textPrimaryValue = 0xff333333;
+  static const int textSecondaryValue = 0xff666666;
+  static const int textHintValue = 0xff999999;
+
+  static const int lineColor = 0x55B0C4DE;
   static const int cardWhite = 0xFFFFFFFF;
   static const int textWhite = 0xFFFFFFFF;
   static const int miWhite = 0xffececec;

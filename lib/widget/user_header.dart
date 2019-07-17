@@ -27,7 +27,7 @@ class UserHeaderChart extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            margin: EdgeInsets.fromLTRB(12, 8, 0, 8),
+            margin: EdgeInsets.fromLTRB(12, 8, 0, 10),
           ),
           _renderChart(context),
         ],

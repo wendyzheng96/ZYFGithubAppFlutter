@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _pages = [DynamicPage(), TrendPage(), MinePage()];
+  List<String> _titles = ['动态', '趋势', '我的'];
   int _tabIndex = 0;
 
   var _pageController = PageController();

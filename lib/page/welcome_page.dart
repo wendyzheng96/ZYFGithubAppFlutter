@@ -57,11 +57,17 @@ class WelcomePageState extends State<WelcomePage>
                   height: 200,
                   child: Image.asset('static/images/pic_github.png'),
                 ),
-                Text('Github Flutter', style: Constant.largeLargeText,)
+                Text(
+                  'Github Flutter',
+                  style: TextStyle(
+                    color: Color(ZColors.primaryValue),
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 }

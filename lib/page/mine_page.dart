@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/model/User.dart';
+import 'package:github_app_flutter/widget/left_line.dart';
 import 'package:github_app_flutter/widget/user_header.dart';
 
 /// 我的页面
@@ -17,6 +19,8 @@ class _MinePageState extends State<MinePage>
     with AutomaticKeepAliveClientMixin {
   User userInfo = User.name('wendyzheng96');
 
+  int listSize = 10;
+
   @override
   bool get wantKeepAlive => true;
 
@@ -24,7 +28,7 @@ class _MinePageState extends State<MinePage>
   Widget build(BuildContext context) {
     double headerSize = 170;
     double bottomSize = 56;
-    double chartSize = 215;
+    double chartSize = 200;
 
     return DefaultTabController(
         length: 2,
@@ -37,6 +41,7 @@ class _MinePageState extends State<MinePage>
                       minHeight: headerSize,
                       maxHeight: headerSize,
                       child: _userInfoTop())),
+
               ///悬停item
               SliverPersistentHeader(
                   pinned: true,
@@ -45,6 +50,7 @@ class _MinePageState extends State<MinePage>
                       minHeight: bottomSize,
                       maxHeight: bottomSize,
                       child: _userModules())),
+
               ///提交图表
               SliverPersistentHeader(
                   delegate: _SliverAppBarDelegate(
@@ -55,18 +61,13 @@ class _MinePageState extends State<MinePage>
                           height: chartSize,
                           child: UserHeaderChart(userInfo),
                         ),
-                      )
-                  )),
+                      ))),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    return Container(
-                      width: 100,
-                      height: 100,
-                      child: Text('Item $index'),
-                    );
+                    return getItem(index);
                   },
-                  childCount: 10,
+                  childCount: listSize,
                 ),
               ),
             ],
@@ -110,8 +111,7 @@ class _MinePageState extends State<MinePage>
       );
 
   //悬停模块
-  Widget _userModules() =>
-      Container(
+  Widget _userModules() => Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -148,6 +148,64 @@ class _MinePageState extends State<MinePage>
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
           )
+        ],
+      );
+
+  //列表item 布局
+  Widget getItem(int index) => Column(
+        children: <Widget>[
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                height: 32,
+                child: LeftLineWidget(index != 0, index != listSize - 1, false),
+              ),
+              CircleAvatar(
+                radius: 16,
+                backgroundColor: Color(ZColors.primaryValue),
+                backgroundImage: NetworkImage(
+                    'https://hbimg.huabanimg.com/b2c76a5f74dbfdcbf0c425e68f88e2d9fc20af561b779-LeAzGo_fw658'),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  'wendy$index',
+                  style: TextStyle(
+                      color: Color(ZColors.textPrimaryValue), fontSize: 14),
+                ),
+              ),
+              Expanded(child: Container(
+                padding: EdgeInsets.only(right: 16),
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  '2019/7/16 17:54',
+                  style: TextStyle(
+                      color: Color(ZColors.textHintValue), fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              )),
+            ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                  left: BorderSide(
+                      width: 1,
+                      color: index == listSize - 1
+                          ? Colors.transparent
+                          : Color(ZColors.lineColor))),
+            ),
+            margin: EdgeInsets.only(left: 23),
+            padding: EdgeInsets.fromLTRB(22, 6, 16, 30),
+            child: Text(
+              '万物的怪物的鼓舞的怪物的怪物更多无辜的有关费用官方也发个衣服v。',
+              style: TextStyle(
+                  color: Color(ZColors.textSecondaryValue),
+                  fontSize: 13,
+              ),
+            ),
+          ),
         ],
       );
 }
