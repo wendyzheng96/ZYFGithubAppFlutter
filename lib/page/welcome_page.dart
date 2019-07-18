@@ -45,7 +45,7 @@ class WelcomePageState extends State<WelcomePage>
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Color(ZColors.white),
+        color: Colors.white,
         child: Center(
           child: FadeTransition(
             opacity: curve,

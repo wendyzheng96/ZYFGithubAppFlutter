@@ -21,8 +21,7 @@ class _DynamicPageState extends State<DynamicPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
+    return Scaffold(body: Container(
       color: Colors.white,
       child: DynamicListView.build(
         itemBuilder: _itemBuilder(),
@@ -50,7 +49,7 @@ class _DynamicPageState extends State<DynamicPage>
       return List.generate(
           10,
           (i) => EventViewModel(
-              "Nike$i",
+              "Nike${10 + i}",
               "https://hbimg.huabanimg.com/0d2a3fca3b1829736261fdf7db36d8001ecb0ea715f10c-3Dv8Bn_fw658",
               '苏丹红事件但还是觉得寒暑假回家世界上的四大金刚傻瓜大好时光',
               '2019/07/15 17:09',
@@ -58,8 +57,7 @@ class _DynamicPageState extends State<DynamicPage>
     });
   }
 
-  Function _itemBuilder() =>
-      (List dataList, BuildContext context, int index) {
+  Function _itemBuilder() => (List dataList, BuildContext context, int index) {
         EventViewModel model = dataList[index];
         return GestureDetector(
           child: Container(

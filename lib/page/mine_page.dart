@@ -21,6 +21,8 @@ class _MinePageState extends State<MinePage>
 
   int listSize = 10;
 
+  bool isLoading = false; //是否正在刷新数据
+
   @override
   bool get wantKeepAlive => true;
 
@@ -33,7 +35,8 @@ class _MinePageState extends State<MinePage>
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-          body: CustomScrollView(
+            body: RefreshIndicator(
+          child: CustomScrollView(
             slivers: <Widget>[
               ///头部信息
               SliverPersistentHeader(
@@ -72,7 +75,8 @@ class _MinePageState extends State<MinePage>
               ),
             ],
           ),
-        ));
+          onRefresh: _onRefresh,
+        )));
   }
 
   //用户信息详情
@@ -175,7 +179,8 @@ class _MinePageState extends State<MinePage>
                       color: Color(ZColors.textPrimaryValue), fontSize: 14),
                 ),
               ),
-              Expanded(child: Container(
+              Expanded(
+                  child: Container(
                 padding: EdgeInsets.only(right: 16),
                 alignment: Alignment.bottomRight,
                 child: Text(
@@ -201,13 +206,23 @@ class _MinePageState extends State<MinePage>
             child: Text(
               '万物的怪物的鼓舞的怪物的怪物更多无辜的有关费用官方也发个衣服v。',
               style: TextStyle(
-                  color: Color(ZColors.textSecondaryValue),
-                  fontSize: 13,
+                color: Color(ZColors.textSecondaryValue),
+                fontSize: 13,
               ),
             ),
           ),
         ],
       );
+
+  Future<void> _onRefresh() async {
+    if (isLoading) return;
+    await Future.delayed(Duration(seconds: 2), () {
+      setState(() {
+        isLoading = true;
+        print('下拉刷新结束');
+      });
+    });
+  }
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {

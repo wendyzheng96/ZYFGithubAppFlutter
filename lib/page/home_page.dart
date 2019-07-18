@@ -43,11 +43,7 @@ class _HomePageState extends State<HomePage> {
         title: Text('GithubFlutter'),
         centerTitle: true,
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.search),
-            tooltip: '搜索',
-            onPressed: () {},
-          )
+          _getActionButton()
         ],
       ),
       body: PageView.builder(
@@ -58,8 +54,7 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (context, index) => _pages[index]),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard), title: Text('动态')),
+          BottomNavigationBarItem(icon: Icon(Icons.camera), title: Text('动态')),
           BottomNavigationBarItem(
               icon: Icon(Icons.trending_up), title: Text('趋势')),
           BottomNavigationBarItem(
@@ -73,6 +68,14 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _tabIndex,
       ),
+    );
+  }
+
+  Widget _getActionButton() {
+    return IconButton(
+      icon: const Icon(Icons.search),
+      tooltip: '搜索',
+      onPressed: () {},
     );
   }
 }
