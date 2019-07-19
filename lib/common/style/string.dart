@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 /// 字符串资源
 /// Create by zyf

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 /// 基础配置
 /// Create by zyf

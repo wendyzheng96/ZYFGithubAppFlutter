@@ -72,10 +72,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getActionButton() {
-    return IconButton(
-      icon: const Icon(Icons.search),
-      tooltip: '搜索',
-      onPressed: () {},
-    );
+    switch(_tabIndex){
+      case 0:
+      case 1:
+        return IconButton(
+        icon: const Icon(Icons.search),
+        tooltip: '搜索',
+        onPressed: () {},
+      );
+      case 2:
+        return IconButton(
+          icon: const Icon(Icons.notifications),
+          tooltip: '通知',
+          onPressed: () {},
+        );
+      default:
+        return null;
+    }
   }
 }

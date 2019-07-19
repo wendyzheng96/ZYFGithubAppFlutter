@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 /// 动态页面事件Item
 /// Create by zyf

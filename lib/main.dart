@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/page/home_page.dart';
@@ -16,13 +14,6 @@ void main() {
     print(obj);
     print(stack);
   });
-
-//  // 透明状态栏
-//  if (Platform.isAndroid) {
-//    SystemUiOverlayStyle systemUiOverlayStyle =
-//    SystemUiOverlayStyle(statusBarColor: Colors.transparent);
-//    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-//  }
 }
 
 class MyApp extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/model/TrendingRepoModel.dart';
+import 'package:github_app_flutter/widget/drop_down_filter.dart';
 import 'package:github_app_flutter/widget/dynamic_list_view.dart';
 import 'package:github_app_flutter/widget/repos_item.dart';
 
@@ -18,6 +18,9 @@ class _TrendPageState extends State<TrendPage>
   bool isSelectTime = false;
   bool isSelectType = false;
 
+  TrendTypeModel selectTime = TrendTypeModel("今日", "daily");
+  TrendTypeModel selectType = TrendTypeModel("全部", null);
+
   @override
   bool get wantKeepAlive => true;
 
@@ -25,12 +28,12 @@ class _TrendPageState extends State<TrendPage>
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-//        color: Color(ZColors.mainBackgroundColor),
-      child: Stack(
+      child:
+      Stack(
         alignment: Alignment.topCenter,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 48),
+            margin: EdgeInsets.only(top: 44),
             child: DynamicListView.build(
               itemBuilder: _itemBuilder(),
               dataRequester: _dataRequester,
@@ -44,79 +47,28 @@ class _TrendPageState extends State<TrendPage>
     ));
   }
 
-  ///头部Items
-  Widget _renderHeadItems() => Container(
-        decoration:
-            BoxDecoration(color: Theme.of(context).primaryColor, boxShadow: [
-          BoxShadow(
-            blurRadius: 6,
-            spreadRadius: 4,
-            color: Color.fromARGB(50, 0, 0, 0),
-          )
-        ]),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: RaisedButton.icon(
-                color: Theme.of(context).primaryColor,
-                textColor: Colors.white,
-                elevation: 0,
-                highlightElevation: 0,
-                disabledElevation: 0,
-                icon: Icon(
-                  isSelectTime ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                label: Text(
-                  '今日',
-                  style: ZStyles.middleTextWhite,
-                ),
-                onPressed: () {///选择时间
-                  setState(() {
-                    isSelectTime = !isSelectTime;
-                    isSelectType = false;
-                  });
-                  CommonUtils.showToast("今日");
-
-                },
-              ),
-              flex: 1,
+  ///头部筛选Items
+  Widget _renderHeadItems() =>
+      Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+        DropDownFilter(
+          buttons: [
+            FilterButtonModel(
+              selectedModel: selectTime,
+              contents: trendTime(),
+              onSelect: (TrendTypeModel select){
+                CommonUtils.showToast('筛选时间： ${select.name}');
+              }
             ),
-            Container(
-              width: 1.0,
-              height: 16,
-              color: Colors.white,
-            ),
-            Expanded(
-              child: RaisedButton.icon(
-                color: Theme.of(context).primaryColor,
-                textColor: Colors.white,
-                elevation: 0,
-                highlightElevation: 0,
-                disabledElevation: 0,
-                icon: Icon(
-                  isSelectType ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                label: Text(
-                  '全部',
-                  style: ZStyles.middleTextWhite,
-                ),
-                onPressed: () {///选择语言
-                  setState(() {
-                    isSelectType = !isSelectType;
-                    isSelectTime = false;
-                  });
-                  CommonUtils.showToast("全部");
-                },
-              ),
-              flex: 1,
+            FilterButtonModel(
+              selectedModel: selectType,
+              contents: trendType(),
+                onSelect: (TrendTypeModel select){
+                  CommonUtils.showToast('筛选语言： ${select.name}');
+                }
             ),
           ],
         ),
-      );
+      ]);
 
   ///刷新数据
   Future<List<ReposViewModel>> _initRequester() async {
@@ -169,69 +121,48 @@ class _TrendPageState extends State<TrendPage>
         );
       };
 
-  ///或者头部可选弹出item容器
-  _renderHeaderPopItem(String data, List<TrendTypeModel> list,
-      PopupMenuItemSelected<TrendTypeModel> onSelected) {
-    return new Expanded(
-      child: new PopupMenuButton<TrendTypeModel>(
-        child: new Center(
-            child: new Text(data, style: ZStyles.middleTextWhite)),
-        onSelected: onSelected,
-        itemBuilder: (BuildContext context) {
-          return _renderHeaderPopItemChild(list);
-        },
-      ),
-    );
+  ///趋势数据时间过滤
+  List<TrendTypeModel> trendTime() {
+    return [
+      TrendTypeModel("今日", "daily"),
+      TrendTypeModel("本周", "weekly"),
+      TrendTypeModel("本月", "monthly"),
+    ];
   }
 
-  ///或者头部可选弹出item
-  _renderHeaderPopItemChild(List<TrendTypeModel> data) {
-    List<PopupMenuEntry<TrendTypeModel>> list = new List();
-    for (TrendTypeModel item in data) {
-      list.add(PopupMenuItem<TrendTypeModel>(
-        value: item,
-        child: new Text(item.name),
-      ));
-    }
-    return list;
+  ///趋势数据语言过滤
+  List<TrendTypeModel> trendType() {
+    return [
+      TrendTypeModel("全部", null),
+      TrendTypeModel("Assembly", "Assembly"),
+      TrendTypeModel("C", "C"),
+      TrendTypeModel("C#", "c%23"),
+      TrendTypeModel("C++", "C++"),
+      TrendTypeModel("Clojure", "Clojure"),
+      TrendTypeModel("CSS", "CSS"),
+      TrendTypeModel("CoffeeScript", "CoffeeScript"),
+      TrendTypeModel("Dart", "Dart"),
+      TrendTypeModel("Go", "Go"),
+      TrendTypeModel("Haskell", "Haskell"),
+      TrendTypeModel("HTML", "HTML"),
+      TrendTypeModel("Java", "Java"),
+      TrendTypeModel("JavaScript", "JavaScript"),
+      TrendTypeModel("Jupyter Notebook", "Jupyter%20Notebook"),
+      TrendTypeModel("Kotlin", "Kotlin"),
+      TrendTypeModel("Lua", "Lua"),
+      TrendTypeModel("Makefile", "Makefile"),
+      TrendTypeModel("Objective-C", "Objective-C"),
+      TrendTypeModel("Perl", "Perl"),
+      TrendTypeModel("PHP", "PHP"),
+      TrendTypeModel("Python", "Python"),
+      TrendTypeModel("Ruby", "Ruby"),
+      TrendTypeModel("Rust", "Rust"),
+      TrendTypeModel("Scala", "Scala"),
+      TrendTypeModel("Shell", "Shell"),
+      TrendTypeModel("Swift", "Swift"),
+      TrendTypeModel("TypeScript", "TypeScript"),
+      TrendTypeModel("Vim script", "Vim%20script"),
+      TrendTypeModel("Vue", "Vue"),
+    ];
   }
 }
-
-///趋势数据过滤显示item
-class TrendTypeModel {
-  final String name;
-  final String value;
-
-  TrendTypeModel(this.name, this.value);
-}
-
-///趋势数据时间过滤
-trendTime(BuildContext context) {
-  return [
-    new TrendTypeModel("今日", "daily"),
-    new TrendTypeModel("本周", "weekly"),
-    new TrendTypeModel("本月", "monthly"),
-  ];
-}
-
-///趋势数据语言过滤
-trendType(BuildContext context) {
-  return [
-    TrendTypeModel("全部", null),
-    TrendTypeModel("Java", "Java"),
-    TrendTypeModel("Kotlin", "Kotlin"),
-    TrendTypeModel("Dart", "Dart"),
-    TrendTypeModel("Objective-C", "Objective-C"),
-    TrendTypeModel("Swift", "Swift"),
-    TrendTypeModel("JavaScript", "JavaScript"),
-    TrendTypeModel("PHP", "PHP"),
-    TrendTypeModel("Go", "Go"),
-    TrendTypeModel("C++", "C++"),
-    TrendTypeModel("C", "C"),
-    TrendTypeModel("HTML", "HTML"),
-    TrendTypeModel("CSS", "CSS"),
-    TrendTypeModel("Python", "Python"),
-    TrendTypeModel("C#", "c%23"),
-  ];
-}
-

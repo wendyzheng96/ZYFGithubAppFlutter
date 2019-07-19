@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/local/local_storage.dart';
 import 'package:github_app_flutter/common/style/style.dart';
