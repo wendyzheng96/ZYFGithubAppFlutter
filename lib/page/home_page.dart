@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_app_flutter/page/dynamic_page.dart';
 import 'package:github_app_flutter/page/mine_page.dart';
 import 'package:github_app_flutter/page/trend_page.dart';
+import 'package:github_app_flutter/widget/home_drawer.dart';
 
 /// 主页
 /// Create by zyf
@@ -15,7 +16,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _pages = [DynamicPage(), TrendPage(), MinePage()];
-  List<String> _titles = ['动态', '趋势', '我的'];
   int _tabIndex = 0;
 
   var _pageController = PageController();
@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: HomeDrawer(),
       appBar: AppBar(
         elevation: 0,
         title: Text('GithubFlutter'),

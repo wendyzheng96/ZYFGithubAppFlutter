@@ -46,6 +46,9 @@ class User {
 
   User.name(this.login);
 
+
+  User.factory(this.avatar_url, this.name, this.email);
+
   String login;
   int id;
   String node_id;

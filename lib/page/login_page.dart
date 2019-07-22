@@ -88,62 +88,52 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget loginUserInput() {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(35, 0, 50, 5),
-      child: TextField(
-        controller: userController,
-        decoration: InputDecoration(
-          hintText: '请输入用户名',
+  Widget loginUserInput() => Container(
+        padding: EdgeInsets.fromLTRB(35, 0, 50, 5),
+        child: TextField(
+          controller: userController,
+          decoration: InputDecoration(
+            hintText: '请输入用户名',
+            icon: Icon(
+              Icons.person,
+              color: Color(ZColors.primaryValue),
+              size: 20,
+            ),
+          ),
+          onChanged: (String value) {
+            _username = value;
+          },
+        ),
+      );
+
+  Widget loginPwdInput() => Container(
+    padding: EdgeInsets.fromLTRB(35, 10, 50, 5),
+    child: TextField(
+      controller: pwdController,
+      decoration: InputDecoration(
+          hintText: '请输入密码',
           icon: Icon(
-            Icons.person,
+            Icons.lock,
             color: Color(ZColors.primaryValue),
             size: 20,
           ),
-        ),
-        onChanged: (String value) {
-          _username = value;
-        },
-      ),
-    );
-  }
-
-  Widget loginPwdInput() {
-    Color primaryColor = Color(ZColors.primaryValue);
-    return Padding(
-      padding: EdgeInsets.fromLTRB(35, 10, 50, 0),
-      child: TextField(
-        controller: pwdController,
-        decoration: InputDecoration(
-            hintText: "请输入密码",
-            icon: Icon(
-              Icons.lock,
-              color: primaryColor,
-              size: 20,
-            ),
-            suffixIcon: Container(
-              width: 48,
-              padding: EdgeInsets.only(left: 20),
-              child: IconButton(
-                  icon: Icon(
-                    _isObscure ? Icons.visibility_off : Icons.visibility,
-                    size: 20,
-                    color: primaryColor,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isObscure = !_isObscure;
-                    });
-                  }),
-            )),
-        keyboardType: TextInputType.text,
-        obscureText: _isObscure,
-        onChanged: (String value) {
-          _password = value;
-        },
-      ),
-    );
-  }
+          suffixIcon: IconButton(
+              icon: Icon(
+                _isObscure ? Icons.visibility_off : Icons.visibility,
+                size: 20,
+                color: Color(ZColors.primaryValue),
+              ),
+              onPressed: () {
+                setState(() {
+                  _isObscure = !_isObscure;
+                });
+              })),
+      obscureText: _isObscure,
+      onChanged: (String value) {
+        _password = value;
+      },
+    ),
+  );
 
   Widget loginButton() {
     return Container(
@@ -174,5 +164,4 @@ class _LoginPageState extends State<LoginPage> {
           }),
     );
   }
-
 }

@@ -9,9 +9,6 @@ class ZColors {
   static const String primaryValueString = "#5098d4";
   static const String primaryLightValueString = "#9bcdf0";
   static const String primaryDarkValueString = "#437fb1";
-  static const String miWhiteString = "#ececec";
-  static const String actionBlueString = "#267aff";
-  static const String webDraculaBackgroundColorString = "#282a36";
 
   static const int primaryValue = 0xff5098d4;
   static const int primaryLightValue = 0xFF9bcdf0;
@@ -21,6 +18,7 @@ class ZColors {
   static const int textSecondaryValue = 0xff586069;
   static const int textHintValue = 0xff999999;
   static const int textColorWhite = 0xFFFFFFFF;
+  static const int textMenuValue = 0xff6c7c90;
 
   static const int lineColor = 0x55B0C4DE;
   static const int miWhite = 0xffececec;
@@ -72,4 +70,10 @@ class ZStyles {
     color: Color(ZColors.textColorWhite),
     fontSize: middleTextWhiteSize,
   );
+}
+
+class ZIcons{
+  static const String FONT_FAMILY = 'wxcIconFont';
+
+  static const IconData REPOS_ITEM_NEXT = const IconData(0xe610, fontFamily: ZIcons.FONT_FAMILY);
 }

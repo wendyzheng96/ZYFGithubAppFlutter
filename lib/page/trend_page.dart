@@ -28,8 +28,7 @@ class _TrendPageState extends State<TrendPage>
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      child:
-      Stack(
+      child: Stack(
         alignment: Alignment.topCenter,
         children: <Widget>[
           Container(
@@ -53,19 +52,19 @@ class _TrendPageState extends State<TrendPage>
         DropDownFilter(
           buttons: [
             FilterButtonModel(
-              selectedModel: selectTime,
-              contents: trendTime(),
-              onSelect: (TrendTypeModel select){
-                CommonUtils.showToast('筛选时间： ${select.name}');
-              }
-            ),
+                selectedModel: selectTime,
+                contents: trendTime(),
+                onSelect: (TrendTypeModel trendModel) {
+                  selectTime = trendModel;
+                  CommonUtils.showToast('筛选时间： ${trendModel.name}');
+                }),
             FilterButtonModel(
-              selectedModel: selectType,
-              contents: trendType(),
-                onSelect: (TrendTypeModel select){
-                  CommonUtils.showToast('筛选语言： ${select.name}');
-                }
-            ),
+                selectedModel: selectType,
+                contents: trendType(),
+                onSelect: (TrendTypeModel trendModel) {
+                  selectType = trendModel;
+                  CommonUtils.showToast('筛选语言： ${trendModel.name}');
+                }),
           ],
         ),
       ]);
