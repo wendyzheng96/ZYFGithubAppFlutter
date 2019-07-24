@@ -28,6 +28,7 @@ class _MinePageState extends State<MinePage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     double headerSize = 170;
     double bottomSize = 56;
     double chartSize = 200;

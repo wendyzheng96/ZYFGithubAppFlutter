@@ -26,6 +26,7 @@ class _TrendPageState extends State<TrendPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         body: Container(
       child: Stack(

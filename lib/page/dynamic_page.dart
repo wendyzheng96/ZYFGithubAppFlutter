@@ -21,6 +21,7 @@ class _DynamicPageState extends State<DynamicPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(body: Container(
       color: Colors.white,
       child: DynamicListView.build(

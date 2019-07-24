@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:github_app_flutter/common/dao/user_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
+import 'package:github_app_flutter/common/zyf_state.dart';
+import 'package:github_app_flutter/page/home_page.dart';
 import 'package:github_app_flutter/page/login_page.dart';
+import 'package:redux/redux.dart';
 
 /// 启动页
 /// Create by zyf
@@ -27,8 +32,16 @@ class WelcomePageState extends State<WelcomePage>
     }
     hadInit = true;
 
+    ///防止多次进入
+    Store<ZYFState> store = StoreProvider.of(context);
     new Future.delayed(const Duration(seconds: 2, milliseconds: 500), () {
-      NavigatorUtils.pushReplaceNamed(context, LoginPage.sName);
+      UserDao.initUserInfo(store).then((res) {
+        if (res != null && res.result) {
+          NavigatorUtils.pushReplaceNamed(context, HomePage.sName);
+        } else {
+          NavigatorUtils.pushReplaceNamed(context, LoginPage.sName);
+        }
+      });
       return true;
     });
   }

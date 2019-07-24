@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/page/dynamic_page.dart';
 import 'package:github_app_flutter/page/mine_page.dart';
+import 'package:github_app_flutter/page/search_page.dart';
 import 'package:github_app_flutter/page/trend_page.dart';
 import 'package:github_app_flutter/widget/home_drawer.dart';
 
@@ -79,7 +81,9 @@ class _HomePageState extends State<HomePage> {
         return IconButton(
         icon: const Icon(Icons.search),
         tooltip: '搜索',
-        onPressed: () {},
+        onPressed: () {
+          NavigatorUtils.navigatorRouter(context, SearchPage());
+        },
       );
       case 2:
         return IconButton(

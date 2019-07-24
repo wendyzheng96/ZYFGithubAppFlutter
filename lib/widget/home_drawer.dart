@@ -1,8 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
+import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/page/login_page.dart';
 import 'package:github_app_flutter/page/user_profile_page.dart';
@@ -12,105 +16,69 @@ import 'package:url_launcher/url_launcher.dart';
 /// Create by zyf
 /// Date: 2019/7/19
 class HomeDrawer extends StatelessWidget {
-  final User user = User.factory(
-      'https://hbimg.huabanimg.com/0d2a3fca3b1829736261fdf7db36d8001ecb0ea715f10c-3Dv8Bn_fw658',
-      'wendyzheng96',
-      'zhengyf@gmail');
 
-  final Color color = Color(ZColors.textMenuValue);
+  final Color iconColor = Color(ZColors.textMenuValue);
+  final Color tvColor = Color(ZColors.textSecondaryValue);
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.only(),
+    return Material(
+      child: StoreBuilder<ZYFState>(
+        builder: (context, store) {
+          User user = store.state.userInfo;
+          return Drawer(
+            child: Column(
               children: <Widget>[
-                _drawerHeader(user, context),
-                ListTile(
-                  leading: Icon(
-                    Icons.feedback,
-                    color: color,
-                    size: 22,
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.only(),
+                    children: <Widget>[
+                      _drawerHeader(user, context),
+                      _renderItem(Icons.feedback, '问题反馈', () {
+                        CommonUtils.showToast('问题反馈');
+                      }),
+                      _renderItem(Icons.history, '阅读历史', () {
+                        CommonUtils.showToast('阅读历史');
+                      }),
+                      _renderItem(Icons.color_lens, '切换主题', () {
+                        CommonUtils.showToast('切换主题');
+                      }),
+                      _renderItem(Icons.local_offer, '关于', () {
+                        _showAPPAboutDialog(context);
+                      }),
+                    ],
                   ),
-                  title: Text('问题反馈'),
-                  onTap: () {
-                    CommonUtils.showToast('问题反馈');
-                  },
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.history,
-                    color: color,
-                    size: 22,
-                  ),
-                  title: Text('阅读历史'),
-                  onTap: () {
-                    CommonUtils.showToast('阅读历史');
-                  },
+                Divider(
+                  height: 1,
                 ),
-                AboutListTile(
-                  icon: Icon(
-                    Icons.local_offer,
-                    color: color,
-                    size: 22,
-                  ),
-                  child: Text('关于'),
-                  applicationName: 'GithubFlutter',
-                  applicationVersion: '1.0',
-                  applicationIcon: Image.asset(
-                    'static/images/ic_github.png',
-                    width: 44,
-                    height: 44,
-                  ),
-                  aboutBoxChildren: <Widget>[
-                    RichText(
-                      text: TextSpan(
-                        text: '源代码地址：',
-                        style: TextStyle(
-                            color: Color(ZColors.textPrimaryValue),
-                            fontSize: 16.0),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: ' 点击跳转链接',
-                              style: TextStyle(color: Colors.blue),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  launch(
-                                      "https://github.com/wendyzheng96/ZYFGithubAppFlutter");
-                                }),
-                        ],
-                      ),
-                    )
-                  ],
-                )
+                _drawerBottom(context),
               ],
             ),
-          ),
-          Divider(
-            height: 1,
-          ),
-          _drawerBottom(context),
-        ],
+          );
+        },
       ),
     );
   }
 
   //drawer头部用户信息
-  Widget _drawerHeader(User userInfo, BuildContext context) => UserAccountsDrawerHeader(
+  Widget _drawerHeader(User user, BuildContext context) =>
+      UserAccountsDrawerHeader(
         accountName: Text(
-          userInfo.name,
+          user.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
-        accountEmail: Text(userInfo.email,
+        accountEmail: Text(user.email,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: Colors.white70,
               fontSize: 14,
             )),
         currentAccountPicture: CircleAvatar(
-          backgroundImage: NetworkImage(userInfo.avatar_url),
+          backgroundImage: NetworkImage(user.avatar_url),
         ),
         onDetailsPressed: () {
           NavigatorUtils.navigatorRouter(context, UserProfilePage());
@@ -128,7 +96,7 @@ class HomeDrawer extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(16, 12, 8, 12),
                   child: Icon(
                     Icons.power_settings_new,
-                    color: color,
+                    color: iconColor,
                     size: 22,
                   ),
                 ),
@@ -150,7 +118,7 @@ class HomeDrawer extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(16, 12, 8, 12),
                   child: Icon(
                     Icons.brightness_2,
-                    color: color,
+                    color: iconColor,
                     size: 22,
                   ),
                 ),
@@ -166,4 +134,53 @@ class HomeDrawer extends StatelessWidget {
           ))
         ],
       );
+
+  Widget _renderItem(IconData iconData, String title, VoidCallback onPressed) =>
+      ListTile(
+        leading: Icon(
+          iconData,
+          color: iconColor,
+          size: 22,
+        ),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: tvColor,
+            fontSize: 15,
+          ),
+        ),
+        contentPadding: EdgeInsets.only(left: 30),
+        onTap: onPressed,
+      );
+
+  void _showAPPAboutDialog(BuildContext context) {
+    showAboutDialog(
+        context: context,
+        applicationName: 'GithubFlutter',
+        applicationVersion: '1.0',
+        applicationIcon: Image.asset(
+          'static/images/ic_github.png',
+          width: 44,
+          height: 44,
+        ),
+        children: <Widget>[
+          RichText(
+            text: TextSpan(
+              text: '源代码地址：',
+              style: TextStyle(
+                  color: Color(ZColors.textPrimaryValue), fontSize: 16.0),
+              children: <TextSpan>[
+                TextSpan(
+                    text: ' 点击跳转链接',
+                    style: TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        launch(
+                            "https://github.com/wendyzheng96/ZYFGithubAppFlutter");
+                      }),
+              ],
+            ),
+          )
+        ]);
+  }
 }

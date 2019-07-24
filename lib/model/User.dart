@@ -43,11 +43,11 @@ class User {
       this.collaborators,
       this.two_factor_authentication);
 
-
   User.name(this.login);
 
 
-  User.factory(this.avatar_url, this.name, this.email);
+  User.factory(this.avatar_url, this.name, this.email, this.blog, this.company,
+      this.location, this.bio);
 
   String login;
   int id;
@@ -87,10 +87,9 @@ class User {
   int collaborators;
   bool two_factor_authentication;
 
-  factory User.fromJson(Map<String, dynamic> json)=>_$UserFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
 
   User.empty();
-
 }

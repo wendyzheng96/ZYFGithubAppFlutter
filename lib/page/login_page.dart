@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:github_app_flutter/common/config/config.dart';
+import 'package:github_app_flutter/common/dao/user_dao.dart';
 import 'package:github_app_flutter/common/local/local_storage.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
+import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/page/home_page.dart';
 
 /// 登录页面
@@ -42,37 +45,41 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
-      },
-      child: Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: Container(
-          color: Colors.white,
-          child: Stack(
-            children: <Widget>[
-              Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Image.asset(
-                  'static/images/img_wave.png',
-                ),
+    return StoreBuilder<ZYFState>(
+      builder: (context, store) {
+        return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Scaffold(
+            resizeToAvoidBottomPadding: false,
+            body: Container(
+              color: Colors.white,
+              child: Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Image.asset(
+                      'static/images/img_wave.png',
+                    ),
+                  ),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        loginTopImg(),
+                        loginUserInput(),
+                        loginPwdInput(),
+                        loginButton(store),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    loginTopImg(),
-                    loginUserInput(),
-                    loginPwdInput(),
-                    loginButton(),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -107,35 +114,35 @@ class _LoginPageState extends State<LoginPage> {
       );
 
   Widget loginPwdInput() => Container(
-    padding: EdgeInsets.fromLTRB(35, 10, 50, 5),
-    child: TextField(
-      controller: pwdController,
-      decoration: InputDecoration(
-          hintText: '请输入密码',
-          icon: Icon(
-            Icons.lock,
-            color: Color(ZColors.primaryValue),
-            size: 20,
-          ),
-          suffixIcon: IconButton(
+        padding: EdgeInsets.fromLTRB(35, 10, 50, 5),
+        child: TextField(
+          controller: pwdController,
+          decoration: InputDecoration(
+              hintText: '请输入密码',
               icon: Icon(
-                _isObscure ? Icons.visibility_off : Icons.visibility,
-                size: 20,
+                Icons.lock,
                 color: Color(ZColors.primaryValue),
+                size: 20,
               ),
-              onPressed: () {
-                setState(() {
-                  _isObscure = !_isObscure;
-                });
-              })),
-      obscureText: _isObscure,
-      onChanged: (String value) {
-        _password = value;
-      },
-    ),
-  );
+              suffixIcon: IconButton(
+                  icon: Icon(
+                    _isObscure ? Icons.visibility_off : Icons.visibility,
+                    size: 20,
+                    color: Color(ZColors.primaryValue),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  })),
+          obscureText: _isObscure,
+          onChanged: (String value) {
+            _password = value;
+          },
+        ),
+      );
 
-  Widget loginButton() {
+  Widget loginButton(store) {
     return Container(
       margin: EdgeInsets.fromLTRB(45, 40, 45, 10),
       width: double.infinity,
@@ -158,9 +165,17 @@ class _LoginPageState extends State<LoginPage> {
               CommonUtils.showToast('密码不能为空');
               return;
             }
-            LocalStorage.save(Config.USERNAME, _username);
-            LocalStorage.save(Config.PWD, _password);
-            NavigatorUtils.pushReplaceNamed(context, HomePage.sName);
+            CommonUtils.showLoadingDialog(context);
+            UserDao.login(_username.trim(), _password.trim(), store)
+                .then((res) {
+              Navigator.pop(context);
+              if (res != null && res.result) {
+                Future.delayed(const Duration(seconds: 1), () {
+                  NavigatorUtils.pushReplaceNamed(context, HomePage.sName);
+                  return true;
+                });
+              }
+            });
           }),
     );
   }

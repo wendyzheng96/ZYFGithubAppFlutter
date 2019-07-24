@@ -27,7 +27,7 @@ class UserHeaderChart extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            margin: EdgeInsets.fromLTRB(12, 8, 0, 10),
+            margin: EdgeInsets.fromLTRB(12, 10, 0, 10),
           ),
           _renderChart(context),
         ],
@@ -43,12 +43,12 @@ class UserHeaderChart extends StatelessWidget {
     }
     return (userInfo.login != null)
         ? Card(
-            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            margin: EdgeInsets.symmetric(horizontal: 10.0),
             color: Colors.white,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
                 width: width,
                 height: height,
                 child: SvgPicture.network(
