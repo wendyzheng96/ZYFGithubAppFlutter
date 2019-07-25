@@ -18,9 +18,9 @@ class ReposItem extends StatelessWidget {
       child: Container(
           margin: EdgeInsets.only(bottom: 10),
           decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(
-                width: 1.0, color: Theme.of(context).dividerColor
-            )),
+            border: Border(
+                bottom: BorderSide(
+                    width: 1.0, color: Theme.of(context).dividerColor)),
             color: Colors.white,
           ),
           child: Container(
@@ -36,60 +36,67 @@ class ReposItem extends StatelessWidget {
                     ),
                     Expanded(
                         child: Container(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                reposViewModel.repositoryName,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Color(ZColors.primaryDarkValue),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(top: 4),
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(Icons.group, color: Color(ZColors.textHintValue),size: 14,),
-                                    Padding(padding: EdgeInsets.only(left: 4)),
-                                    Text(
-                                      reposViewModel.ownerName,
-                                      style: TextStyle(
-                                          color: Color(ZColors.textHintValue),
-                                          fontSize: 13),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            reposViewModel.repositoryName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: Color(ZColors.primaryDarkValue),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500),
                           ),
-                        )),
+                          Container(
+                            padding: EdgeInsets.only(top: 4),
+                            child: Row(
+                              children: <Widget>[
+                                Icon(
+                                  Icons.group,
+                                  color: Color(ZColors.textHintValue),
+                                  size: 14,
+                                ),
+                                Padding(padding: EdgeInsets.only(left: 4)),
+                                Text(
+                                  reposViewModel.ownerName,
+                                  style: TextStyle(
+                                      color: Color(ZColors.textHintValue),
+                                      fontSize: 13),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
                     Row(
                       children: <Widget>[
                         CircleAvatar(
-                          backgroundColor: _getLanguageColor(reposViewModel.repositoryType),
+                          backgroundColor:
+                              _getLanguageColor(reposViewModel.repositoryType),
                           radius: 6,
                         ),
-                        Padding(padding: EdgeInsets.only(left: 3)),
-                        Text(reposViewModel.repositoryType,
-                            style: TextStyle(
-                                color: Color(0xff586069), fontSize: 14))
+                        Container(
+                          padding: EdgeInsets.only(left: 4),
+                          child: Text(
+                              reposViewModel.repositoryType,
+                              style: TextStyle(
+                                  color: Color(0xff586069), fontSize: 14)),
+                        )
                       ],
                     )
                   ],
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 12, bottom: 12),
+                  padding: EdgeInsets.only(top: 12, bottom: 16),
                   child: Text(
                     reposViewModel.repositoryDes,
                     style: TextStyle(
                         color: Color(ZColors.textPrimaryValue),
                         fontSize: 14,
-                        height: 1.2
-                    ),
+                        height: 1.2),
                   ),
                 ),
                 Row(
@@ -97,32 +104,14 @@ class ReposItem extends StatelessWidget {
                   children: <Widget>[
                     Expanded(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.visibility,
-                            color: Color(ZColors.textSecondaryValue),
-                            size: 18,
-                          ),
-                          Padding(padding: EdgeInsets.only(left: 4)),
-                          Text(
-                            reposViewModel.repositoryWatch,
-                            style: ZStyles.minTextSecondary,
-                          )
-                        ],
-                      ),
-                      flex: 1,
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Icon(
                             Icons.star_border,
                             color: Color(ZColors.textSecondaryValue),
-                            size: 18,
+                            size: 16,
                           ),
-                          Padding(padding: EdgeInsets.only(left: 4)),
+                          Padding(padding: EdgeInsets.only(left: 2)),
                           Text(
                             reposViewModel.repositoryStar,
                             style: ZStyles.minTextSecondary,
@@ -133,14 +122,14 @@ class ReposItem extends StatelessWidget {
                     ),
                     Expanded(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Icon(
                             Icons.share,
                             color: Color(ZColors.textSecondaryValue),
-                            size: 18,
+                            size: 16,
                           ),
-                          Padding(padding: EdgeInsets.only(left: 4)),
+                          Padding(padding: EdgeInsets.only(left: 2)),
                           Text(
                             reposViewModel.repositoryFork,
                             style: ZStyles.minTextSecondary,
@@ -148,7 +137,25 @@ class ReposItem extends StatelessWidget {
                         ],
                       ),
                       flex: 1,
-                    )
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Icon(
+                            Icons.star,
+                            color: Color(ZColors.textSecondaryValue),
+                            size: 16,
+                          ),
+                          Padding(padding: EdgeInsets.only(left: 4)),
+                          Text(
+                            reposViewModel.repositoryWatch,
+                            style: ZStyles.minTextSecondary,
+                          )
+                        ],
+                      ),
+                      flex: 2,
+                    ),
                   ],
                 )
               ],
@@ -158,8 +165,8 @@ class ReposItem extends StatelessWidget {
     );
   }
 
-  Color _getLanguageColor(String type){
-    switch(type){
+  Color _getLanguageColor(String type) {
+    switch (type) {
       case 'Assembly':
         return Color(0xff586069);
       case 'C':
@@ -176,6 +183,8 @@ class ReposItem extends StatelessWidget {
         return Color(0xff244776);
       case 'Dart':
         return Color(0xff00b4ab);
+      case 'Elixir':
+        return Color(0xff6e4a7e);
       case 'Go':
         return Color(0xfd00add8);
       case 'Haskell':

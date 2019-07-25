@@ -36,6 +36,19 @@ class Address {
     return "${host}users/$username/events";
   }
 
+  ///用户收到的事件信息 get
+  static getEventReceived(userName) {
+    return "${host}users/$userName/received_events";
+  }
+
+  ///趋势 get
+  static trending(since, languageType) {
+    if (languageType != null) {
+      return "https://github.com/trending/$languageType?since=$since";
+    }
+    return "https://github.com/trending?since=$since";
+  }
+
   ///处理分页参数
   static getPageParams(tab, page, [pageSize = Config.PAGE_SIZE]) {
     if (page != null) {

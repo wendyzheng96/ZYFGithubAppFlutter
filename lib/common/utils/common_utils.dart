@@ -9,6 +9,7 @@ import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 /// Create by zyf
 /// Date: 2019/7/16
 class CommonUtils {
+  ///获取用户头像地址
   static String getUserChartUrl(String username) {
     return Address.graphicHost +
         ZColors.primaryValueString.replaceAll("#", "") +
@@ -16,6 +17,7 @@ class CommonUtils {
         username;
   }
 
+  ///toast提示
   static void showToast(String msg) {
     Fluttertoast.showToast(
       msg: msg,
@@ -25,6 +27,7 @@ class CommonUtils {
     );
   }
 
+  ///显示加载中进度框
   static Future<Null> showLoadingDialog(BuildContext context) {
     return NavigatorUtils.showAppDialog(
         context: context,

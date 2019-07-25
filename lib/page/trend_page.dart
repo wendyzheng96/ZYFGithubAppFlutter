@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/model/TrendingRepoModel.dart';
 import 'package:github_app_flutter/widget/drop_down_filter.dart';
-import 'package:github_app_flutter/widget/dynamic_list_view.dart';
 import 'package:github_app_flutter/widget/repos_item.dart';
 
 /// 趋势页面
@@ -16,13 +16,23 @@ class TrendPage extends StatefulWidget {
 class _TrendPageState extends State<TrendPage>
     with AutomaticKeepAliveClientMixin {
   bool isSelectTime = false;
-  bool isSelectType = false;
+  bool isSelectLanguage = false;
 
   TrendTypeModel selectTime = TrendTypeModel("今日", "daily");
-  TrendTypeModel selectType = TrendTypeModel("全部", null);
+  TrendTypeModel selectLanguage = TrendTypeModel("全部", null);
+
+  List<TrendingRepoModel> trendList;
+
+  bool _isLoading = false;
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getTrendRepos();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +44,22 @@ class _TrendPageState extends State<TrendPage>
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(top: 44),
-            child: DynamicListView.build(
-              itemBuilder: _itemBuilder(),
-              dataRequester: _dataRequester,
-              initRequester: _initRequester,
-              dividerColor: Colors.transparent,
-            ),
+            child: trendList == null
+                ? _loadingProgress(Theme.of(context).primaryColor)
+                : RefreshIndicator(
+                    child: ListView.builder(
+                        itemCount: trendList.length,
+                        itemBuilder: (context, index) {
+                          ReposViewModel repoModel =
+                              ReposViewModel.fromTrendMap(trendList[index]);
+                          return ReposItem(
+                            repoModel,
+                            onPressed: () {
+                              CommonUtils.showToast('趋势 $index');
+                            },
+                          );
+                        }),
+                    onRefresh: _getTrendRepos),
           ),
           _renderHeadItems(),
         ],
@@ -60,66 +80,44 @@ class _TrendPageState extends State<TrendPage>
                   CommonUtils.showToast('筛选时间： ${trendModel.name}');
                 }),
             FilterButtonModel(
-                selectedModel: selectType,
+                selectedModel: selectLanguage,
                 contents: trendType(),
                 onSelect: (TrendTypeModel trendModel) {
-                  selectType = trendModel;
+                  selectLanguage = trendModel;
                   CommonUtils.showToast('筛选语言： ${trendModel.name}');
                 }),
           ],
         ),
       ]);
 
-  ///刷新数据
-  Future<List<ReposViewModel>> _initRequester() async {
-    TrendingRepoModel trendModel = TrendingRepoModel(
-        '',
-        "Nike",
-        <String>[
-          'https://hbimg.huabanimg.com/10af2edaadbdebac80dde620a643fb9132167d7b4c1ec-WRzj8W_fw658'
-        ],
-        '',
-        'PHPMailer/PHPMailer',
-        "仓库描述是但还是觉得还是说的话creat comment on issue 15580 in 996icu/996ICU",
-        "Java",
-        "121",
-        "105",
-        "80",
-        "DHUDD");
-    return Future.value(
-        List.generate(10, (i) => ReposViewModel.fromTrendMap(trendModel)));
+  Widget _loadingProgress(loadingColor) {
+    return Center(
+      child: CircularProgressIndicator(
+        strokeWidth: 2.0,
+        valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
+      ),
+    );
   }
 
-  ///加载更多数据
-  Future<List<ReposViewModel>> _dataRequester() async {
-    TrendingRepoModel trendModel = TrendingRepoModel(
-        '',
-        "Nike",
-        <String>[
-          'https://hbimg.huabanimg.com/0d2a3fca3b1829736261fdf7db36d8001ecb0ea715f10c-3Dv8Bn_fw658'
-        ],
-        '',
-        '仓库名称',
-        "仓库描述creat comment on issue 15580 in 996icu/996ICU",
-        "Dart",
-        "121",
-        "105",
-        "93",
-        "DHUDD");
-    return Future.value(
-        List.generate(10, (i) => ReposViewModel.fromTrendMap(trendModel)));
+  ///获取趋势数据
+  Future<void> _getTrendRepos() async {
+    if (_isLoading) {
+      return;
+    }
+    _isLoading = true;
+    return await ReposDao.getTrendRepos(
+            since: selectTime.value, languageType: selectLanguage.value)
+        .then((res) {
+      setState(() {
+        _isLoading = false;
+        if (res.data != null) {
+          trendList = res.data;
+        } else {
+          trendList = List();
+        }
+      });
+    });
   }
-
-  //仓库Item布局加载
-  Function _itemBuilder() => (List dataList, BuildContext context, int index) {
-        ReposViewModel repoModel = dataList[index];
-        return ReposItem(
-          repoModel,
-          onPressed: () {
-            CommonUtils.showToast('趋势 $index');
-          },
-        );
-      };
 
   ///趋势数据时间过滤
   List<TrendTypeModel> trendTime() {
