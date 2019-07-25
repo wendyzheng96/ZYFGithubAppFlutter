@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:github_app_flutter/common/ab/sql_provider.dart';
 import 'package:github_app_flutter/common/utils/code_utils.dart';
-import 'package:github_app_flutter/model/event.dart';
+import 'package:github_app_flutter/model/Event.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// 用户动态表

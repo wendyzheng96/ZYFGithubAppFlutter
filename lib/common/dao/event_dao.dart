@@ -4,7 +4,7 @@ import 'package:github_app_flutter/common/ab/provider/user_event_db_provider.dar
 import 'package:github_app_flutter/common/dao/dao_result.dart';
 import 'package:github_app_flutter/common/net/address.dart';
 import 'package:github_app_flutter/common/net/api.dart';
-import 'package:github_app_flutter/model/event.dart';
+import 'package:github_app_flutter/model/Event.dart';
 
 /// 事件相关
 /// Create by zyf

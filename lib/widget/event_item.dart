@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/event_utils.dart';
-import 'package:github_app_flutter/model/event.dart';
+import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/widget/left_line.dart';
 
 /// 事件Item

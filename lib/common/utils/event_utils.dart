@@ -1,4 +1,4 @@
-import 'package:github_app_flutter/model/event.dart';
+import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/PushEventCommit.dart';
 
 /// 事件逻辑

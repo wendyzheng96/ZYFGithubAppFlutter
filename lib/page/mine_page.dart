@@ -6,7 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:github_app_flutter/common/dao/event_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
-import 'package:github_app_flutter/model/event.dart';
+import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/widget/dynamic_list_view.dart';
 import 'package:github_app_flutter/widget/event_item.dart';
