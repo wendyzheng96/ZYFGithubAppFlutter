@@ -16,7 +16,7 @@ import 'package:redux/redux.dart';
 /// Date: 2019/7/23
 class UserDao {
   ///登录
-  static login(userName, password, store) async {
+  static Future<DataResult> login(userName, password, store) async {
     String type = userName + ":" + password;
     var bytes = utf8.encode(type);
     var base64Str = base64.encode(bytes);
@@ -118,8 +118,8 @@ class UserDao {
   }
 
   //获取star数目
-  static Future<DataResult> getUserStaredCountNet(userName) async {
-    String url = Address.userStar(userName, null) + "&per_page=1";
+  static Future<DataResult> getUserStaredCountNet(username) async {
+    String url = Address.userStar(username, null) + "&per_page=1";
     var res = await httpManager.netFetch(url, null, null, null);
     if (res != null && res.result && res.headers != null) {
       try {

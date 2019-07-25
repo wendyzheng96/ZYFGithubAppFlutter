@@ -24,11 +24,11 @@ class MyApp extends StatelessWidget {
 
   /// 创建Store，引用 ZYFState 中的 appReducer 实现 Reducer 方法
   /// initialState 初始化 State
-  final store = new Store<ZYFState>(
+  final store = Store<ZYFState>(
     appReducer,
 
     ///初始化数据
-    initialState: new ZYFState(userInfo: User.empty()),
+    initialState: ZYFState(userInfo: User.empty()),
   );
 
 

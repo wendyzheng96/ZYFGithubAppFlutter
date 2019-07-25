@@ -49,11 +49,10 @@ class ZStyles {
 
   static const String app_default_share_url = "https://github.com/wendyzheng96/ZYFGithubAppFlutter";
 
-  static const lagerTextSize = 30.0;
-  static const bigTextSize = 23.0;
+  static const lagerTextSize = 20.0;
   static const normalTextSize = 18.0;
   static const middleTextWhiteSize = 16.0;
-  static const smallTextSize = 14.0;
+  static const smallTextSize = 13.0;
   static const minTextSize = 12.0;
 
   static const minTextSecondary = TextStyle(
@@ -61,9 +60,9 @@ class ZStyles {
     fontSize: minTextSize
   );
 
-  static const minTextHint = TextStyle(
-      color: Color(ZColors.textHintValue),
-      fontSize: minTextSize
+  static const smallTextWhite70 = TextStyle(
+      color: Colors.white70,
+      fontSize: smallTextSize
   );
 
   static const middleTextWhite = TextStyle(

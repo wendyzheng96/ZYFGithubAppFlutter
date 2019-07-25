@@ -2,10 +2,17 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:github_app_flutter/common/dao/event_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/zyf_state.dart';
+import 'package:github_app_flutter/model/event.dart';
 import 'package:github_app_flutter/model/User.dart';
+import 'package:github_app_flutter/widget/dynamic_list_view.dart';
+import 'package:github_app_flutter/widget/event_item.dart';
 import 'package:github_app_flutter/widget/left_line.dart';
 import 'package:github_app_flutter/widget/user_header.dart';
+import 'package:redux/redux.dart';
 
 /// 我的页面
 /// Create by zyf
@@ -17,71 +24,99 @@ class MinePage extends StatefulWidget {
 
 class _MinePageState extends State<MinePage>
     with AutomaticKeepAliveClientMixin {
-  User userInfo = User.name('wendyzheng96');
+  List<Event> eventList = List();
 
-  int listSize = 10;
+  int _page = 1;
 
   bool isLoading = false; //是否正在刷新数据
 
   @override
   bool get wantKeepAlive => true;
 
+  Store<ZYFState> _getStore() {
+    return StoreProvider.of(context);
+  }
+
+  ///从全局状态中获取我的用户名
+  _getUsername() {
+    if (_getStore()?.state?.userInfo == null) {
+      return null;
+    }
+    return _getStore()?.state?.userInfo?.login;
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _onRefresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    double headerSize = 170;
+    double headerSize = 190;
     double bottomSize = 56;
     double chartSize = 200;
 
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-            body: RefreshIndicator(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              ///头部信息
-              SliverPersistentHeader(
-                  delegate: _SliverAppBarDelegate(
-                      minHeight: headerSize,
-                      maxHeight: headerSize,
-                      child: _userInfoTop())),
+    return Material(
+      child: StoreBuilder<ZYFState>(
+        builder: (context, store) {
+          User userInfo = store.state.userInfo;
+          return DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                  body: RefreshIndicator(
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    ///头部信息
+                    SliverPersistentHeader(
+                        delegate: _SliverAppBarDelegate(
+                            minHeight: headerSize,
+                            maxHeight: headerSize,
+                            child: _userInfoTop(userInfo))),
 
-              ///悬停item
-              SliverPersistentHeader(
-                  pinned: true,
-                  floating: true,
-                  delegate: _SliverAppBarDelegate(
-                      minHeight: bottomSize,
-                      maxHeight: bottomSize,
-                      child: _userModules())),
+                    ///悬停item
+                    SliverPersistentHeader(
+                        pinned: true,
+                        floating: true,
+                        delegate: _SliverAppBarDelegate(
+                            minHeight: bottomSize,
+                            maxHeight: bottomSize,
+                            child: _userModules(userInfo))),
 
-              ///提交图表
-              SliverPersistentHeader(
-                  delegate: _SliverAppBarDelegate(
-                      minHeight: chartSize,
-                      maxHeight: chartSize,
-                      child: SizedBox.expand(
-                        child: Container(
-                          height: chartSize,
-                          child: UserHeaderChart(userInfo),
-                        ),
-                      ))),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return getItem(index);
-                  },
-                  childCount: listSize,
+                    ///提交图表
+                    SliverPersistentHeader(
+                        delegate: _SliverAppBarDelegate(
+                            minHeight: chartSize,
+                            maxHeight: chartSize,
+                            child: SizedBox.expand(
+                              child: Container(
+                                height: chartSize,
+                                child: UserHeaderChart(userInfo),
+                              ),
+                            ))),
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          EventViewModel model =
+                              EventViewModel.fromEventMap(eventList[index]);
+                          return EventItem(model, index, eventList.length);
+                        },
+                        childCount: eventList.length,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          onRefresh: _onRefresh,
-        )));
+                onRefresh: _onRefresh,
+              )));
+        },
+      ),
+    );
   }
 
   //用户信息详情
-  Widget _userInfoTop() => Container(
+  Widget _userInfoTop(User user) => Container(
         color: Theme.of(context).primaryColor,
         child: Column(
           children: <Widget>[
@@ -89,42 +124,76 @@ class _MinePageState extends State<MinePage>
               margin: EdgeInsets.only(top: 10, bottom: 10),
               padding: EdgeInsets.all(4),
               child: CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(
-                    'https://hbimg.huabanimg.com/0d2a3fca3b1829736261fdf7db36d8001ecb0ea715f10c-3Dv8Bn_fw658'),
-              ),
+                  radius: 40, backgroundImage: NetworkImage(user.avatar_url)),
               decoration: BoxDecoration(
                   color: Colors.white70,
                   borderRadius: BorderRadius.circular(44)),
             ),
             Text(
-              'WendyYan',
+              user.login,
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 6.0),
+              padding: EdgeInsets.only(top: 6, bottom: 6),
               child: Text(
-                'WendyYan',
-                style: TextStyle(color: Colors.white70, fontSize: 14),
+                user.email,
+                style: ZStyles.smallTextWhite70,
               ),
             ),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Icon(
+                    Icons.location_on,
+                    size: 14,
+                    color: Colors.white,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 4),
+                    child: Text(
+                      user.location ?? "---",
+                      maxLines: 1,
+                      style: ZStyles.smallTextWhite70,
+                    ),
+                  ),
+                  Container(
+                    width: 20,
+                  ),
+                  Icon(
+                    Icons.group,
+                    size: 14,
+                    color: Colors.white,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 4),
+                    child: Text(
+                      user.company ?? "---",
+                      maxLines: 1,
+                      style: ZStyles.smallTextWhite70,
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       );
 
   //悬停模块
-  Widget _userModules() => Container(
+  Widget _userModules(User user) => Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _getFunText('仓库', 16),
-            _getFunText('关注', 3),
-            _getFunText('星标', 22),
+            _getFunText('仓库', user.public_repos),
+            _getFunText('关注', user.following),
+            _getFunText('星标', user.starred),
             _getFunText('荣耀', 1),
-            _getFunText('粉丝', 3),
+            _getFunText('粉丝', user.followers),
           ],
         ),
         decoration: BoxDecoration(
@@ -140,7 +209,7 @@ class _MinePageState extends State<MinePage>
         margin: EdgeInsets.only(bottom: 6),
       );
 
-  Widget _getFunText(String name, int num) => Column(
+  Widget _getFunText(String name, num) => Column(
         children: <Widget>[
           Text(
             name,
@@ -156,70 +225,21 @@ class _MinePageState extends State<MinePage>
         ],
       );
 
-  //列表item 布局
-  Widget getItem(int index) => Column(
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 32,
-                child: LeftLineWidget(index != 0, index != listSize - 1, false),
-              ),
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: Color(ZColors.primaryValue),
-                backgroundImage: NetworkImage(
-                    'https://hbimg.huabanimg.com/b2c76a5f74dbfdcbf0c425e68f88e2d9fc20af561b779-LeAzGo_fw658'),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  'wendy$index',
-                  style: TextStyle(
-                      color: Color(ZColors.textPrimaryValue), fontSize: 14),
-                ),
-              ),
-              Expanded(
-                  child: Container(
-                padding: EdgeInsets.only(right: 16),
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  '2019/7/16 17:54',
-                  style: TextStyle(
-                      color: Color(ZColors.textHintValue), fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              )),
-            ],
-          ),
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                  left: BorderSide(
-                      width: 1,
-                      color: index == listSize - 1
-                          ? Colors.transparent
-                          : Color(ZColors.lineColor))),
-            ),
-            margin: EdgeInsets.only(left: 23),
-            padding: EdgeInsets.fromLTRB(22, 6, 16, 30),
-            child: Text(
-              '万物的怪物的鼓舞的怪物的怪物更多无辜的有关费用官方也发个衣服v。',
-              style: TextStyle(
-                color: Color(ZColors.textSecondaryValue),
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      );
-
   Future<void> _onRefresh() async {
-    if (isLoading) return;
-    await Future.delayed(Duration(seconds: 2), () {
+    _page = 1;
+    await getData();
+  }
+
+  /// 获取数据
+  getData() async {
+    await EventDao.getEventDao(_getUsername(), page: _page, needDb: _page <= 1)
+        .then((res) {
       setState(() {
-        isLoading = true;
+        if(_page == 1){
+          eventList = res.data;
+        } else{
+          eventList.addAll(res.data);
+        }
         print('下拉刷新结束');
       });
     });

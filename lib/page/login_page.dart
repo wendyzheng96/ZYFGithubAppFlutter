@@ -170,11 +170,11 @@ class _LoginPageState extends State<LoginPage> {
                 .then((res) {
               Navigator.pop(context);
               if (res != null && res.result) {
-                Future.delayed(const Duration(seconds: 1), () {
-                  NavigatorUtils.pushReplaceNamed(context, HomePage.sName);
-                  return true;
-                });
+                CommonUtils.showToast('登录成功');
+                NavigatorUtils.pushReplaceNamed(context, HomePage.sName);
+                return;
               }
+              CommonUtils.showToast('登录失败');
             });
           }),
     );

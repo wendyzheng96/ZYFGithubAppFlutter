@@ -39,7 +39,8 @@ class HttpManager {
   ///[ option] 配置
   netFetch(url, params, Map<String, dynamic> header, Options option,
       {noTip = false}) async {
-    Map<String, dynamic> headers = new HashMap();
+
+    Map<String, dynamic> headers = HashMap();
     if (header != null) {
       headers.addAll(header);
     }
@@ -47,7 +48,7 @@ class HttpManager {
     if (option != null) {
       option.headers = headers;
     } else {
-      option = new Options(method: "get");
+      option = Options(method: "get");
       option.headers = headers;
     }
 
@@ -56,7 +57,7 @@ class HttpManager {
       if (e.response != null) {
         errorResponse = e.response;
       } else {
-        errorResponse = new Response(statusCode: 666);
+        errorResponse = Response(statusCode: 666);
       }
       if (e.type == DioErrorType.CONNECT_TIMEOUT ||
           e.type == DioErrorType.RECEIVE_TIMEOUT) {

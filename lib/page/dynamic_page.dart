@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
-import 'package:github_app_flutter/model/event.dart';
 import 'package:github_app_flutter/widget/dynamic_list_view.dart';
+import 'package:github_app_flutter/widget/event_item.dart';
 
 /// 动态页
 /// Create by zyf

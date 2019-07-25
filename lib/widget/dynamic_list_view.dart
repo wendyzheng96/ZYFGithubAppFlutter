@@ -26,7 +26,7 @@ class DynamicListView extends StatefulWidget {
 
 class DynamicListViewState extends State<DynamicListView> {
   bool isPerformingRequest = false;
-  ScrollController _controller = new ScrollController();
+  ScrollController _controller = ScrollController();
   List _dataList;
 
   @override
@@ -109,12 +109,12 @@ Widget loadingProgress(loadingColor) {
 }
 
 Widget opacityLoadingProgress(isPerformingRequest, loadingColor) {
-  return new Padding(
+  return Padding(
     padding: const EdgeInsets.all(8.0),
-    child: new Center(
-      child: new Opacity(
+    child: Center(
+      child: Opacity(
         opacity: isPerformingRequest ? 1.0 : 0.0,
-        child: new CircularProgressIndicator(
+        child: CircularProgressIndicator(
           strokeWidth: 2.0,
           valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
         ),

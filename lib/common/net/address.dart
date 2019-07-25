@@ -1,4 +1,6 @@
 
+import 'package:github_app_flutter/common/config/config.dart';
+
 /// 地址数据
 /// Create by zyf
 /// Date: 2019/7/23
@@ -24,8 +26,26 @@ class Address {
   }
 
   ///获取用户的star get
-  static userStar(userName, sort) {
+  static userStar(username, sort) {
     sort ??= 'updated';
-    return "${host}users/$userName/starred?sort=$sort";
+    return "${host}users/$username/starred?sort=$sort";
+  }
+
+  ///用户相关的事件信息 get
+  static getEvent(username) {
+    return "${host}users/$username/events";
+  }
+
+  ///处理分页参数
+  static getPageParams(tab, page, [pageSize = Config.PAGE_SIZE]) {
+    if (page != null) {
+      if (pageSize != null) {
+        return "${tab}page=$page&per_page=$pageSize";
+      } else {
+        return "${tab}page=$page";
+      }
+    } else {
+      return "";
+    }
   }
 }

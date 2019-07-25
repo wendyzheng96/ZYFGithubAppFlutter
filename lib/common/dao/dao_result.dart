@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-/// 数据结果
+/// 数据返回结果类型
 /// Create by zyf
 /// Date: 2019/7/23
 class DataResult {
