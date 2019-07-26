@@ -8,9 +8,7 @@ import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/User.dart';
-import 'package:github_app_flutter/widget/dynamic_list_view.dart';
 import 'package:github_app_flutter/widget/event_item.dart';
-import 'package:github_app_flutter/widget/left_line.dart';
 import 'package:github_app_flutter/widget/user_header.dart';
 import 'package:redux/redux.dart';
 
@@ -240,7 +238,6 @@ class _MinePageState extends State<MinePage>
         } else{
           eventList.addAll(res.data);
         }
-        print('下拉刷新结束');
       });
     });
   }

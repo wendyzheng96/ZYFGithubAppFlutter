@@ -103,7 +103,7 @@ class _DynamicPageState extends State<DynamicPage>
                         model.actionUser,
                         style: TextStyle(
                             color: Color(ZColors.textPrimaryValue),
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.w500),
                       ),
                     ),

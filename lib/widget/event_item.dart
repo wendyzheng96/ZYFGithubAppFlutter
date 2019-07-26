@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/event_utils.dart';
+import 'package:github_app_flutter/common/utils/time_utils.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/widget/left_line.dart';
 
@@ -95,8 +96,8 @@ class EventViewModel {
       this.actionTime, this.actionTarget);
 
   EventViewModel.fromEventMap(Event event) {
-    var date = event.createdAt;
-    actionTime = "${date.year.toString()}-${date.month.toString().padLeft(2,'0')}-${date.day.toString().padLeft(2,'0')}";
+    actionTime = formatDate(
+        event.createdAt.toLocal(), [yyyy, '/', mm, '/', dd, ' ', HH, ":", nn]);
     actionUser = event.actor.login;
     actionUserPic = event.actor.avatar_url;
     var other = EventUtils.getActionAndDes(event);

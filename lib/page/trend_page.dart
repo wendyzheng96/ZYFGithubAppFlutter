@@ -15,15 +15,16 @@ class TrendPage extends StatefulWidget {
 
 class _TrendPageState extends State<TrendPage>
     with AutomaticKeepAliveClientMixin {
+  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
+
   bool isSelectTime = false;
   bool isSelectLanguage = false;
 
-  TrendTypeModel selectTime = TrendTypeModel("今日", "daily");
-  TrendTypeModel selectLanguage = TrendTypeModel("全部", null);
+  TrendTypeModel selectTime;
+  TrendTypeModel selectLanguage;
 
-  List<TrendingRepoModel> trendList;
-
-  bool _isLoading = false;
+  List<TrendingRepoModel> trendList = List();
 
   @override
   bool get wantKeepAlive => true;
@@ -31,6 +32,11 @@ class _TrendPageState extends State<TrendPage>
   @override
   void initState() {
     super.initState();
+    setState(() {
+      selectTime = trendTime()[0];
+      selectLanguage = trendType()[0];
+    });
+    showRefreshLoading();
     _getTrendRepos();
   }
 
@@ -44,9 +50,8 @@ class _TrendPageState extends State<TrendPage>
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(top: 44),
-            child: trendList == null
-                ? _loadingProgress(Theme.of(context).primaryColor)
-                : RefreshIndicator(
+            child: RefreshIndicator(
+                    key: refreshIndicatorKey,
                     child: ListView.builder(
                         itemCount: trendList.length,
                         itemBuilder: (context, index) {
@@ -77,39 +82,35 @@ class _TrendPageState extends State<TrendPage>
                 contents: trendTime(),
                 onSelect: (TrendTypeModel trendModel) {
                   selectTime = trendModel;
-                  CommonUtils.showToast('筛选时间： ${trendModel.name}');
+                  showRefreshLoading();
+                  _getTrendRepos();
                 }),
             FilterButtonModel(
                 selectedModel: selectLanguage,
                 contents: trendType(),
                 onSelect: (TrendTypeModel trendModel) {
                   selectLanguage = trendModel;
-                  CommonUtils.showToast('筛选语言： ${trendModel.name}');
+                  showRefreshLoading();
+                  _getTrendRepos();
                 }),
           ],
         ),
       ]);
 
-  Widget _loadingProgress(loadingColor) {
-    return Center(
-      child: CircularProgressIndicator(
-        strokeWidth: 2.0,
-        valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
-      ),
-    );
+  ///显示刷新
+  showRefreshLoading() {
+    Future.delayed(const Duration(seconds: 0), () {
+      refreshIndicatorKey.currentState.show().then((e) {});
+      return true;
+    });
   }
 
   ///获取趋势数据
   Future<void> _getTrendRepos() async {
-    if (_isLoading) {
-      return;
-    }
-    _isLoading = true;
     return await ReposDao.getTrendRepos(
             since: selectTime.value, languageType: selectLanguage.value)
         .then((res) {
       setState(() {
-        _isLoading = false;
         if (res.data != null) {
           trendList = res.data;
         } else {
