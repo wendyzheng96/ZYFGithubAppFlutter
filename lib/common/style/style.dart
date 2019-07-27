@@ -50,9 +50,10 @@ class ZStyles {
   static const String app_default_share_url = "https://github.com/wendyzheng96/ZYFGithubAppFlutter";
 
   static const lagerTextSize = 20.0;
-  static const normalTextSize = 18.0;
   static const middleTextWhiteSize = 16.0;
-  static const smallTextSize = 13.0;
+  static const normalTextSize = 15.0;
+  static const smallTextSize = 14.0;
+  static const smallerTextSize = 13.0;
   static const minTextSize = 12.0;
 
   static const minTextSecondary = TextStyle(
@@ -60,9 +61,14 @@ class ZStyles {
     fontSize: minTextSize
   );
 
-  static const smallTextWhite70 = TextStyle(
+  static const smallerTextWhite70 = TextStyle(
       color: Colors.white70,
-      fontSize: smallTextSize
+      fontSize: smallerTextSize
+  );
+
+  static const smallMainText = TextStyle(
+    color: Color(ZColors.primaryDarkValue),
+    fontSize: smallTextSize,
   );
 
   static const middleTextWhite = TextStyle(
@@ -75,4 +81,6 @@ class ZIcons{
   static const String FONT_FAMILY = 'wxcIconFont';
 
   static const IconData REPOS_ITEM_NEXT = const IconData(0xe610, fontFamily: ZIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_WATCH = const IconData(0xe681, fontFamily: ZIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_WATCHED = const IconData(0xe629, fontFamily: ZIcons.FONT_FAMILY);
 }

@@ -49,6 +49,26 @@ class Address {
     return "https://github.com/trending?since=$since";
   }
 
+  ///关注仓库 put
+  static resolveStarRepos(reposOwner, repos) {
+    return "${host}user/starred/$reposOwner/$repos";
+  }
+
+  ///订阅仓库 put
+  static resolveWatcherRepos(reposOwner, repos) {
+    return "${host}user/subscriptions/$reposOwner/$repos";
+  }
+
+  ///create fork post
+  static createFork(reposOwner, reposName) {
+    return "${host}repos/$reposOwner/$reposName/forks";
+  }
+
+  ///branch get
+  static getBranches(reposOwner, reposName) {
+    return "${host}repos/$reposOwner/$reposName/branches";
+  }
+
   ///处理分页参数
   static getPageParams(tab, page, [pageSize = Config.PAGE_SIZE]) {
     if (page != null) {

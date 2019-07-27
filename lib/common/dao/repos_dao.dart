@@ -49,7 +49,8 @@ class ReposDao {
     }
 
     if (needDb) {
-      List<TrendingRepoModel> dbList = await provider.getRepos(languageTypeDb, since);
+      List<TrendingRepoModel> dbList =
+          await provider.getRepos(languageTypeDb, since);
       if (dbList == null || dbList.length == 0) {
         return await next();
       }
@@ -57,5 +58,76 @@ class ReposDao {
       return dataResult;
     }
     return await next();
+  }
+
+  /// 获取用户对当前仓库的star、watcher状态
+  static getRepositoryStatus(String username, String reposName) async {
+    String urlStar = Address.resolveStarRepos(username, reposName);
+    String urlWatch = Address.resolveWatcherRepos(username, reposName);
+    var resStar = await httpManager.netFetch(
+        urlStar, null, null, Options(contentType: ContentType.text),
+        noTip: true);
+    var resWatch = await httpManager.netFetch(
+        urlWatch, null, null, Options(contentType: ContentType.text),
+        noTip: true);
+    var data = {"star": resStar.result, "watch": resWatch.result};
+    return DataResult(data, true);
+  }
+
+  ///star仓库
+  static Future<DataResult> doRepositoryStar(username, reposName, star) async {
+    String url = Address.resolveStarRepos(username, reposName);
+    var res = await httpManager.netFetch(
+        url,
+        null,
+        null,
+        Options(
+            method: !star ? 'PUT' : 'DELETE', contentType: ContentType.text));
+    return Future<DataResult>(() {
+      return DataResult(null, res.result);
+    });
+  }
+
+  ///watcher仓库
+  static Future<DataResult> doRepositoryWatcher(
+      username, reposName, watch) async {
+    String url = Address.resolveWatcherRepos(username, reposName);
+    var res = await httpManager.netFetch(
+        url,
+        null,
+        null,
+        Options(
+            method: !watch ? 'PUT' : 'DELETE', contentType: ContentType.text));
+    return Future<DataResult>(() {
+      return DataResult(null, res.result);
+    });
+  }
+
+  /// 创建仓库的fork分支
+  static createForkDao(username, reposName) async {
+    String url = Address.createFork(username, reposName);
+    var res = await httpManager.netFetch(url, null, null,
+        Options(method: "POST", contentType: ContentType.text));
+    return new DataResult(null, res.result);
+  }
+
+  /// 获取当前仓库所有分支
+  static getBranches(username, reposName) async {
+    String url = Address.getBranches(username, reposName);
+    var res = await httpManager.netFetch(url, null, null, null);
+    if (res != null && res.result) {
+      List<String> list = List();
+      var dataList = res.data;
+      if (dataList == null || dataList.length == 0) {
+        return DataResult(null, false);
+      }
+      for (int i = 0; i < dataList.length; i++) {
+        var data = dataList[i];
+        list.add(data['name']);
+      }
+      return DataResult(list, true);
+    } else {
+      return DataResult(null, false);
+    }
   }
 }

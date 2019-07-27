@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
-import 'package:github_app_flutter/common/utils/common_utils.dart';
+import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/model/TrendingRepoModel.dart';
+import 'package:github_app_flutter/page/repository_detail_page.dart';
 import 'package:github_app_flutter/widget/drop_down_filter.dart';
 import 'package:github_app_flutter/widget/repos_item.dart';
 
@@ -51,20 +52,23 @@ class _TrendPageState extends State<TrendPage>
           Container(
             margin: EdgeInsets.only(top: 44),
             child: RefreshIndicator(
-                    key: refreshIndicatorKey,
-                    child: ListView.builder(
-                        itemCount: trendList.length,
-                        itemBuilder: (context, index) {
-                          ReposViewModel repoModel =
-                              ReposViewModel.fromTrendMap(trendList[index]);
-                          return ReposItem(
-                            repoModel,
-                            onPressed: () {
-                              CommonUtils.showToast('趋势 $index');
-                            },
-                          );
-                        }),
-                    onRefresh: _getTrendRepos),
+                key: refreshIndicatorKey,
+                child: ListView.builder(
+                    itemCount: trendList.length,
+                    itemBuilder: (context, index) {
+                      ReposViewModel repoModel =
+                          ReposViewModel.fromTrendMap(trendList[index]);
+                      return ReposItem(
+                        repoModel,
+                        onPressed: () {
+                          NavigatorUtils.navigatorRouter(
+                              context,
+                              RepositoryDetailPage(repoModel.ownerName,
+                                  repoModel.repositoryName));
+                        },
+                      );
+                    }),
+                onRefresh: _getTrendRepos),
           ),
           _renderHeadItems(),
         ],

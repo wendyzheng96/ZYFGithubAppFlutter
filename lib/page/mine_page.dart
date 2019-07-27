@@ -138,7 +138,7 @@ class _MinePageState extends State<MinePage>
               padding: EdgeInsets.only(top: 6, bottom: 6),
               child: Text(
                 user.email,
-                style: ZStyles.smallTextWhite70,
+                style: ZStyles.smallerTextWhite70,
               ),
             ),
             Container(
@@ -156,7 +156,7 @@ class _MinePageState extends State<MinePage>
                     child: Text(
                       user.location ?? "---",
                       maxLines: 1,
-                      style: ZStyles.smallTextWhite70,
+                      style: ZStyles.smallerTextWhite70,
                     ),
                   ),
                   Container(
@@ -172,7 +172,7 @@ class _MinePageState extends State<MinePage>
                     child: Text(
                       user.company ?? "---",
                       maxLines: 1,
-                      style: ZStyles.smallTextWhite70,
+                      style: ZStyles.smallerTextWhite70,
                     ),
                   ),
                 ],
