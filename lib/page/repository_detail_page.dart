@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/model/Repository.dart';
 import 'package:github_app_flutter/page/repos_detail_info_page.dart';
 import 'package:github_app_flutter/page/repos_readme_page.dart';
 import 'package:github_app_flutter/widget/icon_text.dart';
 import 'package:github_app_flutter/widget/tabbar_widget.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 /// 仓库详情
 /// Create by zyf
@@ -26,6 +28,9 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
     with SingleTickerProviderStateMixin {
   ///动画控制器，用于底部发布 issue 按键动画
   AnimationController animationController;
+
+  ///仓库的详情数据实体
+  final ReposDetailModel reposDetailModel = ReposDetailModel();
 
   /// 仓库底部状态，如 star、watch 控件的显示
   final TarWidgetControl tarBarControl = TarWidgetControl();
@@ -79,39 +84,48 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    return TabBarWidget(
-        indicatorColor: Colors.white,
-        resizeToAvoidBottomPadding: false,
-        type: TabBarWidget.TOP_TAB,
-        tabItems: _renderTabItems(),
-        tabViews: <Widget>[
-          ReposDetailInfoPage(),
-          ReposReadmePage(widget.username, widget.reposName),
-          ReposDetailInfoPage(),
-          ReposDetailInfoPage()
-        ],
-        title: Text(widget.reposName),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(Icons.add),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        bottomBar: BottomAppBar(
-          color: Colors.white,
-          shape: CircularNotchedRectangle(),
-          child: Row(
-            children: (tarBarControl.footerButton == null)
-                ? [Container()]
-                : tarBarControl.footerButton.length == 0
-                    ? [
-                        SizedBox.fromSize(
-                          size: Size(100, 50),
-                        )
-                      ]
-                    : tarBarControl.footerButton,
-          ),
-        ));
+    return ScopedModel<ReposDetailModel>(
+        model: reposDetailModel,
+        child: ScopedModelDescendant<ReposDetailModel>(
+            builder: (context, child, model) {
+          return TabBarWidget(
+              indicatorColor: Colors.white,
+              resizeToAvoidBottomPadding: false,
+              type: TabBarWidget.TOP_TAB,
+              tabItems: _renderTabItems(),
+              tabViews: <Widget>[
+                ReposDetailInfoPage(widget.username, widget.reposName),
+                ReposReadmePage(widget.username, widget.reposName),
+                ReposDetailInfoPage(widget.username, widget.reposName),
+                ReposDetailInfoPage(widget.username, widget.reposName)
+              ],
+              title: Text(widget.reposName),
+              onPageChanged: (index) {
+                reposDetailModel.setCurrentIndex(index);
+              },
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {},
+                child: Icon(Icons.add),
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endDocked,
+              bottomBar: BottomAppBar(
+                color: Colors.white,
+                shape: CircularNotchedRectangle(),
+                child: Row(
+                  children: (tarBarControl.footerButton == null)
+                      ? [Container()]
+                      : tarBarControl.footerButton.length == 0
+                          ? [
+                              SizedBox.fromSize(
+                                size: Size(100, 50),
+                              )
+                            ]
+                          : tarBarControl.footerButton,
+                ),
+              ));
+        }));
   }
 
   ///渲染 Tab 的 Item
@@ -178,4 +192,37 @@ class BottomStatusModel {
 
   BottomStatusModel(this.watchText, this.starText, this.watchIcon,
       this.starIcon, this.watch, this.star);
+}
+
+///仓库详情数据实体，包含有当前index，仓库数据，分支等等
+class ReposDetailModel extends Model {
+  static ReposDetailModel of(BuildContext context) =>
+      ScopedModel.of<ReposDetailModel>(context);
+
+  int _currentIndex = 0;
+
+  int get currentIndex => _currentIndex;
+
+  String _currentBranch = "master";
+
+  String get currentBranch => _currentBranch;
+
+  Repository _repository = Repository.empty();
+
+  Repository get repository => _repository;
+
+  set repository(Repository data) {
+    _repository = data;
+    notifyListeners();
+  }
+
+  void setCurrentBranch(String branch) {
+    _currentBranch = branch;
+    notifyListeners();
+  }
+
+  void setCurrentIndex(int index) {
+    _currentIndex = index;
+    notifyListeners();
+  }
 }

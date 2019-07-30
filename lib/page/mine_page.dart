@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -9,6 +7,7 @@ import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/widget/event_item.dart';
+import 'package:github_app_flutter/widget/sliver_header_delegate.dart';
 import 'package:github_app_flutter/widget/user_header.dart';
 import 'package:redux/redux.dart';
 
@@ -69,7 +68,7 @@ class _MinePageState extends State<MinePage>
                   slivers: <Widget>[
                     ///头部信息
                     SliverPersistentHeader(
-                        delegate: _SliverAppBarDelegate(
+                        delegate: SliverHeaderDelegate(
                             minHeight: headerSize,
                             maxHeight: headerSize,
                             child: _userInfoTop(userInfo))),
@@ -78,14 +77,14 @@ class _MinePageState extends State<MinePage>
                     SliverPersistentHeader(
                         pinned: true,
                         floating: true,
-                        delegate: _SliverAppBarDelegate(
+                        delegate: SliverHeaderDelegate(
                             minHeight: bottomSize,
                             maxHeight: bottomSize,
                             child: _userModules(userInfo))),
 
                     ///提交图表
                     SliverPersistentHeader(
-                        delegate: _SliverAppBarDelegate(
+                        delegate: SliverHeaderDelegate(
                             minHeight: chartSize,
                             maxHeight: chartSize,
                             child: SizedBox.expand(
@@ -240,36 +239,5 @@ class _MinePageState extends State<MinePage>
         }
       });
     });
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate({
-    @required this.minHeight,
-    @required this.maxHeight,
-    @required this.child,
-  });
-
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-
-  @override
-  double get minExtent => minHeight;
-
-  @override
-  double get maxExtent => max(maxHeight, minHeight);
-
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return child;
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:github_app_flutter/page/common_list_page.dart';
 
 /// 导航栏
 /// Create by zyf
@@ -45,5 +46,20 @@ class NavigatorUtils {
               data: MediaQueryData.fromWindow(WidgetsBinding.instance.window),
               child: SafeArea(child: builder(context)));
         });
+  }
+
+  ///通用列表
+  static gotoCommonList(
+      BuildContext context, String title, String showType, String dataType,
+      {String userName, String reposName}) {
+    navigatorRouter(
+        context,
+        new CommonListPage(
+          title,
+          showType,
+          dataType,
+          userName: userName,
+          reposName: reposName,
+        ));
   }
 }

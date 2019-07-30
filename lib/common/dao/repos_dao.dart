@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:github_app_flutter/common/ab/provider/repos_readme_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/trend_repository_db_provider.dart';
 import 'package:github_app_flutter/common/dao/dao_result.dart';
 import 'package:github_app_flutter/common/net/address.dart';
@@ -129,5 +130,38 @@ class ReposDao {
     } else {
       return DataResult(null, false);
     }
+  }
+
+  ///获取仓库readme内容
+  static Future<DataResult> getReposReadme(String username, String reposName, String branch,
+      {bool needDb = true}) async {
+    String fullName = username + "/" + reposName;
+    ReposReadmeDbProvider provider = ReposReadmeDbProvider();
+
+    next() async {
+      String url = Address.readmeFile(fullName, branch);
+      var res = await httpManager.netFetch(
+          url,
+          null,
+          {"Accept": 'application/vnd.github.VERSION.raw'},
+          Options(contentType: ContentType.text));
+      if (res != null && res.result) {
+        if (needDb) {
+          provider.insert(fullName, branch, res.data);
+        }
+        return DataResult(res.data, true);
+      }
+      return DataResult(null, false);
+    }
+
+    if (needDb) {
+      String readme = await provider.getReposReadme(fullName, branch);
+      if (readme == null) {
+        return next();
+      }
+      DataResult dataResult = DataResult(readme, true, next: next);
+      return dataResult;
+    }
+    return await next();
   }
 }

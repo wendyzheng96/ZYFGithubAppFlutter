@@ -61,6 +61,11 @@ class ZStyles {
     fontSize: minTextSize
   );
 
+  static const smallSubLightText = TextStyle(
+    color: Color(ZColors.subLightTextColor),
+    fontSize: smallTextSize,
+  );
+
   static const smallerTextWhite70 = TextStyle(
       color: Colors.white70,
       fontSize: smallerTextSize

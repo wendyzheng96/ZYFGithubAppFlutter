@@ -69,6 +69,11 @@ class Address {
     return "${host}repos/$reposOwner/$reposName/branches";
   }
 
+  ///README 文件地址 get
+  static readmeFile(reposNameFullName, curBranch) {
+    return host + "repos/" + reposNameFullName + "/" + "readme" + ((curBranch == null) ? "" : ("?ref=" + curBranch));
+  }
+
   ///处理分页参数
   static getPageParams(tab, page, [pageSize = Config.PAGE_SIZE]) {
     if (page != null) {

@@ -69,7 +69,7 @@ class UserEventDbProvider extends BaseDbProvider {
       await db
           .delete(name, where: "$columnUsername = ?", whereArgs: [username]);
     }
-    return db.insert(name, toMap(username, eventMapString));
+    return await db.insert(name, toMap(username, eventMapString));
   }
 
   ///从数据库中获取用户信息
