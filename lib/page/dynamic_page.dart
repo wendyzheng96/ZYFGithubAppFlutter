@@ -5,9 +5,9 @@ import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/model/Event.dart';
+import 'package:github_app_flutter/model/EventViewModel.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/widget/dynamic_list_view.dart';
-import 'package:github_app_flutter/widget/event_item.dart';
 
 /// 动态页
 /// Create by zyf
@@ -55,20 +55,14 @@ class _DynamicPageState extends State<DynamicPage>
     _page = 1;
     return await EventDao.getEventReceived(username, page: _page, needDb: true)
         .then((res) {
-      if (res.data != null) {
-        return res.data;
-      }
-      return List<Event>();
+      return res.data ?? List<Event>();
     });
   }
 
   Future<List<Event>> _dataRequester() async {
     _page++;
     return await EventDao.getEventReceived(username, page: _page).then((res) {
-      if (res.data != null) {
-        return res.data;
-      }
-      return List<Event>();
+      return res.data ?? List<Event>();
     });
   }
 

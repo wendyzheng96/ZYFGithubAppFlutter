@@ -46,19 +46,23 @@ class ZColors {
 
 ///文本样式
 class ZStyles {
+  static const String app_default_share_url =
+      "https://github.com/wendyzheng96/ZYFGithubAppFlutter";
 
-  static const String app_default_share_url = "https://github.com/wendyzheng96/ZYFGithubAppFlutter";
-
-  static const lagerTextSize = 20.0;
-  static const middleTextWhiteSize = 16.0;
+  static const lagerTextSize = 18.0;
+  static const middleTextSize = 16.0;
   static const normalTextSize = 15.0;
   static const smallTextSize = 14.0;
   static const smallerTextSize = 13.0;
   static const minTextSize = 12.0;
 
   static const minTextSecondary = TextStyle(
-    color: Color(ZColors.textSecondaryValue),
-    fontSize: minTextSize
+      color: Color(ZColors.textSecondaryValue), fontSize: minTextSize);
+
+  static const minTextHint = TextStyle(
+    color: Color(ZColors.textHintValue),
+    fontSize: minTextSize,
+    fontWeight: FontWeight.normal,
   );
 
   static const smallSubLightText = TextStyle(
@@ -66,26 +70,45 @@ class ZStyles {
     fontSize: smallTextSize,
   );
 
-  static const smallerTextWhite70 = TextStyle(
-      color: Colors.white70,
-      fontSize: smallerTextSize
-  );
+  static const smallerTextWhite70 =
+      TextStyle(color: Colors.white70, fontSize: smallerTextSize);
 
   static const smallMainText = TextStyle(
     color: Color(ZColors.primaryDarkValue),
     fontSize: smallTextSize,
   );
 
+  static const smallTextPrimary = TextStyle(
+    color: Color(ZColors.textPrimaryValue),
+    fontSize: smallTextSize,
+  );
+
+  static const normalTextPrimary = TextStyle(
+    color: Color(ZColors.textPrimaryValue),
+    fontSize: normalTextSize,
+  );
+
   static const middleTextWhite = TextStyle(
     color: Color(ZColors.textColorWhite),
-    fontSize: middleTextWhiteSize,
+    fontSize: middleTextSize,
+  );
+
+  static const largeTextWhiteBold = TextStyle(
+    color: Color(ZColors.miWhite),
+    fontSize: lagerTextSize,
+    fontWeight: FontWeight.bold,
   );
 }
 
-class ZIcons{
+class ZIcons {
   static const String FONT_FAMILY = 'wxcIconFont';
 
-  static const IconData REPOS_ITEM_NEXT = const IconData(0xe610, fontFamily: ZIcons.FONT_FAMILY);
-  static const IconData REPOS_ITEM_WATCH = const IconData(0xe681, fontFamily: ZIcons.FONT_FAMILY);
-  static const IconData REPOS_ITEM_WATCHED = const IconData(0xe629, fontFamily: ZIcons.FONT_FAMILY);
+  static const String DEFAULT_USER_ICON = 'static/images/ic_github.png';
+
+  static const IconData REPOS_ITEM_NEXT =
+      const IconData(0xe610, fontFamily: ZIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_WATCH =
+      const IconData(0xe681, fontFamily: ZIcons.FONT_FAMILY);
+  static const IconData REPOS_ITEM_WATCHED =
+      const IconData(0xe629, fontFamily: ZIcons.FONT_FAMILY);
 }

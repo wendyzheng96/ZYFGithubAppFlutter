@@ -9,12 +9,16 @@ class SliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   SliverHeaderDelegate({
     @required this.minHeight,
     @required this.maxHeight,
-    @required this.child,
+    this.child,
+    this.builder,
+    this.changeSize = false,
   });
 
   final double minHeight;
   final double maxHeight;
   final Widget child;
+  final Builder builder;
+  final bool changeSize;
 
   @override
   double get minExtent => minHeight;
@@ -25,6 +29,9 @@ class SliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    if (builder != null) {
+      return builder(context, shrinkOffset, overlapsContent);
+    }
     return child;
   }
 
@@ -35,3 +42,6 @@ class SliverHeaderDelegate extends SliverPersistentHeaderDelegate {
         child != oldDelegate.child;
   }
 }
+
+typedef Widget Builder(
+    BuildContext context, double shrinkOffset, bool overlapsContent);

@@ -26,6 +26,198 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
 
   double widgetHeight = 0;
 
+  @override
+  void didUpdateWidget(ReposHeaderItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    Future.delayed(Duration(seconds: 0), () {
+      ///tag所在Container
+      RenderBox renderBox2 =
+          layoutTopicContainerKey.currentContext?.findRenderObject();
+
+      ///最后面的一个tag
+      RenderBox renderBox3 =
+          layoutLastTopicKey.currentContext?.findRenderObject();
+
+      double overflow = ((renderBox3?.localToGlobal(Offset.zero)?.dy ?? 0) -
+              (renderBox2?.localToGlobal(Offset.zero)?.dy ?? 0)) -
+          (layoutLastTopicKey.currentContext?.size?.height ?? 0);
+
+      var newSize = layoutKey.currentContext.size.height +
+          ((overflow > 0) ? overflow : 10);
+      if (widgetHeight != newSize && newSize > 0) {
+        widgetHeight = newSize;
+        widget?.layoutListener
+            ?.call(Size(layoutKey.currentContext.size.width, widgetHeight));
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: layoutKey,
+      child: Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        color: Theme.of(context).primaryColorDark,
+        margin: EdgeInsets.all(10),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: Container(
+            ///背景头像
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: NetworkImage(
+                      'https://hbimg.huabanimg.com/96b3ad9260aa2b218393382cb22e0ecbcd1477ea29c20-o3nQgY_fw658'),
+                  fit: BoxFit.cover),
+            ),
+            child: Container(
+              ///透明黑色遮罩
+              decoration: BoxDecoration(
+                color: Color(0xA0000000),
+              ),
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      RawMaterialButton(
+                        constraints: BoxConstraints(minWidth: 0, minHeight: 0),
+                        padding: EdgeInsets.all(0.0),
+                        child: Text(
+                          widget.reposHeaderViewModel.ownerName,
+                          style: TextStyle(
+                            color: Color(ZColors.primaryLightValue),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        onPressed: () {},
+                      ),
+                      Text(
+                        ' / ',
+                        style: ZStyles.largeTextWhiteBold,
+                      ),
+                      Expanded(child: Text(
+                        widget.reposHeaderViewModel.repositoryName,
+                        style: ZStyles.largeTextWhiteBold,
+                      )),
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      ///仓库语言
+                      Text(widget.reposHeaderViewModel.repositoryType ?? "--",
+                          style: ZStyles.smallSubLightText),
+                      Container(width: 10, height: 1.0),
+
+                      ///仓库大小
+                      Text(widget.reposHeaderViewModel.repositorySize ?? "--",
+                          style: ZStyles.smallSubLightText),
+                      Container(width: 10, height: 1.0),
+
+                      ///仓库协议
+                      Expanded(child: Text(widget.reposHeaderViewModel.license ?? "--",
+                          style: ZStyles.smallSubLightText),)
+                    ],
+                  ),
+                  Container(
+                      child: new Text(
+                        widget.reposHeaderViewModel.repositoryDes ?? "---",
+                        style: ZStyles.smallSubLightText,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      margin: new EdgeInsets.only(top: 6.0, bottom: 2.0),
+                      alignment: Alignment.topLeft),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 5, 5, 2),
+                    alignment: Alignment.topRight,
+                    child: RawMaterialButton(
+                      onPressed: () {},
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      constraints:
+                      const BoxConstraints(minWidth: 0.0, minHeight: 0.0),
+                      child: Text(
+                        _getInfoText(context),
+                        style: TextStyle(
+                            fontSize: ZStyles.smallTextSize,
+                            color: Color(
+                                widget.reposHeaderViewModel.repositoryIsFork
+                                    ? ZColors.primaryLightValue
+                                    : ZColors.subLightTextColor)),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: Color(ZColors.subTextColor),
+                  ),
+                  _getBottomItemList(),
+                  _renderTopicGroup(context),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  ///仓库创建和提交状态信息
+  _getInfoText(BuildContext context) {
+    String createStr = widget.reposHeaderViewModel.repositoryIsFork
+        ? 'fork at ${widget.reposHeaderViewModel.repositoryParentName}\n'
+        : '创建于 ${widget.reposHeaderViewModel.created_at}\n';
+
+    String updateStr = '最后提交于 ${widget.reposHeaderViewModel.push_at}';
+    return createStr +
+        ((widget.reposHeaderViewModel.push_at != null) ? updateStr : '');
+  }
+
+  Widget _getBottomItemList() => Row(
+        children: <Widget>[
+          _getBottomItem(Icons.star, widget.reposHeaderViewModel.repositoryStar,
+              () {
+            NavigatorUtils.gotoCommonList(context,
+                widget.reposHeaderViewModel.repositoryName, "user", "repo_star",
+                userName: widget.reposHeaderViewModel.ownerName,
+                reposName: widget.reposHeaderViewModel.repositoryName);
+          }),
+          _verticalDivider(),
+          _getBottomItem(
+              Icons.share, widget.reposHeaderViewModel.repositoryFork, () {
+            NavigatorUtils.gotoCommonList(
+                context,
+                widget.reposHeaderViewModel.repositoryName,
+                "repository",
+                "repo_fork",
+                userName: widget.reposHeaderViewModel.ownerName,
+                reposName: widget.reposHeaderViewModel.repositoryName);
+          }),
+          _verticalDivider(),
+          _getBottomItem(
+              Icons.visibility, widget.reposHeaderViewModel.repositoryWatch,
+              () {
+            NavigatorUtils.gotoCommonList(
+                context,
+                widget.reposHeaderViewModel.repositoryName,
+                "user",
+                "repo_watcher",
+                userName: widget.reposHeaderViewModel.ownerName,
+                reposName: widget.reposHeaderViewModel.repositoryName);
+          }),
+          _verticalDivider(),
+          _getBottomItem(Icons.error_outline,
+              widget.reposHeaderViewModel.repositoryIssue, () {}),
+        ],
+      );
+
+  ///垂直分割线
+  _verticalDivider() => Container(
+      width: 0.5, height: 20.0, color: Color(ZColors.subLightTextColor));
+
   ///底部仓库状态信息，比如star数量等
   _getBottomItem(IconData icon, String text, onPressed) {
     return Expanded(
@@ -39,8 +231,8 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
           icon,
           ZStyles.smallSubLightText,
           iconColor: Color(ZColors.subLightTextColor),
-          iconSize: 15.0,
-          padding: 3.0,
+          iconSize: 14.0,
+          padding: 2.0,
           mainAxisAlignment: MainAxisAlignment.center,
         ),
         onPressed: onPressed,
@@ -88,81 +280,11 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
     return Container(
       key: layoutTopicContainerKey,
       alignment: Alignment.topLeft,
-      margin: EdgeInsets.only(top: 5.0),
+      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
       child: Wrap(
         spacing: 10.0,
         runSpacing: 5.0,
         children: list,
-      ),
-    );
-  }
-
-  ///仓库创建和提交状态信息
-  _getInfoText(BuildContext context) {
-    String createStr = widget.reposHeaderViewModel.repositoryIsFork
-        ? 'fork at ${widget.reposHeaderViewModel.repositoryParentName}\n'
-        : 'create at ${widget.reposHeaderViewModel.created_at}\n';
-
-    String updateStr = 'last commit at ${widget.reposHeaderViewModel.push_at}';
-    return createStr +
-        ((widget.reposHeaderViewModel.push_at != null) ? updateStr : '');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 6,
-              spreadRadius: 4,
-              color: Color.fromARGB(20, 0, 0, 0),
-            )
-          ]),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              _getBottomItem(
-                  Icons.star, widget.reposHeaderViewModel.repositoryStar, () {
-                NavigatorUtils.gotoCommonList(
-                    context,
-                    widget.reposHeaderViewModel.repositoryName,
-                    "user",
-                    "repo_star",
-                    userName: widget.reposHeaderViewModel.ownerName,
-                    reposName: widget.reposHeaderViewModel.repositoryName);
-              }),
-              _getBottomItem(
-                  Icons.share, widget.reposHeaderViewModel.repositoryFork, () {
-                NavigatorUtils.gotoCommonList(
-                    context,
-                    widget.reposHeaderViewModel.repositoryName,
-                    "repository",
-                    "repo_fork",
-                    userName: widget.reposHeaderViewModel.ownerName,
-                    reposName: widget.reposHeaderViewModel.repositoryName);
-              }),
-              _getBottomItem(Icons.remove_red_eye,
-                  widget.reposHeaderViewModel.repositoryWatch, () {
-                NavigatorUtils.gotoCommonList(
-                    context,
-                    widget.reposHeaderViewModel.repositoryName,
-                    "user",
-                    "repo_watcher",
-                    userName: widget.reposHeaderViewModel.ownerName,
-                    reposName: widget.reposHeaderViewModel.repositoryName);
-              }),
-              _getBottomItem(Icons.error_outline,
-                  widget.reposHeaderViewModel.repositoryIssue, () {}),
-            ],
-          ),
-          _renderTopicGroup(context),
-        ],
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:json_annotation/json_annotation.dart';
 

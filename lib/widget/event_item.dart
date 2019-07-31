@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/style/style.dart';
-import 'package:github_app_flutter/common/utils/event_utils.dart';
-import 'package:github_app_flutter/common/utils/time_utils.dart';
-import 'package:github_app_flutter/model/Event.dart';
+import 'package:github_app_flutter/model/EventViewModel.dart';
 import 'package:github_app_flutter/widget/left_line.dart';
 
 /// 事件Item
@@ -82,26 +80,5 @@ class EventItem extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class EventViewModel {
-  String actionUser;
-  String actionUserPic;
-  String actionDes;
-  String actionTime;
-  String actionTarget;
-
-  EventViewModel(this.actionUser, this.actionUserPic, this.actionDes,
-      this.actionTime, this.actionTarget);
-
-  EventViewModel.fromEventMap(Event event) {
-    actionTime = formatDate(
-        event.createdAt.toLocal(), [yyyy, '/', mm, '/', dd, ' ', HH, ":", nn]);
-    actionUser = event.actor.login;
-    actionUserPic = event.actor.avatar_url;
-    var other = EventUtils.getActionAndDes(event);
-    actionDes = other["des"];
-    actionTarget = other["actionStr"];
   }
 }

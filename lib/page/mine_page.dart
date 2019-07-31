@@ -5,6 +5,7 @@ import 'package:github_app_flutter/common/dao/event_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/model/Event.dart';
+import 'package:github_app_flutter/model/EventViewModel.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/widget/event_item.dart';
 import 'package:github_app_flutter/widget/sliver_header_delegate.dart';
@@ -21,11 +22,17 @@ class MinePage extends StatefulWidget {
 
 class _MinePageState extends State<MinePage>
     with AutomaticKeepAliveClientMixin {
-  List<Event> eventList = List();
+  final GlobalKey<RefreshIndicatorState> refreshKey =
+      GlobalKey<RefreshIndicatorState>();
+
+  ///滑动监听
+  ScrollController _controller = ScrollController();
+
+  bool isPerformingRequest = false;
 
   int _page = 1;
 
-  bool isLoading = false; //是否正在刷新数据
+  List<Event> eventList = List();
 
   @override
   bool get wantKeepAlive => true;
@@ -42,6 +49,16 @@ class _MinePageState extends State<MinePage>
     return _getStore()?.state?.userInfo?.login;
   }
 
+  @override
+  void initState() {
+    super.initState();
+    showRefreshLoading();
+    _controller.addListener(() {
+      if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+        _loadMore();
+      }
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -64,7 +81,9 @@ class _MinePageState extends State<MinePage>
               length: 2,
               child: Scaffold(
                   body: RefreshIndicator(
+                key: refreshKey,
                 child: CustomScrollView(
+                  controller: _controller,
                   slivers: <Widget>[
                     ///头部信息
                     SliverPersistentHeader(
@@ -96,11 +115,15 @@ class _MinePageState extends State<MinePage>
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
+                          if (index == eventList.length) {
+                            return opacityLoadingProgress(isPerformingRequest,
+                                Theme.of(context).primaryColor);
+                          }
                           EventViewModel model =
                               EventViewModel.fromEventMap(eventList[index]);
                           return EventItem(model, index, eventList.length);
                         },
-                        childCount: eventList.length,
+                        childCount: eventList.length + 1,
                       ),
                     ),
                   ],
@@ -222,19 +245,52 @@ class _MinePageState extends State<MinePage>
         ],
       );
 
+  ///加载更多布局
+  Widget opacityLoadingProgress(isPerformingRequest, loadingColor) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Opacity(
+          opacity: isPerformingRequest ? 1.0 : 0.0,
+          child: CircularProgressIndicator(
+            strokeWidth: 2.0,
+            valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
+          ),
+        ),
+      ),
+    );
+  }
+
+  ///显示刷新
+  showRefreshLoading() {
+    Future.delayed(const Duration(seconds: 0), () {
+      refreshKey.currentState.show().then((e) {});
+      return true;
+    });
+  }
+
+  ///刷新 初始化数据
   Future<void> _onRefresh() async {
     _page = 1;
-    await getData();
+    await _getData();
+  }
+
+  /// 加载更多数据
+  _loadMore() async {
+    this.setState(() => isPerformingRequest = true);
+    _page++;
+    await _getData();
+    this.setState(() => isPerformingRequest = false);
   }
 
   /// 获取数据
-  getData() async {
+  _getData() async {
     await EventDao.getEventDao(_getUsername(), page: _page, needDb: _page <= 1)
         .then((res) {
       setState(() {
-        if(_page == 1){
-          eventList = res.data;
-        } else{
+        if (_page == 1) {
+          eventList = res.data??List();
+        } else {
           eventList.addAll(res.data);
         }
       });

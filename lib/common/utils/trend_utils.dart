@@ -99,7 +99,7 @@ class TrendingUtils {
     if(splitWitSemicolon.length > 1) {
       repo.contributorsUrl = splitWitSemicolon[1];
     }
-    var contributors = new List<String>();
+    var contributors = List<String>();
     for (var i = 0; i < splitWitSemicolon.length; i++) {
       String url = splitWitSemicolon[i];
       if (url.indexOf('http') != -1) {

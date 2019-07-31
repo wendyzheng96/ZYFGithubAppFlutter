@@ -49,6 +49,44 @@ class Address {
     return "https://github.com/trending?since=$since";
   }
 
+  ///仓库详情 get
+  static getReposDetail(reposOwner, reposName) {
+    return "${host}repos/$reposOwner/$reposName";
+  }
+
+  ///仓库活动 get
+  static getReposEvent(reposOwner, reposName) {
+    return "${host}networks/$reposOwner/$reposName/events";
+  }
+
+  ///仓库提交 get
+  static getReposCommits(reposOwner, reposName) {
+    return "${host}repos/$reposOwner/$reposName/commits";
+  }
+
+  ///仓库Fork get
+  static getReposForks(reposOwner, reposName) {
+    return "${host}repos/$reposOwner/$reposName/forks";
+  }
+
+  ///仓库Star get
+  static getReposStar(reposOwner, reposName) {
+    return "${host}repos/$reposOwner/$reposName/stargazers";
+  }
+
+  ///仓库Watch get
+  static getReposWatcher(reposOwner, reposName) {
+    return "${host}repos/$reposOwner/$reposName/subscribers";
+  }
+
+  ///仓库Issue get
+  static getReposIssue(reposOwner, reposName, state, sort, direction) {
+    state ??= 'all';
+    sort ??= 'created';
+    direction ??= 'desc';
+    return "${host}repos/$reposOwner/$reposName/issues?state=$state&sort=$sort&direction=$direction";
+  }
+
   ///关注仓库 put
   static resolveStarRepos(reposOwner, repos) {
     return "${host}user/starred/$reposOwner/$repos";

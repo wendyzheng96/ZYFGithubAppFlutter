@@ -52,33 +52,33 @@ class _ReposReadmePageState extends State<ReposReadmePage>
     return widget;
   }
 
-  Widget emptyWidget() => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            child: SpinKitCircle(
-              color: Theme.of(context).primaryColor,
-              size: 30,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 10),
-            child: Text(
-              '努力加载中...',
-              style: TextStyle(
-                color: Color(ZColors.textSecondaryValue),
-                fontSize: 14,
-              ),
-            ),
-          )
-        ],
-      );
-
   @override
   void dispose() {
     isShow = false;
     super.dispose();
   }
+
+  Widget emptyWidget() => Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      Container(
+        child: SpinKitCircle(
+          color: Theme.of(context).primaryColor,
+          size: 30,
+        ),
+      ),
+      Container(
+        padding: EdgeInsets.only(left: 10),
+        child: Text(
+          '努力加载中...',
+          style: TextStyle(
+            color: Color(ZColors.textSecondaryValue),
+            fontSize: 14,
+          ),
+        ),
+      )
+    ],
+  );
 
   refreshReadme() {
     ReposDao.getReposReadme(widget.username, widget.reposName,
