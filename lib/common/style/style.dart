@@ -10,6 +10,10 @@ class ZColors {
   static const String primaryLightValueString = "#9bcdf0";
   static const String primaryDarkValueString = "#437fb1";
 
+  static const String whiteString = "#ffffff";
+  static const String miWhiteString = "#ececec";
+  static const String webDraculaBackgroundColorString = "#282a36";
+
   static const int primaryValue = 0xff5098d4;
   static const int primaryLightValue = 0xFF9bcdf0;
   static const int primaryDarkValue = 0xFF437fb1;
@@ -46,8 +50,6 @@ class ZColors {
 
 ///文本样式
 class ZStyles {
-  static const String app_default_share_url =
-      "https://github.com/wendyzheng96/ZYFGithubAppFlutter";
 
   static const lagerTextSize = 18.0;
   static const middleTextSize = 16.0;
@@ -65,16 +67,19 @@ class ZStyles {
     fontWeight: FontWeight.normal,
   );
 
-  static const smallSubLightText = TextStyle(
-    color: Color(ZColors.subLightTextColor),
-    fontSize: smallTextSize,
-  );
-
   static const smallerTextWhite70 =
       TextStyle(color: Colors.white70, fontSize: smallerTextSize);
 
+  static const smallTextSecondary = TextStyle(
+      color: Color(ZColors.textSecondaryValue), fontSize: smallTextSize);
+
   static const smallMainText = TextStyle(
     color: Color(ZColors.primaryDarkValue),
+    fontSize: smallTextSize,
+  );
+
+  static const smallSubLightText = TextStyle(
+    color: Color(ZColors.subLightTextColor),
     fontSize: smallTextSize,
   );
 
@@ -111,4 +116,9 @@ class ZIcons {
       const IconData(0xe681, fontFamily: ZIcons.FONT_FAMILY);
   static const IconData REPOS_ITEM_WATCHED =
       const IconData(0xe629, fontFamily: ZIcons.FONT_FAMILY);
+}
+
+class ZConstant{
+  static const String app_default_share_url =
+      "https://github.com/wendyzheng96/ZYFGithubAppFlutter";
 }

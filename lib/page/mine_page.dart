@@ -66,13 +66,13 @@ class _MinePageState extends State<MinePage>
     _onRefresh();
   }
 
+  final double headerSize = 180;
+  final double bottomSize = 50;
+  final double chartSize = 200;
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    double headerSize = 190;
-    double bottomSize = 56;
-    double chartSize = 200;
-
     return Material(
       child: StoreBuilder<ZYFState>(
         builder: (context, store) {
@@ -209,10 +209,9 @@ class _MinePageState extends State<MinePage>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _getFunText('仓库', user.public_repos),
+            _getFunText('项目', user.public_repos),
+            _getFunText('Stars', user.starred),
             _getFunText('关注', user.following),
-            _getFunText('星标', user.starred),
-            _getFunText('荣耀', 1),
             _getFunText('粉丝', user.followers),
           ],
         ),
@@ -229,20 +228,50 @@ class _MinePageState extends State<MinePage>
         margin: EdgeInsets.only(bottom: 6),
       );
 
-  Widget _getFunText(String name, num) => Column(
-        children: <Widget>[
-          Text(
-            name,
-            style: TextStyle(color: Colors.white, fontSize: 14),
+  Widget _getFunText(String name, num) => Expanded(
+        child: RawMaterialButton(
+          constraints: BoxConstraints(minWidth: 0, minHeight: bottomSize),
+          onPressed: () {},
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                name,
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 4),
+                padding: EdgeInsets.symmetric(horizontal: 3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                child: Text(
+                  num.toString(),
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: 12,
+                  ),
+                ),
+              )
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 6, bottom: 10),
-            child: Text(
-              num.toString(),
-              style: TextStyle(color: Colors.white, fontSize: 14),
-            ),
-          )
-        ],
+        ),
+//        child: Column(
+//          children: <Widget>[
+//            Text(
+//              name,
+//              style: TextStyle(color: Colors.white, fontSize: 14),
+//            ),
+//            Padding(
+//              padding: EdgeInsets.only(top: 6, bottom: 10),
+//              child: Text(
+//                num.toString(),
+//                style: TextStyle(color: Colors.white, fontSize: 14),
+//              ),
+//            )
+//          ],
+//        ),
       );
 
   ///加载更多布局
@@ -289,7 +318,7 @@ class _MinePageState extends State<MinePage>
         .then((res) {
       setState(() {
         if (_page == 1) {
-          eventList = res.data??List();
+          eventList = res.data ?? List();
         } else {
           eventList.addAll(res.data);
         }

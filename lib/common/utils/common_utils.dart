@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_app_flutter/common/net/address.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// 通用工具方法
 /// Create by zyf
@@ -25,6 +27,19 @@ class CommonUtils {
       timeInSecForIos: 1,
       backgroundColor: Color(0x99000000),
     );
+  }
+
+  static launchOutURL(String url, BuildContext context) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      Fluttertoast.showToast(msg: "url异常 : $url");
+    }
+  }
+
+  static copy(String data, BuildContext context) {
+    Clipboard.setData(new ClipboardData(text: data));
+    Fluttertoast.showToast(msg: '已经复制到粘贴板');
   }
 
   ///显示加载中进度框
@@ -70,6 +85,18 @@ class CommonUtils {
             ),
           );
         });
+  }
+
+  static const IMAGE_END = [".png", ".jpg", ".jpeg", ".gif", ".svg"];
+
+  static isImageEnd(path) {
+    bool image = false;
+    for (String item in IMAGE_END) {
+      if (path.indexOf(item) + item.length == path.length) {
+        image = true;
+      }
+    }
+    return image;
   }
 
   static Color getLanguageColor(String type) {

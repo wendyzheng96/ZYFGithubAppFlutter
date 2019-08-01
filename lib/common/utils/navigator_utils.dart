@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:github_app_flutter/page/code_detail_web_page.dart';
 import 'package:github_app_flutter/page/common_list_page.dart';
+import 'package:github_app_flutter/page/photo_view_page.dart';
 
 /// 导航栏
 /// Create by zyf
@@ -60,6 +62,33 @@ class NavigatorUtils {
           dataType,
           userName: userName,
           reposName: reposName,
+        ));
+  }
+
+  ///图片预览
+  static gotoPhotoPage(BuildContext context, String url) {
+    navigatorRouter(context, PhotoViewPage(url));
+  }
+
+  ///文件代码详情Web
+  static gotoCodeDetailPageWeb(BuildContext context,
+      {String title,
+      String username,
+      String reposName,
+      String path,
+      String data,
+      String branch,
+      String htmlUrl}) {
+    navigatorRouter(
+        context,
+        CodeDetailWebPage(
+          title: title,
+          username: username,
+          reposName: reposName,
+          path: path,
+          data: data,
+          branch: branch,
+          htmlUrl: htmlUrl,
         ));
   }
 }

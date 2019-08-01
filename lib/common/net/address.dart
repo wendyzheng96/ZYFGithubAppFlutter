@@ -1,4 +1,3 @@
-
 import 'package:github_app_flutter/common/config/config.dart';
 
 /// 地址数据
@@ -64,6 +63,12 @@ class Address {
     return "${host}repos/$reposOwner/$reposName/commits";
   }
 
+  ///仓库路径下的内容 get
+  static reposDataDir(reposOwner, repos, path, [branch = 'master']) {
+    return "${host}repos/$reposOwner/$repos/contents/$path" +
+        ((branch == null) ? "" : ("?ref=" + branch));
+  }
+
   ///仓库Fork get
   static getReposForks(reposOwner, reposName) {
     return "${host}repos/$reposOwner/$reposName/forks";
@@ -109,7 +114,12 @@ class Address {
 
   ///README 文件地址 get
   static readmeFile(reposNameFullName, curBranch) {
-    return host + "repos/" + reposNameFullName + "/" + "readme" + ((curBranch == null) ? "" : ("?ref=" + curBranch));
+    return host +
+        "repos/" +
+        reposNameFullName +
+        "/" +
+        "readme" +
+        ((curBranch == null) ? "" : ("?ref=" + curBranch));
   }
 
   ///处理分页参数

@@ -13,6 +13,7 @@ import 'package:github_app_flutter/common/net/address.dart';
 import 'package:github_app_flutter/common/net/api.dart';
 import 'package:github_app_flutter/common/utils/trend_utils.dart';
 import 'package:github_app_flutter/model/Event.dart';
+import 'package:github_app_flutter/model/FileModel.dart';
 import 'package:github_app_flutter/model/RepoCommit.dart';
 import 'package:github_app_flutter/model/Repository.dart';
 import 'package:github_app_flutter/model/TrendingRepoModel.dart';
@@ -204,6 +205,45 @@ class ReposDao {
       return dataResult;
     }
     return await next();
+  }
+
+  /// 获取仓库的文件列表
+  static Future<DataResult> getReposFileDir(userName, reposName,
+      {path = '', branch, text = false, isHtml = false}) async {
+    String url = Address.reposDataDir(userName, reposName, path, branch);
+    var res = await httpManager.netFetch(
+      url,
+      null,
+      isHtml
+          ? {"Accept": 'application/vnd.github.html'}
+          : {"Accept": 'application/vnd.github.VERSION.raw'},
+      new Options(contentType: text ? ContentType.text : ContentType.json),
+    );
+    if (res != null && res.result) {
+      if (text) {
+        return DataResult(res.data, true);
+      }
+      List<FileModel> list = List();
+      var data = res.data;
+      if (data == null || data.length == 0) {
+        return DataResult(null, false);
+      }
+      List<FileModel> dirs = [];
+      List<FileModel> files = [];
+      for (int i = 0; i < data.length; i++) {
+        FileModel file = FileModel.fromJson(data[i]);
+        if (file.type == 'file') {
+          files.add(file);
+        } else {
+          dirs.add(file);
+        }
+      }
+      list.addAll(dirs);
+      list.addAll(files);
+      return DataResult(list, true);
+    } else {
+      return DataResult(null, false);
+    }
   }
 
   ///star仓库

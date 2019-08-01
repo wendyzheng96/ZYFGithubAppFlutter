@@ -64,7 +64,7 @@ class _SelectItemWidgetState extends State<SelectItemWidget> {
         list.add(_renderItem(widget.itemNames[i], i));
       } else {
         list.add(_renderItem(widget.itemNames[i], i));
-        list.add(new Container(
+        list.add(Container(
             width: 1.0, height: 20.0, color: Color(ZColors.miWhite)));
       }
     }
@@ -72,9 +72,7 @@ class _SelectItemWidgetState extends State<SelectItemWidget> {
   }
 
   _renderItem(String name, int index) {
-    var color = Color(index == selectIndex
-        ? ZColors.textColorWhite
-        : ZColors.miWhite);
+    var color = index == selectIndex ? Colors.white : Colors.white70;
     return Expanded(
       child: RawMaterialButton(
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,

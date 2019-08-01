@@ -16,7 +16,6 @@ import 'package:url_launcher/url_launcher.dart';
 /// Create by zyf
 /// Date: 2019/7/19
 class HomeDrawer extends StatelessWidget {
-
   final Color iconColor = Color(ZColors.textMenuValue);
   final Color tvColor = Color(ZColors.textSecondaryValue);
 
@@ -175,8 +174,9 @@ class HomeDrawer extends StatelessWidget {
                     style: TextStyle(color: Colors.blue),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        launch(
-                            "https://github.com/wendyzheng96/ZYFGithubAppFlutter");
+                        CommonUtils.launchOutURL(
+                            "https://github.com/wendyzheng96/ZYFGithubAppFlutter",
+                            context);
                       }),
               ],
             ),

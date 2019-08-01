@@ -115,11 +115,7 @@ class _TrendPageState extends State<TrendPage>
             since: selectTime.value, languageType: selectLanguage.value)
         .then((res) {
       setState(() {
-        if (res.data != null) {
-          trendList = res.data;
-        } else {
-          trendList = List();
-        }
+        trendList = res.data ?? List();
       });
     });
   }

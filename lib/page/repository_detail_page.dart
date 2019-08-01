@@ -3,6 +3,8 @@ import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/model/Repository.dart';
 import 'package:github_app_flutter/page/repos_detail_info_page.dart';
+import 'package:github_app_flutter/page/repos_file_page.dart';
+import 'package:github_app_flutter/page/repos_issue_page.dart';
 import 'package:github_app_flutter/page/repos_readme_page.dart';
 import 'package:github_app_flutter/widget/icon_text.dart';
 import 'package:github_app_flutter/widget/tabbar_widget.dart';
@@ -96,8 +98,8 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
               tabViews: <Widget>[
                 ReposDetailInfoPage(widget.username, widget.reposName),
                 ReposReadmePage(widget.username, widget.reposName),
-                ReposDetailInfoPage(widget.username, widget.reposName),
-                ReposDetailInfoPage(widget.username, widget.reposName)
+                ReposIssuePage(widget.username, widget.reposName),
+                ReposFilePage(widget.username, widget.reposName)
               ],
               title: Text(widget.reposName),
               onPageChanged: (index) {

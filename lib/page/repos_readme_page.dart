@@ -61,11 +61,9 @@ class _ReposReadmePageState extends State<ReposReadmePage>
   Widget emptyWidget() => Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
-      Container(
-        child: SpinKitCircle(
-          color: Theme.of(context).primaryColor,
-          size: 30,
-        ),
+      SpinKitCircle(
+        color: Theme.of(context).primaryColor,
+        size: 30,
       ),
       Container(
         padding: EdgeInsets.only(left: 10),
