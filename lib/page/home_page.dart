@@ -17,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var _pages = [DynamicPage(), TrendPage(), MinePage()];
+  var _pages = [TrendPage(), DynamicPage(), MinePage()];
   int _tabIndex = 0;
 
   var _pageController = PageController();
@@ -45,9 +45,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         title: Text('GithubFlutter'),
         centerTitle: true,
-        actions: <Widget>[
-          _getActionButton()
-        ],
+        actions: <Widget>[_getActionButton()],
       ),
       body: PageView.builder(
           physics: NeverScrollableScrollPhysics(), //禁止页面左右滑动切换
@@ -57,11 +55,18 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: (context, index) => _pages[index]),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.camera), title: Text('动态')),
           BottomNavigationBarItem(
-              icon: Icon(Icons.trending_up), title: Text('趋势')),
+            icon: Icon(Icons.trending_up),
+            title: Text('趋势'),
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.perm_identity), title: Text('我的')),
+            icon: Icon(Icons.camera),
+            title: Text('动态'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.perm_identity),
+            title: Text('我的'),
+          ),
         ],
         selectedFontSize: 12,
         onTap: (index) {
@@ -75,16 +80,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _getActionButton() {
-    switch(_tabIndex){
+    switch (_tabIndex) {
       case 0:
       case 1:
         return IconButton(
-        icon: const Icon(Icons.search),
-        tooltip: '搜索',
-        onPressed: () {
-          NavigatorUtils.navigatorRouter(context, SearchPage());
-        },
-      );
+          icon: const Icon(Icons.search),
+          tooltip: '搜索',
+          onPressed: () {
+            NavigatorUtils.navigatorRouter(context, SearchPage());
+          },
+        );
       case 2:
         return IconButton(
           icon: const Icon(Icons.notifications),

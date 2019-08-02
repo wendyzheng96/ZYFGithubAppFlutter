@@ -56,14 +56,15 @@ class NavigatorUtils {
       BuildContext context, String title, String showType, String dataType,
       {String userName, String reposName}) {
     navigatorRouter(
-        context,
-        new CommonListPage(
-          title,
-          showType,
-          dataType,
-          userName: userName,
-          reposName: reposName,
-        ));
+      context,
+      CommonListPage(
+        title,
+        showType,
+        dataType,
+        userName: userName,
+        reposName: reposName,
+      ),
+    );
   }
 
   ///图片预览
@@ -81,16 +82,17 @@ class NavigatorUtils {
       String branch,
       String htmlUrl}) {
     navigatorRouter(
-        context,
-        CodeDetailWebPage(
-          title: title,
-          username: username,
-          reposName: reposName,
-          path: path,
-          data: data,
-          branch: branch,
-          htmlUrl: htmlUrl,
-        ));
+      context,
+      CodeDetailWebPage(
+        title: title,
+        username: username,
+        reposName: reposName,
+        path: path,
+        data: data,
+        branch: branch,
+        htmlUrl: htmlUrl,
+      ),
+    );
   }
 
   ///issue详情
@@ -98,12 +100,13 @@ class NavigatorUtils {
       BuildContext context, String userName, String reposName, String num,
       {bool needRightLocalIcon = false}) {
     return navigatorRouter(
-        context,
-        IssueDetailPage(
-          userName,
-          reposName,
-          num,
-          needHomeIcon: needRightLocalIcon,
-        ));
+      context,
+      IssueDetailPage(
+        userName,
+        reposName,
+        num,
+        needHomeIcon: needRightLocalIcon,
+      ),
+    );
   }
 }

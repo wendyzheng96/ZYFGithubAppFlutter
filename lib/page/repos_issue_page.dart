@@ -128,7 +128,9 @@ class _ReposIssuePageState extends State<ReposIssuePage>
                       ),
                       maxLines: 1,
                       onChanged: (String value) {
-                        _searchContent = value;
+                        setState(() {
+                          _searchContent = value;
+                        });
                       },
                       style: TextStyle(
                         color: Color(ZColors.textPrimaryValue),
@@ -150,7 +152,7 @@ class _ReposIssuePageState extends State<ReposIssuePage>
                       _searchContent = "";
                       showRefreshLoading();
                     },
-                    child: Icon(
+                    child: _searchContent.isEmpty?Container():Icon(
                       Icons.cancel,
                       size: 16,
                       color: Colors.grey,
@@ -264,9 +266,9 @@ class _ReposIssuePageState extends State<ReposIssuePage>
               widget.username, widget.reposName, selectType.value,
               page: _page, needDb: _page <= 1)
           .then((res) {
-        if (!res.result) {
-          _page--;
-        }
+            if(!res.result) {
+              _page--;
+            }
         setState(() {
           _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
         });

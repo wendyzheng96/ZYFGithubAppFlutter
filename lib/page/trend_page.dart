@@ -52,23 +52,26 @@ class _TrendPageState extends State<TrendPage>
           Container(
             margin: EdgeInsets.only(top: 44),
             child: RefreshIndicator(
-                key: refreshIndicatorKey,
-                child: ListView.builder(
-                    itemCount: trendList.length,
-                    itemBuilder: (context, index) {
-                      ReposViewModel repoModel =
-                          ReposViewModel.fromTrendMap(trendList[index]);
-                      return ReposItem(
-                        repoModel,
-                        onPressed: () {
-                          NavigatorUtils.navigatorRouter(
-                              context,
-                              RepositoryDetailPage(repoModel.ownerName,
-                                  repoModel.repositoryName));
-                        },
+              key: refreshIndicatorKey,
+              child: ListView.builder(
+                itemCount: trendList.length,
+                itemBuilder: (context, index) {
+                  ReposViewModel repoModel =
+                      ReposViewModel.fromTrendMap(trendList[index]);
+                  return ReposItem(
+                    repoModel,
+                    onPressed: () {
+                      NavigatorUtils.navigatorRouter(
+                        context,
+                        RepositoryDetailPage(
+                            repoModel.ownerName, repoModel.repositoryName),
                       );
-                    }),
-                onRefresh: _getTrendRepos),
+                    },
+                  );
+                },
+              ),
+              onRefresh: _getTrendRepos,
+            ),
           ),
           _renderHeadItems(),
         ],
