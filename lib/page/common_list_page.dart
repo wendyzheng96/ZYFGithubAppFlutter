@@ -37,7 +37,6 @@ class _CommonListPageState extends State<CommonListPage>
             itemBuilder: _itemBuilder(),
             dataRequester: _dataRequester,
             initRequester: _initRequester,
-            dividerColor: Colors.transparent,
           ),
         ));
   }

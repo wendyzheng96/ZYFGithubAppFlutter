@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/event_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
@@ -23,6 +24,9 @@ class _DynamicPageState extends State<DynamicPage>
 
   int _page = 1;
 
+  ///是否加载完成
+  bool _isComplete = false;
+
   String username = "";
 
   @override
@@ -37,32 +41,45 @@ class _DynamicPageState extends State<DynamicPage>
           User user = store.state.userInfo;
           username = user.login;
           return Scaffold(
-              body: Container(
-            color: Colors.white,
-            child: DynamicListView.build(
-              itemBuilder: _itemBuilder(),
-              dataRequester: _dataRequester,
-              initRequester: _initRequester,
-              dividerColor: Colors.transparent,
+            body: Container(
+              color: Colors.white,
+              child: DynamicListView.build(
+                itemBuilder: _itemBuilder(),
+                dataRequester: _dataRequester,
+                initRequester: _initRequester,
+                isLoadComplete: _isComplete,
+              ),
             ),
-          ));
+          );
         },
       ),
     );
   }
 
+  ///刷新数据
   Future<List<Event>> _initRequester() async {
     _page = 1;
-    return await EventDao.getEventReceived(username, page: _page, needDb: true)
-        .then((res) {
-      return res.data ?? List<Event>();
-    });
+    return await _getData();
   }
 
+  ///加载更多
   Future<List<Event>> _dataRequester() async {
     _page++;
-    return await EventDao.getEventReceived(username, page: _page).then((res) {
-      return res.data ?? List<Event>();
+    return await _getData();
+  }
+
+  ///获取数据
+  _getData() async {
+    return await EventDao.getEventReceived(username,
+            page: _page, needDb: _page <= 1)
+        .then((res) {
+      if (!res.result) {
+        _page--;
+      }
+      setState(() {
+        _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
+      });
+      return res.data;
     });
   }
 
@@ -91,37 +108,40 @@ class _DynamicPageState extends State<DynamicPage>
                       backgroundColor: Theme.of(context).primaryColor,
                       backgroundImage: NetworkImage(model.actionUserPic),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        model.actionUser,
-                        style: TextStyle(
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: Text(
+                          model.actionUser,
+                          style: TextStyle(
                             color: Color(ZColors.textPrimaryValue),
                             fontSize: 15,
-                            fontWeight: FontWeight.w500),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ),
-                    Expanded(
-                        child: Container(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        model.actionTime,
-                        style: TextStyle(
-                            color: Color(ZColors.textHintValue), fontSize: 12),
-                        overflow: TextOverflow.ellipsis,
+                    Text(
+                      model.actionTime,
+                      style: TextStyle(
+                        color: Color(ZColors.textHintValue),
+                        fontSize: 12,
                       ),
-                    ))
+                    )
                   ],
                 ),
                 Container(
                   padding: EdgeInsets.only(
-                      top: 8, bottom: model.actionDes.isEmpty ? 0 : 8),
+                    top: 8,
+                    bottom: model.actionDes.isEmpty ? 0 : 8,
+                  ),
                   child: Text(
                     model.actionTarget,
                     style: TextStyle(
-                        color: Color(ZColors.textPrimaryValue),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
+                      color: Color(ZColors.textPrimaryValue),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 model.actionDes.isEmpty

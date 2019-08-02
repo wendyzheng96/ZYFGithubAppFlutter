@@ -1,7 +1,7 @@
 import 'package:github_app_flutter/model/User.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-///  
+/// Issue
 /// Create by zyf
 /// Date: 2019/7/24
 part 'Issue.g.dart';
@@ -33,8 +33,6 @@ class Issue {
   String htmlUrl;
   @JsonKey(name: "closed_by")
   User closeBy;
-
-
 
   Issue(
       this.id,

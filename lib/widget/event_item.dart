@@ -38,35 +38,42 @@ class EventItem extends StatelessWidget {
               backgroundColor: Color(ZColors.primaryValue),
               backgroundImage: NetworkImage(eventViewModel.actionUserPic),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                eventViewModel.actionUser,
-                style: TextStyle(
-                    color: Color(ZColors.textPrimaryValue), fontSize: 14),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  eventViewModel.actionUser,
+                  style: TextStyle(
+                    color: Color(ZColors.textPrimaryValue),
+                    fontSize: 14,
+                  ),
+                ),
               ),
             ),
-            Expanded(
-                child: Container(
+            Container(
               padding: EdgeInsets.only(right: 16),
               alignment: Alignment.bottomRight,
               child: Text(
                 eventViewModel.actionTime,
                 style: TextStyle(
-                    color: Color(ZColors.textHintValue), fontSize: 12),
+                  color: Color(ZColors.textHintValue),
+                  fontSize: 12,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
-            )),
+            ),
           ],
         ),
         Container(
           decoration: BoxDecoration(
             border: Border(
-                left: BorderSide(
-                    width: 1,
-                    color: index == count - 1
-                        ? Colors.transparent
-                        : Color(ZColors.lineColor))),
+              left: BorderSide(
+                width: 1,
+                color: index == count - 1
+                    ? Colors.transparent
+                    : Color(ZColors.lineColor),
+              ),
+            ),
           ),
           margin: EdgeInsets.only(left: 23),
           padding: EdgeInsets.fromLTRB(22, 6, 16, 30),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/event_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
@@ -29,6 +30,9 @@ class _MinePageState extends State<MinePage>
   ScrollController _controller = ScrollController();
 
   bool isPerformingRequest = false;
+
+  ///是否加载完成
+  bool _isComplete = false;
 
   int _page = 1;
 
@@ -78,9 +82,9 @@ class _MinePageState extends State<MinePage>
         builder: (context, store) {
           User userInfo = store.state.userInfo;
           return DefaultTabController(
-              length: 2,
-              child: Scaffold(
-                  body: RefreshIndicator(
+            length: 2,
+            child: Scaffold(
+              body: RefreshIndicator(
                 key: refreshKey,
                 child: CustomScrollView(
                   controller: _controller,
@@ -129,7 +133,9 @@ class _MinePageState extends State<MinePage>
                   ],
                 ),
                 onRefresh: _onRefresh,
-              )));
+              ),
+            ),
+          );
         },
       ),
     );
@@ -257,37 +263,31 @@ class _MinePageState extends State<MinePage>
             ],
           ),
         ),
-//        child: Column(
-//          children: <Widget>[
-//            Text(
-//              name,
-//              style: TextStyle(color: Colors.white, fontSize: 14),
-//            ),
-//            Padding(
-//              padding: EdgeInsets.only(top: 6, bottom: 10),
-//              child: Text(
-//                num.toString(),
-//                style: TextStyle(color: Colors.white, fontSize: 14),
-//              ),
-//            )
-//          ],
-//        ),
       );
 
   ///加载更多布局
   Widget opacityLoadingProgress(isPerformingRequest, loadingColor) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(
-        child: Opacity(
-          opacity: isPerformingRequest ? 1.0 : 0.0,
-          child: CircularProgressIndicator(
-            strokeWidth: 2.0,
-            valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
-          ),
-        ),
-      ),
-    );
+    return _isComplete
+        ? Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.only(top: 5, bottom: 15),
+            child: Text(
+              '——我是有底线的——',
+              style: ZStyles.smallTextHint,
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Opacity(
+                opacity: isPerformingRequest ? 1.0 : 0.0,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.0,
+                  valueColor: AlwaysStoppedAnimation<Color>(loadingColor),
+                ),
+              ),
+            ),
+          );
   }
 
   ///显示刷新
@@ -306,10 +306,12 @@ class _MinePageState extends State<MinePage>
 
   /// 加载更多数据
   _loadMore() async {
-    this.setState(() => isPerformingRequest = true);
-    _page++;
-    await _getData();
-    this.setState(() => isPerformingRequest = false);
+    if (!_isComplete) {
+      this.setState(() => isPerformingRequest = true);
+      _page++;
+      await _getData();
+      this.setState(() => isPerformingRequest = false);
+    }
   }
 
   /// 获取数据
@@ -317,11 +319,16 @@ class _MinePageState extends State<MinePage>
     await EventDao.getEventDao(_getUsername(), page: _page, needDb: _page <= 1)
         .then((res) {
       setState(() {
-        if (_page == 1) {
-          eventList = res.data ?? List();
+        if (res.result) {
+          if (_page == 1) {
+            eventList = res.data;
+          } else {
+            eventList.addAll(res.data);
+          }
         } else {
-          eventList.addAll(res.data);
+          _page--;
         }
+        _isComplete = (res.data != null && res.data.length < Config.PAGE_SIZE);
       });
     });
   }

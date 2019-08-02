@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_app_flutter/common/net/address.dart';
 import 'package:github_app_flutter/common/style/style.dart';
-import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// 通用工具方法
@@ -29,6 +27,7 @@ class CommonUtils {
     );
   }
 
+  ///跳转外部链接
   static launchOutURL(String url, BuildContext context) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -37,58 +36,15 @@ class CommonUtils {
     }
   }
 
+  ///复制文字
   static copy(String data, BuildContext context) {
     Clipboard.setData(new ClipboardData(text: data));
     Fluttertoast.showToast(msg: '已经复制到粘贴板');
   }
 
-  ///显示加载中进度框
-  static Future<Null> showLoadingDialog(BuildContext context) {
-    return NavigatorUtils.showAppDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Material(
-            color: Colors.transparent,
-            child: WillPopScope(
-              child: Center(
-                child: Container(
-                  width: 200,
-                  height: 200,
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        child: SpinKitCircle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Text(
-                          '加载中...',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              onWillPop: () => Future.value(false),
-            ),
-          );
-        });
-  }
-
   static const IMAGE_END = [".png", ".jpg", ".jpeg", ".gif", ".svg"];
 
+  ///判断是否是图片格式
   static isImageEnd(path) {
     bool image = false;
     for (String item in IMAGE_END) {
@@ -99,6 +55,24 @@ class CommonUtils {
     return image;
   }
 
+  ///获取全名
+  static getFullName(String repositoryUrl) {
+    if (repositoryUrl != null &&
+        repositoryUrl.substring(repositoryUrl.length - 1) == "/") {
+      repositoryUrl = repositoryUrl.substring(0, repositoryUrl.length - 1);
+    }
+    String fullName = '';
+    if (repositoryUrl != null) {
+      List<String> splitUrl = repositoryUrl.split("/");
+      if (splitUrl.length > 2) {
+        fullName =
+            splitUrl[splitUrl.length - 2] + "/" + splitUrl[splitUrl.length - 1];
+      }
+    }
+    return fullName;
+  }
+
+  ///获取语言对应颜色
   static Color getLanguageColor(String type) {
     switch (type) {
       case 'Assembly':

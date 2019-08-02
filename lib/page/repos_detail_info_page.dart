@@ -27,7 +27,6 @@ class ReposDetailInfoPage extends StatefulWidget {
 
 class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
     with AutomaticKeepAliveClientMixin<ReposDetailInfoPage> {
-
   final GlobalKey<RefreshIndicatorState> refreshKey =
       GlobalKey<RefreshIndicatorState>();
 
@@ -96,8 +95,8 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: SliverHeaderDelegate(
-                      minHeight: 56,
-                      maxHeight: 56,
+                      minHeight: 60,
+                      maxHeight: 60,
                       child: SizedBox.expand(
                           child: Container(
                         color: Theme.of(context).scaffoldBackgroundColor,
@@ -123,7 +122,7 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index){
+                    (BuildContext context, int index) {
                       return itemBuilder(context, index);
                     },
                     childCount: selectIndex == 1
@@ -238,7 +237,7 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
       ).then((res) {
         setState(() {
           if (page == 1) {
-            commitList = res.data??List();
+            commitList = res.data ?? List();
           } else {
             commitList.addAll(res.data);
           }
@@ -255,7 +254,7 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
       ).then((res) {
         setState(() {
           if (page == 1) {
-            eventList = res.data??List();
+            eventList = res.data ?? List();
           } else {
             eventList.addAll(res.data);
           }

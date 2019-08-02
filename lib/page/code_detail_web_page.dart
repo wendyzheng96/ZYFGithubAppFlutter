@@ -39,6 +39,8 @@ class CodeDetailWebPage extends StatefulWidget {
 }
 
 class _CodeDetailWebPageState extends State<CodeDetailWebPage> {
+  bool _isLoadSuccess = true;
+
   String data;
 
   _CodeDetailWebPageState(this.data);
@@ -60,6 +62,11 @@ class _CodeDetailWebPageState extends State<CodeDetailWebPage> {
               .toString();
           setState(() {
             this.data = url;
+            _isLoadSuccess = true;
+          });
+        } else {
+          setState(() {
+            _isLoadSuccess = false;
           });
         }
       });
@@ -72,17 +79,22 @@ class _CodeDetailWebPageState extends State<CodeDetailWebPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: (data == null)
-          ? emptyWidget()
-          : WebView(
-              initialUrl: data,
-              javascriptMode: JavascriptMode.unrestricted,
-            ),
+      body: _getBody(),
     );
   }
 
+  Widget _getBody() {
+    if (data != null) {
+      return WebView(
+        initialUrl: data,
+        javascriptMode: JavascriptMode.unrestricted,
+      );
+    }
+    return _isLoadSuccess ? _emptyWidget() : _errorWidget();
+  }
+
   ///空白布局
-  Widget emptyWidget() => Row(
+  Widget _emptyWidget() => Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SpinKitCircle(
@@ -100,5 +112,29 @@ class _CodeDetailWebPageState extends State<CodeDetailWebPage> {
             ),
           )
         ],
+      );
+
+  ///加载失败布局
+  Widget _errorWidget() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.error_outline,
+              color: Color(ZColors.textHintValue),
+              size: 50,
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(
+                '加载失败',
+                style: TextStyle(
+                  color: Color(ZColors.textSecondaryValue),
+                  fontSize: 14,
+                ),
+              ),
+            )
+          ],
+        ),
       );
 }

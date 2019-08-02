@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/page/repository_detail_page.dart';
 
 /// 仓库Readme介绍
@@ -46,7 +47,9 @@ class _ReposReadmePageState extends State<ReposReadmePage>
             padding: EdgeInsets.all(14),
             child: MarkdownBody(
               data: _getMarkDownData(markdownData),
-              onTapLink: (String source) {},
+              onTapLink: (String source) {
+                CommonUtils.launchOutURL(source, context);
+              },
             ),
           );
     return widget;

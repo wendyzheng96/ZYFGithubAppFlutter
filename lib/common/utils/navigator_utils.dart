@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/page/code_detail_web_page.dart';
 import 'package:github_app_flutter/page/common_list_page.dart';
+import 'package:github_app_flutter/page/issue_detail_page.dart';
 import 'package:github_app_flutter/page/photo_view_page.dart';
 
 /// 导航栏
@@ -89,6 +90,20 @@ class NavigatorUtils {
           data: data,
           branch: branch,
           htmlUrl: htmlUrl,
+        ));
+  }
+
+  ///issue详情
+  static goIssueDetail(
+      BuildContext context, String userName, String reposName, String num,
+      {bool needRightLocalIcon = false}) {
+    return navigatorRouter(
+        context,
+        IssueDetailPage(
+          userName,
+          reposName,
+          num,
+          needHomeIcon: needRightLocalIcon,
         ));
   }
 }

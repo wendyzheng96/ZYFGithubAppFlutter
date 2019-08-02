@@ -30,9 +30,24 @@ class FilterButtonModel {
 typedef FilterCallback = void Function(TrendTypeModel selectModel);
 
 class DropDownFilter extends StatefulWidget {
-  DropDownFilter({Key key, this.buttons});
+  //按钮数组 数据类型FilterButtonModel
+  final List<FilterButtonModel> buttons;
 
-  final List<FilterButtonModel> buttons; //按钮数组 数据类型FilterButtonModel
+  ///按钮宽度
+  final double buttonWidth;
+
+  ///筛选框宽度
+  final double filterWidth;
+
+  final BoxDecoration decoration;
+
+  DropDownFilter({
+    Key key,
+    this.buttons,
+    this.buttonWidth,
+    this.filterWidth,
+    this.decoration,
+  });
 
   @override
   _DropDownFilterState createState() => _DropDownFilterState();
@@ -84,19 +99,23 @@ class _DropDownFilterState extends State<DropDownFilter>
   //筛选按钮
   Widget _filterButton() {
     return Container(
-      decoration:
-          BoxDecoration(color: Theme.of(context).primaryColor, boxShadow: [
-        BoxShadow(
-          blurRadius: 4,
-          spreadRadius: 2,
-          color: Color.fromARGB(50, 0, 0, 0),
-        )
-      ]),
+      decoration: widget.decoration ??
+          BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 4,
+                spreadRadius: 2,
+                color: Color.fromARGB(50, 0, 0, 0),
+              )
+            ],
+          ),
       child: Row(
         children: List.generate(widget.buttons.length, (i) {
           final selectBtn = widget.buttons[i];
           return Container(
-              width: MediaQuery.of(context).size.width / widget.buttons.length,
+              width: widget.buttonWidth ??
+                  MediaQuery.of(context).size.width / widget.buttons.length,
               height: FILTER_BTN_HEIGHT,
               child: Row(
                 children: <Widget>[
@@ -155,7 +174,7 @@ class _DropDownFilterState extends State<DropDownFilter>
         }
       });
       return Positioned(
-          width: MediaQuery.of(context).size.width,
+          width: widget.filterWidth ?? MediaQuery.of(context).size.width,
           top: FILTER_BTN_HEIGHT,
           left: 0,
           child: Column(

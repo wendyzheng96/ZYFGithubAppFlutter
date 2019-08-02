@@ -179,7 +179,7 @@ class ReposDao {
           branch;
       var res = await httpManager.netFetch(url, null, null, null);
       if (res != null && res.result) {
-        List<RepoCommit> list = new List();
+        List<RepoCommit> list = List();
         var data = res.data;
         if (data == null || data.length == 0) {
           return DataResult(null, false);

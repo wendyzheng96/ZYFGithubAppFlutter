@@ -50,7 +50,6 @@ class ZColors {
 
 ///文本样式
 class ZStyles {
-
   static const lagerTextSize = 18.0;
   static const middleTextSize = 16.0;
   static const normalTextSize = 15.0;
@@ -59,7 +58,9 @@ class ZStyles {
   static const minTextSize = 12.0;
 
   static const minTextSecondary = TextStyle(
-      color: Color(ZColors.textSecondaryValue), fontSize: minTextSize);
+    color: Color(ZColors.textSecondaryValue),
+    fontSize: minTextSize,
+  );
 
   static const minTextHint = TextStyle(
     color: Color(ZColors.textHintValue),
@@ -67,11 +68,15 @@ class ZStyles {
     fontWeight: FontWeight.normal,
   );
 
-  static const smallerTextWhite70 =
-      TextStyle(color: Colors.white70, fontSize: smallerTextSize);
+  static const smallerTextWhite70 = TextStyle(
+    color: Colors.white70,
+    fontSize: smallerTextSize,
+  );
 
-  static const smallTextSecondary = TextStyle(
-      color: Color(ZColors.textSecondaryValue), fontSize: smallTextSize);
+  static const smallerTextSecondary = TextStyle(
+    color: Color(ZColors.textSecondaryValue),
+    fontSize: smallerTextSize,
+  );
 
   static const smallMainText = TextStyle(
     color: Color(ZColors.primaryDarkValue),
@@ -80,6 +85,21 @@ class ZStyles {
 
   static const smallSubLightText = TextStyle(
     color: Color(ZColors.subLightTextColor),
+    fontSize: smallTextSize,
+  );
+
+  static const smallTextWhite = TextStyle(
+    color: Colors.white,
+    fontSize: smallTextSize,
+  );
+
+  static const smallTextHint = TextStyle(
+    color: Color(ZColors.textHintValue),
+    fontSize: smallTextSize,
+  );
+
+  static const smallTextSecondary = TextStyle(
+    color: Color(ZColors.textSecondaryValue),
     fontSize: smallTextSize,
   );
 
@@ -116,9 +136,11 @@ class ZIcons {
       const IconData(0xe681, fontFamily: ZIcons.FONT_FAMILY);
   static const IconData REPOS_ITEM_WATCHED =
       const IconData(0xe629, fontFamily: ZIcons.FONT_FAMILY);
+  static const IconData SEARCH =
+      const IconData(0xe61c, fontFamily: ZIcons.FONT_FAMILY);
 }
 
-class ZConstant{
+class ZConstant {
   static const String app_default_share_url =
       "https://github.com/wendyzheng96/ZYFGithubAppFlutter";
 }

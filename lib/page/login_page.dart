@@ -5,6 +5,7 @@ import 'package:github_app_flutter/common/dao/user_dao.dart';
 import 'package:github_app_flutter/common/local/local_storage.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
+import 'package:github_app_flutter/common/utils/dialog_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/page/home_page.dart';
@@ -165,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
               CommonUtils.showToast('密码不能为空');
               return;
             }
-            CommonUtils.showLoadingDialog(context);
+            showLoadingDialog(context);
             UserDao.login(_username.trim(), _password.trim(), store)
                 .then((res) {
               Navigator.pop(context);

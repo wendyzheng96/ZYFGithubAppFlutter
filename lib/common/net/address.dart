@@ -92,6 +92,21 @@ class Address {
     return "${host}repos/$reposOwner/$reposName/issues?state=$state&sort=$sort&direction=$direction";
   }
 
+  ///搜索issue
+  static reposIssueSearch(q) {
+    return "${host}search/issues?q=$q";
+  }
+
+  ///仓库Issue评论 get
+  static getIssueComment(reposOwner, reposName, issueNumber) {
+    return "${host}repos/$reposOwner/$reposName/issues/$issueNumber/comments";
+  }
+
+  ///仓库Issue get
+  static getIssueInfo(reposOwner, reposName, issueNumber) {
+    return "${host}repos/$reposOwner/$reposName/issues/$issueNumber";
+  }
+
   ///关注仓库 put
   static resolveStarRepos(reposOwner, repos) {
     return "${host}user/starred/$reposOwner/$repos";
