@@ -14,6 +14,7 @@ import 'package:github_app_flutter/common/net/api.dart';
 import 'package:github_app_flutter/common/utils/trend_utils.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/FileModel.dart';
+import 'package:github_app_flutter/model/PushCommit.dart';
 import 'package:github_app_flutter/model/RepoCommit.dart';
 import 'package:github_app_flutter/model/Repository.dart';
 import 'package:github_app_flutter/model/TrendingRepoModel.dart';
@@ -205,6 +206,18 @@ class ReposDao {
       return dataResult;
     }
     return await next();
+  }
+
+  static Future<DataResult> getReposCommitsInfo(
+      username, reposName, sha) async {
+    String url = Address.getReposCommitsInfo(username, reposName, sha);
+    var res = await httpManager.netFetch(url, null, null, null);
+    if (res != null && res.result) {
+      PushCommit pushCommit = PushCommit.fromJson(res.data);
+      return DataResult(pushCommit, true);
+    } else {
+      return DataResult(null, false);
+    }
   }
 
   /// 获取仓库的文件列表

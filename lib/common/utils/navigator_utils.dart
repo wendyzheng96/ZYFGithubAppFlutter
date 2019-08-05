@@ -4,6 +4,8 @@ import 'package:github_app_flutter/page/code_detail_web_page.dart';
 import 'package:github_app_flutter/page/common_list_page.dart';
 import 'package:github_app_flutter/page/issue_detail_page.dart';
 import 'package:github_app_flutter/page/photo_view_page.dart';
+import 'package:github_app_flutter/page/push_detail_page.dart';
+import 'package:github_app_flutter/page/repository_detail_page.dart';
 
 /// 导航栏
 /// Create by zyf
@@ -108,5 +110,25 @@ class NavigatorUtils {
         needHomeIcon: needRightLocalIcon,
       ),
     );
+  }
+
+  ///提交详情
+  static goPushDetailPage(BuildContext context, String username,
+      String reposName, String sha, bool needHomeIcon) {
+    return navigatorRouter(
+      context,
+      PushDetailPage(
+        username,
+        reposName,
+        sha,
+        needHomeIcon: needHomeIcon,
+      ),
+    );
+  }
+
+  ///仓库详情
+  static goReposDetail(
+      BuildContext context, String username, String reposName) {
+    return navigatorRouter(context, RepositoryDetailPage(username, reposName));
   }
 }

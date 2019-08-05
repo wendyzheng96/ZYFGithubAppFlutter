@@ -17,9 +17,16 @@ class IssueHeaderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color labelColor =
-        issueItemModel.state == 'open' ? Colors.green : Colors.redAccent;
+    Color labelColor;
+    if(issueItemModel.state == 'open') {
+      labelColor = Colors.green;
+    } else if(issueItemModel.state == 'closed'){
+      labelColor = Colors.redAccent;
+    } else {
+      labelColor = Colors.grey;
+    }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         FlatButton(
           padding: EdgeInsets.all(12),

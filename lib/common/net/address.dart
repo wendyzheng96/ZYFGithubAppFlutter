@@ -63,6 +63,11 @@ class Address {
     return "${host}repos/$reposOwner/$reposName/commits";
   }
 
+  ///仓库提交详情 get
+  static getReposCommitsInfo(reposOwner, reposName, sha) {
+    return "${host}repos/$reposOwner/$reposName/commits/$sha";
+  }
+
   ///仓库路径下的内容 get
   static reposDataDir(reposOwner, repos, path, [branch = 'master']) {
     return "${host}repos/$reposOwner/$repos/contents/$path" +

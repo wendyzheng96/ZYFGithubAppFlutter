@@ -30,7 +30,7 @@ class CommitItem extends StatelessWidget {
                 height: 36,
               ),
             ),
-            onPressed: () {},
+            onPressed: onPressed,
           )
         : Container();
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
+import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/EventViewModel.dart';
 import 'package:github_app_flutter/model/RepoCommit.dart';
@@ -152,16 +153,22 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
         return opacityLoadingProgress(
             isPerformingRequest, Theme.of(context).primaryColor);
       }
+      ///提交
       EventViewModel model = EventViewModel.fromCommitMap(commitList[index]);
       return CommitItem(
         model,
         needImage: false,
+        onPressed: (){
+          NavigatorUtils.goPushDetailPage(context, widget.username,
+              widget.reposName, commitList[index].sha, false);
+        },
       );
     }
     if (index == eventList.length) {
       return opacityLoadingProgress(
           isPerformingRequest, Theme.of(context).primaryColor);
     }
+    ///动态
     EventViewModel model = EventViewModel.fromEventMap(eventList[index]);
     return EventItem(model, index, eventList.length);
   }

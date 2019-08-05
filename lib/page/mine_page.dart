@@ -272,7 +272,7 @@ class _MinePageState extends State<MinePage>
             alignment: Alignment.center,
             padding: EdgeInsets.only(top: 5, bottom: 15),
             child: Text(
-              '——我是有底线的——',
+              '——到底线啦——',
               style: ZStyles.smallTextHint,
             ),
           )

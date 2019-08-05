@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/model/TrendingRepoModel.dart';
-import 'package:github_app_flutter/page/repository_detail_page.dart';
 import 'package:github_app_flutter/widget/drop_down_filter.dart';
 import 'package:github_app_flutter/widget/repos_item.dart';
 
@@ -61,11 +60,8 @@ class _TrendPageState extends State<TrendPage>
                   return ReposItem(
                     repoModel,
                     onPressed: () {
-                      NavigatorUtils.navigatorRouter(
-                        context,
-                        RepositoryDetailPage(
-                            repoModel.ownerName, repoModel.repositoryName),
-                      );
+                      NavigatorUtils.goReposDetail(context, repoModel.ownerName,
+                          repoModel.repositoryName);
                     },
                   );
                 },

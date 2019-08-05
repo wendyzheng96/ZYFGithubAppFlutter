@@ -190,7 +190,7 @@ class DynamicListViewState extends State<DynamicListView> {
         alignment: Alignment.center,
         padding: EdgeInsets.all(20),
         child: Text(
-          '——我是有底线的——',
+          '——到底线啦——',
           style: ZStyles.smallTextSecondary,
         ),
       );

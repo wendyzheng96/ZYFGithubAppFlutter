@@ -27,8 +27,7 @@ class HtmlUtils {
   }
 
   static generateHtml(String mdData,
-      {String backgroundColor = ZColors.miWhiteString,
-      userBR = true}) {
+      {String backgroundColor = ZColors.miWhiteString, userBR = true}) {
     if (mdData == null) {
       return "";
     }
@@ -192,6 +191,94 @@ class HtmlUtils {
     } else {
       return "<h1>" + "Not Support" + "</h1>";
     }
+  }
+
+  static parseDiffSource(String diffSource, bool wrap) {
+    if (diffSource == null) {
+      return "";
+    }
+    List<String> lines = diffSource.split("\n");
+    String source = "";
+    int addStartLine = -1;
+    int removeStartLine = -1;
+    int addLineNum = 0;
+    int removeLineNum = 0;
+    int normalLineNum = 0;
+    for (int i = 0; i < lines.length; i++) {
+      String line = lines[i];
+      String lineNumberStr = "";
+      String classStr = "";
+      int curAddNumber = -1;
+      int curRemoveNumber = -1;
+
+      if (line.indexOf("+") == 0) {
+        classStr = "class=\"hljs-addition\";";
+        curAddNumber = addStartLine + normalLineNum + addLineNum;
+        addLineNum++;
+      } else if (line.indexOf("-") == 0) {
+        classStr = "class=\"hljs-deletion\";";
+        curRemoveNumber = removeStartLine + normalLineNum + removeLineNum;
+        removeLineNum++;
+      } else if (line.indexOf("@@") == 0) {
+        classStr = "class=\"hljs-literal\";";
+        removeStartLine = getRemoveStartLine(line);
+        addStartLine = getAddStartLine(line);
+        addLineNum = 0;
+        removeLineNum = 0;
+        normalLineNum = 0;
+      } else if (!(line.indexOf("\\") == 0)) {
+        curAddNumber = addStartLine + normalLineNum + addLineNum;
+        curRemoveNumber = removeStartLine + normalLineNum + removeLineNum;
+        normalLineNum++;
+      }
+      lineNumberStr = getDiffLineNumber(
+          curRemoveNumber == -1 ? "" : (curRemoveNumber.toString() + ""),
+          curAddNumber == -1 ? "" : (curAddNumber.toString() + ""));
+      source = source +
+          "\n" +
+          "<div " +
+          classStr +
+          ">" +
+          (wrap ? "" : lineNumberStr + getBlank(1)) +
+          line +
+          "</div>";
+    }
+    return source;
+  }
+
+  static getRemoveStartLine(line) {
+    try {
+      return int.parse(
+          line.substring(line.indexOf("-") + 1, line.indexOf(",")));
+    } catch (e) {
+      return 1;
+    }
+  }
+
+  static getAddStartLine(line) {
+    try {
+      return int.parse(line.substring(
+          line.indexOf("+") + 1, line.indexOf(",", line.indexOf("+"))));
+    } catch (e) {
+      return 1;
+    }
+  }
+
+  static getDiffLineNumber(String removeNumber, String addNumber) {
+    int minLength = 4;
+    return getBlank(minLength - removeNumber.length) +
+        removeNumber +
+        getBlank(1) +
+        getBlank(minLength - addNumber.length) +
+        addNumber;
+  }
+
+  static getBlank(num) {
+    String builder = "";
+    for (int i = 0; i < num; i++) {
+      builder += " ";
+    }
+    return builder;
   }
 
   static formName(name) {

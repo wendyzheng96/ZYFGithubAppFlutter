@@ -164,19 +164,6 @@ class _ReposFilePagePage extends State<ReposFilePage>
     );
   }
 
-  /// 返回按键逻辑
-  Future<bool> _dialogExitApp(BuildContext context) {
-    if (ReposDetailModel.of(context).currentIndex != 3) {
-      return Future.value(true);
-    }
-    if (headerList.length == 1) {
-      return Future.value(true);
-    } else {
-      _resolveHeaderClick(headerList.length - 2);
-      return Future.value(false);
-    }
-  }
-
   ///头部列表点击
   _resolveHeaderClick(index) {
     if (headerList[index] != ".") {
@@ -193,6 +180,19 @@ class _ReposFilePagePage extends State<ReposFilePage>
         headerList = ["."];
       });
       this.showRefreshLoading();
+    }
+  }
+
+  /// 返回按键逻辑
+  Future<bool> _dialogExitApp(BuildContext context) {
+    if (ReposDetailModel.of(context).currentIndex != 3) {
+      return Future.value(true);
+    }
+    if (headerList.length == 1) {
+      return Future.value(true);
+    } else {
+      _resolveHeaderClick(headerList.length - 2);
+      return Future.value(false);
     }
   }
 

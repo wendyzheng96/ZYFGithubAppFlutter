@@ -67,9 +67,10 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
             ///背景头像
             decoration: BoxDecoration(
               image: DecorationImage(
-                  image: NetworkImage(
-                      'https://hbimg.huabanimg.com/96b3ad9260aa2b218393382cb22e0ecbcd1477ea29c20-o3nQgY_fw658'),
-                  fit: BoxFit.cover),
+                image: NetworkImage(
+                    'https://hbimg.huabanimg.com/96b3ad9260aa2b218393382cb22e0ecbcd1477ea29c20-o3nQgY_fw658'),
+                fit: BoxFit.cover,
+              ),
             ),
             child: Container(
               ///透明黑色遮罩
@@ -99,7 +100,8 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
                         ' / ',
                         style: ZStyles.largeTextWhiteBold,
                       ),
-                      Expanded(child: Text(
+                      Expanded(
+                          child: Text(
                         widget.reposHeaderViewModel.repositoryName,
                         style: ZStyles.largeTextWhiteBold,
                       )),
@@ -119,8 +121,10 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
                       Container(width: 10, height: 1.0),
 
                       ///仓库协议
-                      Expanded(child: Text(widget.reposHeaderViewModel.license ?? "--",
-                          style: ZStyles.smallSubLightText),)
+                      Expanded(
+                        child: Text(widget.reposHeaderViewModel.license ?? "--",
+                            style: ZStyles.smallSubLightText),
+                      )
                     ],
                   ),
                   Container(
@@ -139,7 +143,7 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
                       onPressed: () {},
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       constraints:
-                      const BoxConstraints(minWidth: 0.0, minHeight: 0.0),
+                          const BoxConstraints(minWidth: 0.0, minHeight: 0.0),
                       child: Text(
                         _getInfoText(context),
                         style: TextStyle(
