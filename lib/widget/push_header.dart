@@ -41,7 +41,7 @@ class PushHeader extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 16,
-                  backgroundColor: Color(ZColors.primaryValue),
+                  backgroundColor: Theme.of(context).primaryColor,
                   backgroundImage: NetworkImage(headerModel.actionUserPic),
                 ),
                 Padding(padding: EdgeInsets.only(left: 10)),
@@ -135,8 +135,8 @@ class PushHeaderModel {
     } else if (pushMap.commit != null && pushMap.commit.author != null) {
       name = pushMap.commit.author.name;
     }
-    if (pushMap.committer != null && pushMap.committer.avatar_url != null) {
-      pic = pushMap.committer.avatar_url;
+    if (pushMap.committer != null && pushMap.committer.avatarUrl != null) {
+      pic = pushMap.committer.avatarUrl;
     }
     actionUser = name;
     actionUserPic = pic;

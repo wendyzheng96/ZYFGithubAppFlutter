@@ -95,6 +95,7 @@ class DynamicListViewState extends State<DynamicListView> {
           return _getItem(index, loadingColor);
         },
         controller: _controller,
+        physics: const AlwaysScrollableScrollPhysics(),
       ),
     );
   }

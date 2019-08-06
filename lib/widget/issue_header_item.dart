@@ -37,7 +37,7 @@ class IssueHeaderItem extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 16,
-                  backgroundColor: Color(ZColors.primaryValue),
+                  backgroundColor: Theme.of(context).primaryColor,
                   backgroundImage: NetworkImage(issueItemModel.actionUserPic),
                 ),
                 Expanded(
@@ -161,7 +161,7 @@ class IssueHeaderViewModel {
   IssueHeaderViewModel.fromMap(Issue issueMap) {
     actionTime = getTimeAgoStr(issueMap.createdAt);
     actionUser = issueMap.user.login;
-    actionUserPic = issueMap.user.avatar_url ?? "";
+    actionUserPic = issueMap.user.avatarUrl ?? "";
     closedBy = issueMap.closeBy != null ? issueMap.closeBy.login : "";
     locked = issueMap.locked;
     issueComment = issueMap.title;

@@ -10,7 +10,6 @@ import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/page/login_page.dart';
 import 'package:github_app_flutter/page/user_profile_page.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// 主页drawer
 /// Create by zyf
@@ -37,7 +36,9 @@ class HomeDrawer extends StatelessWidget {
                         CommonUtils.showToast('问题反馈');
                       }),
                       _renderItem(Icons.history, '阅读历史', () {
-                        CommonUtils.showToast('阅读历史');
+                        NavigatorUtils.gotoCommonList(
+                            context, "阅读历史", "repository", "history",
+                            username: "", reposName: "");
                       }),
                       _renderItem(Icons.color_lens, '切换主题', () {
                         CommonUtils.showToast('切换主题');
@@ -77,7 +78,7 @@ class HomeDrawer extends StatelessWidget {
               fontSize: 14,
             )),
         currentAccountPicture: CircleAvatar(
-          backgroundImage: NetworkImage(user.avatar_url),
+          backgroundImage: NetworkImage(user.avatarUrl),
         ),
         onDetailsPressed: () {
           NavigatorUtils.navigatorRouter(context, UserProfilePage());

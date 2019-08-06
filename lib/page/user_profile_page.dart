@@ -36,7 +36,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
           return Scaffold(
             appBar: AppBar(
               title: Text('个人信息'),
-              centerTitle: true,
               elevation: 0.0,
             ),
             body: SingleChildScrollView(
@@ -104,7 +103,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             CircleAvatar(
               radius: 50,
               backgroundImage: _headImage == null
-                  ? NetworkImage(user.avatar_url)
+                  ? NetworkImage(user.avatarUrl)
                   : FileImage(_headImage),
             ),
             CircleAvatar(

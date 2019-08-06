@@ -173,11 +173,11 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
   _getInfoText(BuildContext context) {
     String createStr = widget.reposHeaderViewModel.repositoryIsFork
         ? 'fork at ${widget.reposHeaderViewModel.repositoryParentName}\n'
-        : '创建于 ${widget.reposHeaderViewModel.created_at}\n';
+        : '创建于 ${widget.reposHeaderViewModel.createdAt}\n';
 
-    String updateStr = '最后提交于 ${widget.reposHeaderViewModel.push_at}';
+    String updateStr = '最后提交于 ${widget.reposHeaderViewModel.pushAt}';
     return createStr +
-        ((widget.reposHeaderViewModel.push_at != null) ? updateStr : '');
+        ((widget.reposHeaderViewModel.pushAt != null) ? updateStr : '');
   }
 
   Widget _getBottomItemList() => Row(
@@ -186,7 +186,7 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
               () {
             NavigatorUtils.gotoCommonList(context,
                 widget.reposHeaderViewModel.repositoryName, "user", "repo_star",
-                userName: widget.reposHeaderViewModel.ownerName,
+                username: widget.reposHeaderViewModel.ownerName,
                 reposName: widget.reposHeaderViewModel.repositoryName);
           }),
           _verticalDivider(),
@@ -197,7 +197,7 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
                 widget.reposHeaderViewModel.repositoryName,
                 "repository",
                 "repo_fork",
-                userName: widget.reposHeaderViewModel.ownerName,
+                username: widget.reposHeaderViewModel.ownerName,
                 reposName: widget.reposHeaderViewModel.repositoryName);
           }),
           _verticalDivider(),
@@ -209,7 +209,7 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
                 widget.reposHeaderViewModel.repositoryName,
                 "user",
                 "repo_watcher",
-                userName: widget.reposHeaderViewModel.ownerName,
+                username: widget.reposHeaderViewModel.ownerName,
                 reposName: widget.reposHeaderViewModel.repositoryName);
           }),
           _verticalDivider(),
@@ -265,7 +265,7 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
       ),
       onPressed: () {
         NavigatorUtils.gotoCommonList(context, item, "repository", "topics",
-            userName: item, reposName: "");
+            username: item, reposName: "");
       },
     );
   }
@@ -310,8 +310,8 @@ class ReposHeaderViewModel {
   String repositoryLastActivity = "";
   String repositoryParentName = "";
   String repositoryParentUser = "";
-  String created_at = "";
-  String push_at = "";
+  String createdAt = "";
+  String pushAt = "";
   String license = "";
   List<String> topics;
   int allIssueCount = 0;
@@ -328,7 +328,7 @@ class ReposHeaderViewModel {
     if (map == null || map.owner == null) {
       return;
     }
-    this.ownerPic = map.owner.avatar_url;
+    this.ownerPic = map.owner.avatarUrl;
     this.repositoryName = reposName;
     this.allIssueCount = map.allIssueCount;
     this.topics = map.topics;
@@ -352,7 +352,7 @@ class ReposHeaderViewModel {
     this.repositoryParentName = map.parent != null ? map.parent.fullName : null;
     this.repositoryParentUser =
         map.parent != null ? map.parent.owner.login : null;
-    this.created_at = getTimeAgoStr(map.createdAt);
-    this.push_at = getTimeAgoStr(map.pushedAt);
+    this.createdAt = getTimeAgoStr(map.createdAt);
+    this.pushAt = getTimeAgoStr(map.pushedAt);
   }
 }

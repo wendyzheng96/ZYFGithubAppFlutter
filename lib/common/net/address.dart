@@ -30,6 +30,21 @@ class Address {
     return "${host}users/$username/starred?sort=$sort";
   }
 
+  ///用户关注人列表 get
+  static getUserFollowed(userName) {
+    return "${host}users/$userName/following";
+  }
+
+  ///用户的粉丝列表 get
+  static getUserFollower(userName) {
+    return "${host}users/$userName/followers";
+  }
+
+  ///我的粉丝列表 get
+  static getMyFollower() {
+    return "${host}user/followers";
+  }
+
   ///用户相关的事件信息 get
   static getEvent(username) {
     return "${host}users/$username/events";
@@ -40,12 +55,23 @@ class Address {
     return "${host}users/$userName/received_events";
   }
 
+  ///用户的仓库 get
+  static userRepos(userName, sort) {
+    sort ??= 'pushed';
+    return "${host}users/$userName/repos?sort=$sort";
+  }
+
   ///趋势 get
   static trending(since, languageType) {
     if (languageType != null) {
       return "https://github.com/trending/$languageType?since=$since";
     }
     return "https://github.com/trending?since=$since";
+  }
+
+  ///搜索topic tag
+  static searchTopic(topic) {
+    return "${host}search/repositories?q=topic:$topic&sort=stars&order=desc";
   }
 
   ///仓库详情 get

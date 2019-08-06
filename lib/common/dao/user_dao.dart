@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:github_app_flutter/common/ab/provider/user_followed_db_provider.dart';
+import 'package:github_app_flutter/common/ab/provider/user_follower_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/user_info_db_provider.dart';
 import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/dao_result.dart';
@@ -139,7 +141,80 @@ class UserDao {
     return DataResult(null, false);
   }
 
-  ///清楚用户信息
+  /// 获取用户关注列表
+  static getFollowedList(username, page, {needDb = false}) async {
+    UserFollowedDbProvider provider = new UserFollowedDbProvider();
+    next() async {
+      String url =
+          Address.getUserFollowed(username) + Address.getPageParams("?", page);
+      var res = await httpManager.netFetch(url, null, null, null);
+      if (res != null && res.result) {
+        List<User> list = new List();
+        var data = res.data;
+        if (data == null || data.length == 0) {
+          return DataResult(list, true);
+        }
+        for (int i = 0; i < data.length; i++) {
+          list.add(new User.fromJson(data[i]));
+        }
+        if (needDb) {
+          provider.insert(username, json.encode(data));
+        }
+        return DataResult(list, true);
+      } else {
+        return DataResult(null, false);
+      }
+    }
+
+    if (needDb) {
+      List<User> list = await provider.getFollowedList(username);
+      if (list == null) {
+        return await next();
+      }
+      DataResult dataResult = DataResult(list, true, next: next);
+      return dataResult;
+    }
+    return await next();
+  }
+
+  /// 获取用户粉丝列表
+  static getFollowerList(username, page, {needDb = false}) async {
+    UserFollowerDbProvider provider = UserFollowerDbProvider();
+
+    next() async {
+      String url =
+          Address.getUserFollower(username) + Address.getPageParams("?", page);
+      var res = await httpManager.netFetch(url, null, null, null);
+      if (res != null && res.result) {
+        List<User> list = new List();
+        var data = res.data;
+        if (data == null || data.length == 0) {
+          return DataResult(list, true);
+        }
+        for (int i = 0; i < data.length; i++) {
+          list.add(User.fromJson(data[i]));
+        }
+        if (needDb) {
+          provider.insert(username, json.encode(data));
+        }
+        return DataResult(list, true);
+      } else {
+        return DataResult(null, false);
+      }
+    }
+
+    if (needDb) {
+      List<User> list = await provider.getFollowerList(username);
+      if (list == null) {
+        return await next();
+      }
+      DataResult dataResult = DataResult(list, true, next: next);
+      return dataResult;
+    }
+    return await next();
+  }
+
+  ///清除用户信息
   static clearAll(Store store) async {
     httpManager.clearAuthorization();
     LocalStorage.remove(Config.USER_INFO);

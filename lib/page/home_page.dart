@@ -44,7 +44,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0,
         title: Text('GithubFlutter'),
-        centerTitle: true,
         actions: <Widget>[_getActionButton()],
       ),
       body: PageView.builder(

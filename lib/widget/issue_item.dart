@@ -32,7 +32,7 @@ class IssueItem extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 16,
-                backgroundColor: Color(ZColors.primaryValue),
+                backgroundColor: Theme.of(context).primaryColor,
                 backgroundImage: NetworkImage(issueItemModel.actionUserPic),
               ),
               Expanded(
@@ -100,7 +100,7 @@ class IssueItemViewModel {
     String fullName = CommonUtils.getFullName(issueMap.repoUrl);
     actionTime = getTimeAgoStr(issueMap.createdAt);
     actionUser = issueMap.user.login;
-    actionUserPic = issueMap.user.avatar_url ?? "";
+    actionUserPic = issueMap.user.avatarUrl ?? "";
     if (needTitle) {
       issueComment = fullName + "- " + issueMap.title;
       commentCount = issueMap.commentNum.toString();

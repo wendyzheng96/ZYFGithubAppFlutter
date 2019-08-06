@@ -20,7 +20,7 @@ class EventViewModel {
     actionTime = formatDate(
         event.createdAt.toLocal(), [yyyy, '/', mm, '/', dd, ' ', HH, ":", nn]);
     actionUser = event.actor.login;
-    actionUserPic = event.actor.avatar_url;
+    actionUserPic = event.actor.avatarUrl;
     var other = EventUtils.getActionAndDes(event);
     actionDes = other["des"];
     actionTarget = other["actionStr"];

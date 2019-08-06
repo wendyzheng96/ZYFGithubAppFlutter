@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:github_app_flutter/page/code_detail_web_page.dart';
 import 'package:github_app_flutter/page/common_list_page.dart';
 import 'package:github_app_flutter/page/issue_detail_page.dart';
+import 'package:github_app_flutter/page/person_page.dart';
 import 'package:github_app_flutter/page/photo_view_page.dart';
 import 'package:github_app_flutter/page/push_detail_page.dart';
 import 'package:github_app_flutter/page/repository_detail_page.dart';
@@ -56,14 +57,14 @@ class NavigatorUtils {
   ///通用列表
   static gotoCommonList(
       BuildContext context, String title, String showType, String dataType,
-      {String userName, String reposName}) {
+      {String username, String reposName}) {
     navigatorRouter(
       context,
       CommonListPage(
         title,
         showType,
         dataType,
-        userName: userName,
+        username: username,
         reposName: reposName,
       ),
     );
@@ -130,5 +131,10 @@ class NavigatorUtils {
   static goReposDetail(
       BuildContext context, String username, String reposName) {
     return navigatorRouter(context, RepositoryDetailPage(username, reposName));
+  }
+
+  ///用户详情
+  static goPersonPage(BuildContext context, String username) {
+    navigatorRouter(context, PersonPage(username));
   }
 }

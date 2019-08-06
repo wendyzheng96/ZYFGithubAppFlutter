@@ -97,8 +97,8 @@ class ReadHistoryDbProvider extends BaseDbProvider {
     return await db.insert(name, toMap(fullName, dateTime, dataMapString));
   }
 
-  ///获取事件数据
-  Future<List<Repository>> getData(int page) async {
+  ///获取历史数据
+  Future<List<Repository>> getHistoryData(int page) async {
     Database db = await getDataBase();
     var provider = await _getProvider(db, page);
     if (provider != null) {

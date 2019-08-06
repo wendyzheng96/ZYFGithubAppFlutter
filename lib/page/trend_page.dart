@@ -44,35 +44,37 @@ class _TrendPageState extends State<TrendPage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-        body: Container(
-      child: Stack(
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 44),
-            child: RefreshIndicator(
-              key: refreshIndicatorKey,
-              child: ListView.builder(
-                itemCount: trendList.length,
-                itemBuilder: (context, index) {
-                  ReposViewModel repoModel =
-                      ReposViewModel.fromTrendMap(trendList[index]);
-                  return ReposItem(
-                    repoModel,
-                    onPressed: () {
-                      NavigatorUtils.goReposDetail(context, repoModel.ownerName,
-                          repoModel.repositoryName);
-                    },
-                  );
-                },
+      body: Container(
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(top: 44),
+              child: RefreshIndicator(
+                key: refreshIndicatorKey,
+                child: ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: trendList.length,
+                  itemBuilder: (context, index) {
+                    ReposViewModel repoModel =
+                        ReposViewModel.fromTrendMap(trendList[index]);
+                    return ReposItem(
+                      repoModel,
+                      onPressed: () {
+                        NavigatorUtils.goReposDetail(context,
+                            repoModel.ownerName, repoModel.repositoryName);
+                      },
+                    );
+                  },
+                ),
+                onRefresh: _getTrendRepos,
               ),
-              onRefresh: _getTrendRepos,
             ),
-          ),
-          _renderHeadItems(),
-        ],
+            _renderHeadItems(),
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   ///头部筛选Items
