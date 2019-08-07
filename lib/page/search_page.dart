@@ -88,7 +88,6 @@ class SearchPageState extends State<SearchPage> {
               },
             ),
           ),
-          Container(height: 60,),
           Expanded(
             child: DynamicListView.build(
               itemBuilder: _renderItem(),
