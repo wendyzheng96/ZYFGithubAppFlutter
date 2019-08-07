@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/issue_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/model/Issue.dart';
 import 'package:github_app_flutter/widget/common_option_widget.dart';
 import 'package:github_app_flutter/widget/dynamic_list_view.dart';
@@ -49,8 +50,14 @@ class _IssueDetailPageState extends State<IssueDetailPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    Widget rightContent =
-        (widget.needHomeIcon) ? null : CommonOptionWidget(titleOptionControl);
+    Widget rightContent = (widget.needHomeIcon)
+        ? IconButton(
+            icon: Icon(Icons.home),
+            onPressed: () {
+              NavigatorUtils.goReposDetail(
+                  context, widget.username, widget.reposName);
+            })
+        : CommonOptionWidget(titleOptionControl);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.reposName),
@@ -84,6 +91,7 @@ class _IssueDetailPageState extends State<IssueDetailPage>
 
   Future<List<Issue>> _initRequester() async {
     _page = 1;
+
     ///刷新时同时更新头部信息
     await _getHeaderInfo();
     return await _getIssueComments();
@@ -100,7 +108,7 @@ class _IssueDetailPageState extends State<IssueDetailPage>
             widget.username, widget.reposName, widget.issueNum,
             page: _page, needDb: _page <= 1)
         .then((res) {
-      if(!res.result) {
+      if (!res.result) {
         _page--;
       }
       setState(() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/common/utils/time_utils.dart';
 import 'package:github_app_flutter/model/Issue.dart';
 import 'package:github_app_flutter/widget/icon_text.dart';
@@ -97,6 +98,9 @@ class IssueHeaderItem extends StatelessWidget {
                         Container(height: 8),
                         MarkdownBody(
                           data: issueItemModel.issueDesHtml,
+                          onTapLink: (source){
+                            CommonUtils.launchUrl(context, source);
+                          },
                         ),
                       ],
                     ),

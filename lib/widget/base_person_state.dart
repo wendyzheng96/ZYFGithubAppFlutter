@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/event_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/event_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/EventViewModel.dart';
@@ -103,7 +104,14 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
                 }
                 EventViewModel model =
                     EventViewModel.fromEventMap(eventList[index]);
-                return EventItem(model, index, eventList.length);
+                return EventItem(
+                  model,
+                  index,
+                  eventList.length,
+                  onPressed: () {
+                    EventUtils.actionUtils(context, eventList[index], "");
+                  },
+                );
               },
               childCount: eventList.length + 1,
             ),

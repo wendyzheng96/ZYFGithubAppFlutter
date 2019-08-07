@@ -19,6 +19,9 @@ class DynamicListView extends StatefulWidget {
 
   final bool needHeader;
 
+  ///是否一开始就加载数据
+  final bool isLoadDataFirst;
+
   DynamicListView.build(
       {Key key,
       @required this.itemBuilder,
@@ -27,7 +30,8 @@ class DynamicListView extends StatefulWidget {
       this.isLoadComplete = false,
       this.dividerColor,
       this.refreshKey,
-      this.needHeader = false})
+      this.needHeader = false,
+      this.isLoadDataFirst = true})
       : assert(itemBuilder != null),
         assert(dataRequester != null),
         assert(initRequester != null),
@@ -38,7 +42,6 @@ class DynamicListView extends StatefulWidget {
 }
 
 class DynamicListViewState extends State<DynamicListView> {
-
   final bool needHeader;
 
   GlobalKey<RefreshIndicatorState> refreshKey;
@@ -54,10 +57,12 @@ class DynamicListViewState extends State<DynamicListView> {
   @override
   void initState() {
     super.initState();
-    if(refreshKey == null) {
+    if (refreshKey == null) {
       refreshKey = GlobalKey<RefreshIndicatorState>();
     }
-    showRefreshLoading();
+    if (widget.isLoadDataFirst) {
+      showRefreshLoading();
+    }
     _controller.addListener(() {
       if (_controller.position.pixels == _controller.position.maxScrollExtent) {
         _loadMore();
@@ -138,7 +143,7 @@ class DynamicListViewState extends State<DynamicListView> {
   }
 
   Widget _getEmpty() => Container(
-        height: MediaQuery.of(context).size.height,
+        height: 400,
         child: Center(
           child: Text('暂无数据'),
         ),

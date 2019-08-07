@@ -63,7 +63,10 @@ class IssueItem extends StatelessWidget {
                         ],
                       ),
                       Container(height: 8),
-                      MarkdownBody(data: issueItemModel.issueComment,),
+                      MarkdownBody(data: issueItemModel.issueComment,
+                      onTapLink: (String source){
+                        CommonUtils.launchUrl(context, source);
+                      },),
                     ],
                   ),
                 ),

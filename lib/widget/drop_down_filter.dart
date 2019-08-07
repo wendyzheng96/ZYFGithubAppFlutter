@@ -41,12 +41,15 @@ class DropDownFilter extends StatefulWidget {
 
   final BoxDecoration decoration;
 
+  final TextStyle textStyle;
+
   DropDownFilter({
     Key key,
     this.buttons,
     this.buttonWidth,
     this.filterWidth,
     this.decoration,
+    this.textStyle,
   });
 
   @override
@@ -126,7 +129,7 @@ class _DropDownFilterState extends State<DropDownFilter>
                         children: <Widget>[
                           Text(
                             selectBtn.selectedModel.name,
-                            style: ZStyles.middleTextWhite,
+                            style: widget.textStyle ?? ZStyles.middleTextWhite,
                           ),
                           Icon(
                             selectBtn.direction == UP

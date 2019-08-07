@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
+import 'package:github_app_flutter/common/utils/event_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/EventViewModel.dart';
@@ -170,7 +171,10 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
     }
     ///动态
     EventViewModel model = EventViewModel.fromEventMap(eventList[index]);
-    return EventItem(model, index, eventList.length);
+    return EventItem(model, index, eventList.length, onPressed: (){
+      EventUtils.actionUtils(context, eventList[index],
+          widget.username + "/" + widget.reposName);
+    },);
   }
 
   ///加载更多布局

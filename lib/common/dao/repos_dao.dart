@@ -76,6 +76,52 @@ class ReposDao {
     return await next();
   }
 
+  /// 搜索仓库
+  /// @param q 搜索关键字
+  /// @param sort 分类排序，beat match、most star等
+  /// @param order 倒序或者正序
+  /// @param type 搜索类型，人或者仓库 null \ 'user',
+  /// @param page
+  /// @param pageSize
+  static searchRepositoryDao(
+      q, language, sort, order, type, page, pageSize) async {
+    if (language != null) {
+      q = q + "%2Blanguage%3A$language";
+    }
+    String url = Address.search(q, sort, order, type, page, pageSize);
+    var res = await httpManager.netFetch(url, null, null, null);
+    if (type == null) {
+      if (res != null && res.result) {
+        List<Repository> list = new List();
+        var dataList = res.data["items"];
+        if (dataList == null || dataList.length == 0) {
+          return DataResult(list, true);
+        }
+        for (int i = 0; i < dataList.length; i++) {
+          var data = dataList[i];
+          list.add(Repository.fromJson(data));
+        }
+        return DataResult(list, true);
+      } else {
+        return DataResult(null, false);
+      }
+    } else {
+      if (res != null && res.result) {
+        List<User> list = new List();
+        var data = res.data["items"];
+        if (data == null || data.length == 0) {
+          return DataResult(list, true);
+        }
+        for (int i = 0; i < data.length; i++) {
+          list.add(User.fromJson(data[i]));
+        }
+        return DataResult(list, true);
+      } else {
+        return DataResult(null, false);
+      }
+    }
+  }
+
   /// 仓库的详情数据
   static Future<DataResult> getReposDetail(username, reposName, branch,
       {needDb = true}) async {

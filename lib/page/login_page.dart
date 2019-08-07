@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
               CommonUtils.showToast('密码不能为空');
               return;
             }
-            showLoadingDialog(context);
+            DialogUtils.showLoadingDialog(context);
             UserDao.login(_username.trim(), _password.trim(), store)
                 .then((res) {
               Navigator.pop(context);

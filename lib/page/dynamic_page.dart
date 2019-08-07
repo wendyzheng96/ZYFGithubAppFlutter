@@ -3,7 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/event_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
-import 'package:github_app_flutter/common/utils/common_utils.dart';
+import 'package:github_app_flutter/common/utils/event_utils.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/EventViewModel.dart';
@@ -71,7 +71,7 @@ class _DynamicPageState extends State<DynamicPage>
   ///获取数据
   _getData() async {
     return await EventDao.getEventReceived(username,
-            page: _page, needDb: _page <= 1)
+            page: _page)
         .then((res) {
       if (!res.result) {
         _page--;
@@ -79,7 +79,7 @@ class _DynamicPageState extends State<DynamicPage>
       setState(() {
         _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
       });
-      return res.data;
+      return res.data??List();
     });
   }
 
@@ -159,8 +159,7 @@ class _DynamicPageState extends State<DynamicPage>
             ),
           ),
           onTap: () {
-            //TODO 跳转页面
-            CommonUtils.showToast('click $index');
+            EventUtils.actionUtils(context, dataList[index], "");
           },
         );
       };

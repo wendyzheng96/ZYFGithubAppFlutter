@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_app_flutter/common/net/address.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// 通用工具方法
@@ -27,6 +28,12 @@ class CommonUtils {
     );
   }
 
+  ///复制文字
+  static copy(String data, BuildContext context) {
+    Clipboard.setData(new ClipboardData(text: data));
+    Fluttertoast.showToast(msg: '已经复制到粘贴板');
+  }
+
   ///跳转外部链接
   static launchOutURL(String url, BuildContext context) async {
     if (await canLaunch(url)) {
@@ -36,10 +43,39 @@ class CommonUtils {
     }
   }
 
-  ///复制文字
-  static copy(String data, BuildContext context) {
-    Clipboard.setData(new ClipboardData(text: data));
-    Fluttertoast.showToast(msg: '已经复制到粘贴板');
+  static launchUrl(context, String url) {
+    if (url == null && url.length == 0) return;
+    Uri parseUrl = Uri.parse(url);
+    bool isImage = isImageEnd(parseUrl.toString());
+    if (parseUrl.toString().endsWith("?raw=true")) {
+      isImage = isImageEnd(parseUrl.toString().replaceAll("?raw=true", ""));
+    }
+    if (isImage) {
+      NavigatorUtils.gotoPhotoPage(context, url);
+      return;
+    }
+
+    if (parseUrl != null &&
+        parseUrl.host == "github.com" &&
+        parseUrl.path.length > 0) {
+      List<String> pathNames = parseUrl.path.split("/");
+      if (pathNames.length == 2) {
+        //解析人
+        String userName = pathNames[1];
+        NavigatorUtils.goPersonPage(context, userName);
+      } else if (pathNames.length >= 3) {
+        String userName = pathNames[1];
+        String repoName = pathNames[2];
+        //解析仓库
+        if (pathNames.length == 3) {
+          NavigatorUtils.goReposDetail(context, userName, repoName);
+        } else {
+          NavigatorUtils.launchWebView(context, "", url);
+        }
+      }
+    } else if (url != null && url.startsWith("http")) {
+      NavigatorUtils.launchWebView(context, "", url);
+    }
   }
 
   static const IMAGE_END = [".png", ".jpg", ".jpeg", ".gif", ".svg"];
@@ -139,6 +175,4 @@ class CommonUtils {
         return Colors.transparent;
     }
   }
-
 }
-

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/dialog_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/common/utils/time_utils.dart';
 import 'package:github_app_flutter/model/Repository.dart';
@@ -9,11 +10,11 @@ import 'package:github_app_flutter/widget/icon_text.dart';
 /// Create by zyf
 /// Date: 2019/7/29
 class ReposHeaderItem extends StatefulWidget {
-  final ReposHeaderViewModel reposHeaderViewModel;
+  final ReposHeaderViewModel reposModel;
 
   final ValueChanged<Size> layoutListener;
 
-  ReposHeaderItem(this.reposHeaderViewModel, {this.layoutListener}) : super();
+  ReposHeaderItem(this.reposModel, {this.layoutListener}) : super();
 
   @override
   _ReposHeaderItemState createState() => _ReposHeaderItemState();
@@ -87,7 +88,7 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
                         constraints: BoxConstraints(minWidth: 0, minHeight: 0),
                         padding: EdgeInsets.all(0.0),
                         child: Text(
-                          widget.reposHeaderViewModel.ownerName,
+                          widget.reposModel.ownerName,
                           style: TextStyle(
                             color: Color(ZColors.primaryLightValue),
                             fontSize: 18,
@@ -102,7 +103,7 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
                       ),
                       Expanded(
                           child: Text(
-                        widget.reposHeaderViewModel.repositoryName,
+                        widget.reposModel.repositoryName,
                         style: ZStyles.largeTextWhiteBold,
                       )),
                     ],
@@ -111,25 +112,25 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       ///仓库语言
-                      Text(widget.reposHeaderViewModel.repositoryType ?? "--",
+                      Text(widget.reposModel.repositoryType ?? "--",
                           style: ZStyles.smallSubLightText),
                       Container(width: 10, height: 1.0),
 
                       ///仓库大小
-                      Text(widget.reposHeaderViewModel.repositorySize ?? "--",
+                      Text(widget.reposModel.repositorySize ?? "--",
                           style: ZStyles.smallSubLightText),
                       Container(width: 10, height: 1.0),
 
                       ///仓库协议
                       Expanded(
-                        child: Text(widget.reposHeaderViewModel.license ?? "--",
+                        child: Text(widget.reposModel.license ?? "--",
                             style: ZStyles.smallSubLightText),
                       )
                     ],
                   ),
                   Container(
                       child: new Text(
-                        widget.reposHeaderViewModel.repositoryDes ?? "---",
+                        widget.reposModel.repositoryDes ?? "---",
                         style: ZStyles.smallSubLightText,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
@@ -145,21 +146,20 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
                       constraints:
                           const BoxConstraints(minWidth: 0.0, minHeight: 0.0),
                       child: Text(
-                        _getInfoText(context),
+                        _getInfoText(context, widget.reposModel),
                         style: TextStyle(
                             fontSize: ZStyles.smallTextSize,
-                            color: Color(
-                                widget.reposHeaderViewModel.repositoryIsFork
-                                    ? ZColors.primaryLightValue
-                                    : ZColors.subLightTextColor)),
+                            color: Color(widget.reposModel.repositoryIsFork
+                                ? ZColors.primaryLightValue
+                                : ZColors.subLightTextColor)),
                       ),
                     ),
                   ),
                   Divider(
                     color: Color(ZColors.subTextColor),
                   ),
-                  _getBottomItemList(),
-                  _renderTopicGroup(context),
+                  _getBottomItemList(widget.reposModel),
+                  _renderTopicGroup(context, widget.reposModel),
                 ],
               ),
             ),
@@ -170,51 +170,38 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
   }
 
   ///仓库创建和提交状态信息
-  _getInfoText(BuildContext context) {
-    String createStr = widget.reposHeaderViewModel.repositoryIsFork
-        ? 'fork at ${widget.reposHeaderViewModel.repositoryParentName}\n'
-        : '创建于 ${widget.reposHeaderViewModel.createdAt}\n';
+  _getInfoText(BuildContext context, ReposHeaderViewModel model) {
+    String createStr = model.repositoryIsFork
+        ? 'fork at ${model.repositoryParentName}\n'
+        : '创建于 ${model.createdAt}\n';
 
-    String updateStr = '最后提交于 ${widget.reposHeaderViewModel.pushAt}';
-    return createStr +
-        ((widget.reposHeaderViewModel.pushAt != null) ? updateStr : '');
+    String updateStr = '最后提交于 ${model.pushAt}';
+    return createStr + ((model.pushAt != null) ? updateStr : '');
   }
 
-  Widget _getBottomItemList() => Row(
+  Widget _getBottomItemList(ReposHeaderViewModel model) => Row(
         children: <Widget>[
-          _getBottomItem(Icons.star, widget.reposHeaderViewModel.repositoryStar,
-              () {
-            NavigatorUtils.gotoCommonList(context,
-                widget.reposHeaderViewModel.repositoryName, "user", "repo_star",
-                username: widget.reposHeaderViewModel.ownerName,
-                reposName: widget.reposHeaderViewModel.repositoryName);
-          }),
-          _verticalDivider(),
-          _getBottomItem(
-              Icons.share, widget.reposHeaderViewModel.repositoryFork, () {
+          _getBottomItem(Icons.star, model.repositoryStar, () {
             NavigatorUtils.gotoCommonList(
-                context,
-                widget.reposHeaderViewModel.repositoryName,
-                "repository",
-                "repo_fork",
-                username: widget.reposHeaderViewModel.ownerName,
-                reposName: widget.reposHeaderViewModel.repositoryName);
+                context, model.repositoryName, "user", "repo_star",
+                username: model.ownerName, reposName: model.repositoryName);
           }),
           _verticalDivider(),
-          _getBottomItem(
-              Icons.visibility, widget.reposHeaderViewModel.repositoryWatch,
-              () {
+          _getBottomItem(Icons.share, model.repositoryFork, () {
             NavigatorUtils.gotoCommonList(
-                context,
-                widget.reposHeaderViewModel.repositoryName,
-                "user",
-                "repo_watcher",
-                username: widget.reposHeaderViewModel.ownerName,
-                reposName: widget.reposHeaderViewModel.repositoryName);
+                context, model.repositoryName, "repository", "repo_fork",
+                username: model.ownerName, reposName: model.repositoryName);
           }),
           _verticalDivider(),
-          _getBottomItem(Icons.error_outline,
-              widget.reposHeaderViewModel.repositoryIssue, () {}),
+          _getBottomItem(Icons.visibility, model.repositoryWatch, () {
+            NavigatorUtils.gotoCommonList(
+                context, model.repositoryName, "user", "repo_watcher",
+                username: model.ownerName, reposName: model.repositoryName);
+          }),
+          _verticalDivider(),
+          _getBottomItem(Icons.error_outline, model.repositoryIssue, () {
+            _showDialog(model);
+          }),
         ],
       );
 
@@ -246,7 +233,7 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
 
   _renderTopicItem(BuildContext context, String item, int index) {
     return RawMaterialButton(
-      key: index == widget.reposHeaderViewModel.topics.length - 1
+      key: index == widget.reposModel.topics.length - 1
           ? layoutLastTopicKey
           : null,
       constraints: const BoxConstraints(minWidth: 0.0, minHeight: 0.0),
@@ -271,14 +258,13 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
   }
 
   ///话题组控件
-  _renderTopicGroup(BuildContext context) {
-    if (widget.reposHeaderViewModel.topics == null ||
-        widget.reposHeaderViewModel.topics.length == 0) {
+  _renderTopicGroup(BuildContext context, ReposHeaderViewModel model) {
+    if (model.topics == null || model.topics.length == 0) {
       return Container();
     }
     List<Widget> list = new List();
-    for (int i = 0; i < widget.reposHeaderViewModel.topics.length; i++) {
-      var item = widget.reposHeaderViewModel.topics[i];
+    for (int i = 0; i < model.topics.length; i++) {
+      var item = model.topics[i];
       list.add(_renderTopicItem(context, item, i));
     }
     return Container(
@@ -291,6 +277,19 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
         children: list,
       ),
     );
+  }
+
+  _showDialog(ReposHeaderViewModel model) {
+    if (model.allIssueCount == null || model.allIssueCount <= 0) {
+      return;
+    }
+    List<String> list = [
+      '全部Issue数：${model.allIssueCount}',
+      '打开Issue数：${model.openIssuesCount}',
+      '关闭Issue数：${model.allIssueCount - model.openIssuesCount}'
+    ];
+    DialogUtils.showCommitOptionDialog(context, list, (index) {},
+        height: 150.0);
   }
 }
 

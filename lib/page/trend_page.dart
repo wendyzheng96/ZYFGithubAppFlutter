@@ -34,7 +34,7 @@ class _TrendPageState extends State<TrendPage>
     super.initState();
     setState(() {
       selectTime = trendTime()[0];
-      selectLanguage = trendType()[0];
+      selectLanguage = languageType()[0];
     });
     showRefreshLoading();
     _getTrendRepos();
@@ -92,7 +92,7 @@ class _TrendPageState extends State<TrendPage>
                 }),
             FilterButtonModel(
                 selectedModel: selectLanguage,
-                contents: trendType(),
+                contents: languageType(),
                 onSelect: (TrendTypeModel trendModel) {
                   selectLanguage = trendModel;
                   showRefreshLoading();
@@ -120,49 +120,49 @@ class _TrendPageState extends State<TrendPage>
       });
     });
   }
+}
 
-  ///趋势数据时间过滤
-  List<TrendTypeModel> trendTime() {
-    return [
-      TrendTypeModel("今日", "daily"),
-      TrendTypeModel("本周", "weekly"),
-      TrendTypeModel("本月", "monthly"),
-    ];
-  }
+///趋势数据时间过滤
+List<TrendTypeModel> trendTime() {
+  return [
+    TrendTypeModel("今日", "daily"),
+    TrendTypeModel("本周", "weekly"),
+    TrendTypeModel("本月", "monthly"),
+  ];
+}
 
-  ///趋势数据语言过滤
-  List<TrendTypeModel> trendType() {
-    return [
-      TrendTypeModel("全部", null),
-      TrendTypeModel("Assembly", "Assembly"),
-      TrendTypeModel("C", "C"),
-      TrendTypeModel("C#", "c%23"),
-      TrendTypeModel("C++", "C++"),
-      TrendTypeModel("Clojure", "Clojure"),
-      TrendTypeModel("CSS", "CSS"),
-      TrendTypeModel("CoffeeScript", "CoffeeScript"),
-      TrendTypeModel("Dart", "Dart"),
-      TrendTypeModel("Go", "Go"),
-      TrendTypeModel("Haskell", "Haskell"),
-      TrendTypeModel("HTML", "HTML"),
-      TrendTypeModel("Java", "Java"),
-      TrendTypeModel("JavaScript", "JavaScript"),
-      TrendTypeModel("Jupyter Notebook", "Jupyter%20Notebook"),
-      TrendTypeModel("Kotlin", "Kotlin"),
-      TrendTypeModel("Lua", "Lua"),
-      TrendTypeModel("Makefile", "Makefile"),
-      TrendTypeModel("Objective-C", "Objective-C"),
-      TrendTypeModel("Perl", "Perl"),
-      TrendTypeModel("PHP", "PHP"),
-      TrendTypeModel("Python", "Python"),
-      TrendTypeModel("Ruby", "Ruby"),
-      TrendTypeModel("Rust", "Rust"),
-      TrendTypeModel("Scala", "Scala"),
-      TrendTypeModel("Shell", "Shell"),
-      TrendTypeModel("Swift", "Swift"),
-      TrendTypeModel("TypeScript", "TypeScript"),
-      TrendTypeModel("Vim script", "Vim%20script"),
-      TrendTypeModel("Vue", "Vue"),
-    ];
-  }
+///趋势数据语言过滤
+List<TrendTypeModel> languageType() {
+  return [
+    TrendTypeModel("全部", null),
+    TrendTypeModel("Assembly", "Assembly"),
+    TrendTypeModel("C", "C"),
+    TrendTypeModel("C#", "c%23"),
+    TrendTypeModel("C++", "C++"),
+    TrendTypeModel("Clojure", "Clojure"),
+    TrendTypeModel("CSS", "CSS"),
+    TrendTypeModel("CoffeeScript", "CoffeeScript"),
+    TrendTypeModel("Dart", "Dart"),
+    TrendTypeModel("Go", "Go"),
+    TrendTypeModel("Haskell", "Haskell"),
+    TrendTypeModel("HTML", "HTML"),
+    TrendTypeModel("Java", "Java"),
+    TrendTypeModel("JavaScript", "JavaScript"),
+    TrendTypeModel("Jupyter Notebook", "Jupyter%20Notebook"),
+    TrendTypeModel("Kotlin", "Kotlin"),
+    TrendTypeModel("Lua", "Lua"),
+    TrendTypeModel("Makefile", "Makefile"),
+    TrendTypeModel("Objective-C", "Objective-C"),
+    TrendTypeModel("Perl", "Perl"),
+    TrendTypeModel("PHP", "PHP"),
+    TrendTypeModel("Python", "Python"),
+    TrendTypeModel("Ruby", "Ruby"),
+    TrendTypeModel("Rust", "Rust"),
+    TrendTypeModel("Scala", "Scala"),
+    TrendTypeModel("Shell", "Shell"),
+    TrendTypeModel("Swift", "Swift"),
+    TrendTypeModel("TypeScript", "TypeScript"),
+    TrendTypeModel("Vim script", "Vim%20script"),
+    TrendTypeModel("Vue", "Vue"),
+  ];
 }

@@ -77,11 +77,16 @@ class EventItem extends StatelessWidget {
           ),
           margin: EdgeInsets.only(left: 23),
           padding: EdgeInsets.fromLTRB(22, 6, 16, 30),
-          child: Text(
-            eventViewModel.actionTarget,
-            style: TextStyle(
-              color: Color(ZColors.textSecondaryValue),
-              fontSize: 13,
+          child: RawMaterialButton(
+            onPressed: onPressed,
+            constraints: BoxConstraints(minWidth: 0, minHeight: 0),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            child: Text(
+              eventViewModel.actionTarget,
+              style: TextStyle(
+                color: Color(ZColors.textSecondaryValue),
+                fontSize: 13,
+              ),
             ),
           ),
         ),

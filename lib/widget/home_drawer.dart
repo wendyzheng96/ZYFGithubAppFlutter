@@ -35,9 +35,9 @@ class HomeDrawer extends StatelessWidget {
                       _renderItem(Icons.feedback, '问题反馈', () {
                         CommonUtils.showToast('问题反馈');
                       }),
-                      _renderItem(Icons.history, '阅读历史', () {
+                      _renderItem(Icons.history, '浏览历史', () {
                         NavigatorUtils.gotoCommonList(
-                            context, "阅读历史", "repository", "history",
+                            context, "浏览历史", "repository", "history",
                             username: "", reposName: "");
                       }),
                       _renderItem(Icons.color_lens, '切换主题', () {

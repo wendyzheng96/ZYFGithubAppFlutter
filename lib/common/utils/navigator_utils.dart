@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/page/code_detail_web_page.dart';
@@ -7,6 +9,7 @@ import 'package:github_app_flutter/page/person_page.dart';
 import 'package:github_app_flutter/page/photo_view_page.dart';
 import 'package:github_app_flutter/page/push_detail_page.dart';
 import 'package:github_app_flutter/page/repository_detail_page.dart';
+import 'package:github_app_flutter/page/web_view_page.dart';
 
 /// 导航栏
 /// Create by zyf
@@ -36,22 +39,6 @@ class NavigatorUtils {
           .copyWith(textScaleFactor: 1),
       child: widget,
     );
-  }
-
-  ///弹出dialog
-  static Future<T> showAppDialog<T>({
-    @required BuildContext context,
-    bool barrierDismissible = true,
-    WidgetBuilder builder,
-  }) {
-    return showDialog<T>(
-        context: context,
-        barrierDismissible: barrierDismissible,
-        builder: (context) {
-          return MediaQuery(
-              data: MediaQueryData.fromWindow(WidgetsBinding.instance.window),
-              child: SafeArea(child: builder(context)));
-        });
   }
 
   ///通用列表
@@ -136,5 +123,20 @@ class NavigatorUtils {
   ///用户详情
   static goPersonPage(BuildContext context, String username) {
     navigatorRouter(context, PersonPage(username));
+  }
+
+  static launchWebView(BuildContext context, String title, String url) {
+    if (url.startsWith("http")) {
+      navigatorRouter(context, WebViewPage(url, title));
+    } else {
+      navigatorRouter(
+          context,
+          WebViewPage(
+              Uri.dataFromString(url,
+                      mimeType: 'text/html',
+                      encoding: Encoding.getByName("utf-8"))
+                  .toString(),
+              title));
+    }
   }
 }

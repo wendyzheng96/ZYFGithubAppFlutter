@@ -1,11 +1,13 @@
+import 'package:flutter/widgets.dart';
+import 'package:github_app_flutter/common/utils/dialog_utils.dart';
+import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/PushEventCommit.dart';
 
 /// 事件逻辑
 /// Create by zyf
 /// Date: 2019/7/24
-class EventUtils{
-
+class EventUtils {
   ///事件描述与动作
   static getActionAndDes(Event event) {
     String actionStr;
@@ -18,11 +20,21 @@ class EventUtils{
         if (event.payload.refType == "repository") {
           actionStr = "Created repository " + event.repo.name;
         } else {
-          actionStr = "Created " + event.payload.refType + " " + event.payload.ref + " at " + event.repo.name;
+          actionStr = "Created " +
+              event.payload.refType +
+              " " +
+              event.payload.ref +
+              " at " +
+              event.repo.name;
         }
         break;
       case "DeleteEvent":
-        actionStr = "Delete " + event.payload.refType + " " + event.payload.ref + " at " + event.repo.name;
+        actionStr = "Delete " +
+            event.payload.refType +
+            " " +
+            event.payload.ref +
+            " at " +
+            event.repo.name;
         break;
       case "ForkEvent":
         String oriRepo = event.repo.name;
@@ -40,11 +52,19 @@ class EventUtils{
         actionStr = event.payload.action + " repository from an installation ";
         break;
       case "IssueCommentEvent":
-        actionStr = event.payload.action + " comment on issue " + event.payload.issue.number.toString() + " in " + event.repo.name;
+        actionStr = event.payload.action +
+            " comment on issue " +
+            event.payload.issue.number.toString() +
+            " in " +
+            event.repo.name;
         des = event.payload.comment.body;
         break;
       case "IssuesEvent":
-        actionStr = event.payload.action + " issue " + event.payload.issue.number.toString() + " in " + event.repo.name;
+        actionStr = event.payload.action +
+            " issue " +
+            event.payload.issue.number.toString() +
+            " in " +
+            event.repo.name;
         des = event.payload.issue.title;
         break;
       case "MarketplacePurchaseEvent":
@@ -73,10 +93,13 @@ class EventUtils{
         actionStr = event.payload.action + " pull request " + event.repo.name;
         break;
       case "PullRequestReviewEvent":
-        actionStr = event.payload.action + " pull request review at" + event.repo.name;
+        actionStr =
+            event.payload.action + " pull request review at" + event.repo.name;
         break;
       case "PullRequestReviewCommentEvent":
-        actionStr = event.payload.action + " pull request review comment at" + event.repo.name;
+        actionStr = event.payload.action +
+            " pull request review comment at" +
+            event.repo.name;
         break;
       case "PushEvent":
         String ref = event.payload.ref;
@@ -105,7 +128,11 @@ class EventUtils{
         }
         break;
       case "ReleaseEvent":
-        actionStr = event.payload.action + " release " + event.payload.release.tagName + " at " + event.repo.name;
+        actionStr = event.payload.action +
+            " release " +
+            event.payload.release.tagName +
+            " at " +
+            event.repo.name;
         break;
       case "WatchEvent":
         actionStr = event.payload.action + " " + event.repo.name;
@@ -113,5 +140,64 @@ class EventUtils{
     }
 
     return {"actionStr": actionStr, "des": des != null ? des : ""};
+  }
+
+  ///跳转
+  static actionUtils(BuildContext context, Event event, currentRepository) {
+    if (event.repo == null) {
+      NavigatorUtils.goPersonPage(context, event.actor.login);
+      return;
+    }
+    String owner = event.repo.name.split("/")[0];
+    String repositoryName = event.repo.name.split("/")[1];
+    String fullName = owner + '/' + repositoryName;
+    switch (event.type) {
+      case 'ForkEvent':
+        String forkName = event.actor.login + "/" + repositoryName;
+        if (forkName.toLowerCase() == currentRepository.toLowerCase()) {
+          return;
+        }
+        NavigatorUtils.goReposDetail(
+            context, event.actor.login, repositoryName);
+        break;
+      case 'PushEvent':
+        if (event.payload.commits == null) {
+          if (fullName.toLowerCase() == currentRepository.toLowerCase()) {
+            return;
+          }
+          NavigatorUtils.goReposDetail(context, owner, repositoryName);
+        } else if (event.payload.commits.length == 1) {
+          NavigatorUtils.goPushDetailPage(context, owner, repositoryName,
+              event.payload.commits[0].sha, true);
+        } else {
+          List<String> list = new List();
+          for (int i = 0; i < event.payload.commits.length; i++) {
+            list.add(event.payload.commits[i].message +
+                " " +
+                event.payload.commits[i].sha.substring(0, 4));
+          }
+          DialogUtils.showCommitOptionDialog(context, list, (index) {
+            NavigatorUtils.goPushDetailPage(context, owner, repositoryName,
+                event.payload.commits[index].sha, true);
+          });
+        }
+        break;
+      case 'ReleaseEvent':
+        String url = event.payload.release.tarballUrl;
+        NavigatorUtils.launchWebView(context, repositoryName, url);
+        break;
+      case 'IssueCommentEvent':
+      case 'IssuesEvent':
+        NavigatorUtils.goIssueDetail(context, owner, repositoryName,
+            event.payload.issue.number.toString(),
+            needRightLocalIcon: true);
+        break;
+      default:
+        if (fullName.toLowerCase() == currentRepository.toLowerCase()) {
+          return;
+        }
+        NavigatorUtils.goReposDetail(context, owner, repositoryName);
+        break;
+    }
   }
 }

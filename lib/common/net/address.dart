@@ -69,6 +69,18 @@ class Address {
     return "https://github.com/trending?since=$since";
   }
 
+  ///搜索 get
+  static search(q, sort, order, type, page, [pageSize = Config.PAGE_SIZE]) {
+    if (type == 'user') {
+      return "${host}search/users?q=$q&page=$page&per_page=$pageSize";
+    }
+    sort ??= "best%20match";
+    order ??= "desc";
+    page ??= 1;
+    pageSize ??= Config.PAGE_SIZE;
+    return "${host}search/repositories?q=$q&sort=$sort&order=$order&page=$page&per_page=$pageSize";
+  }
+
   ///搜索topic tag
   static searchTopic(topic) {
     return "${host}search/repositories?q=topic:$topic&sort=stars&order=desc";

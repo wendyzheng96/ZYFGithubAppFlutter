@@ -48,7 +48,7 @@ class _ReposReadmePageState extends State<ReposReadmePage>
             child: MarkdownBody(
               data: _getMarkDownData(markdownData),
               onTapLink: (String source) {
-                CommonUtils.launchOutURL(source, context);
+                CommonUtils.launchUrl(context, source);
               },
             ),
           );

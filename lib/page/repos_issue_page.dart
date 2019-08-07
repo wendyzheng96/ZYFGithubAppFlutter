@@ -27,10 +27,10 @@ class ReposIssuePage extends StatefulWidget {
 
 class _ReposIssuePageState extends State<ReposIssuePage>
     with AutomaticKeepAliveClientMixin {
-  final TextEditingController inputController = TextEditingController();
-
   final GlobalKey<RefreshIndicatorState> refreshKey =
       GlobalKey<RefreshIndicatorState>();
+
+  final TextEditingController inputController = TextEditingController();
 
   String _searchContent = '';
 
@@ -131,6 +131,9 @@ class _ReposIssuePageState extends State<ReposIssuePage>
                         setState(() {
                           _searchContent = value;
                         });
+                        if(_searchContent.isEmpty) {
+                          showRefreshLoading();
+                        }
                       },
                       style: TextStyle(
                         color: Color(ZColors.textPrimaryValue),
@@ -149,7 +152,9 @@ class _ReposIssuePageState extends State<ReposIssuePage>
                     padding: EdgeInsets.symmetric(horizontal: 8),
                     onPressed: () {
                       inputController.clear();
-                      _searchContent = "";
+                      setState(() {
+                        _searchContent = "";
+                      });
                       showRefreshLoading();
                     },
                     child: _searchContent.isEmpty?Container():Icon(
