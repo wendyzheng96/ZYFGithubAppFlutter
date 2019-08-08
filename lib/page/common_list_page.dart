@@ -140,7 +140,7 @@ class _CommonListPageState extends State<CommonListPage>
           return res.data;
         });
       case 'history':///用户阅读历史表
-        return await ReposDao.getHistoryDao(_page).then((res) {
+        return await ReposDao.getReadHistory(_page).then((res) {
           return res.data;
         });
       case 'topics':///标签相关仓库表

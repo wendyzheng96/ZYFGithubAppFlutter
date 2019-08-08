@@ -10,6 +10,7 @@ import 'package:github_app_flutter/common/ab/provider/repos_fork_db_provider.dar
 import 'package:github_app_flutter/common/ab/provider/repos_readme_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/repos_star_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/repos_watcher_db_provider.dart';
+import 'package:github_app_flutter/common/ab/provider/search_history_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/trend_repository_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/user_repos_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/user_stared_db_provider.dart';
@@ -147,7 +148,7 @@ class ReposDao {
         if (needDb) {
           provider.insert(fullName, json.encode(repository.toJson()));
         }
-        saveHistoryDao(
+        saveReadHistory(
             fullName, DateTime.now(), json.encode(repository.toJson()));
         return DataResult(repository, true);
       } else {
@@ -638,19 +639,49 @@ class ReposDao {
     }
   }
 
+  /// 保存阅读历史
+  static saveReadHistory(String fullName, DateTime dateTime, String data) {
+    ReadHistoryDbProvider provider = ReadHistoryDbProvider();
+    provider.insert(fullName, dateTime, data);
+  }
+
   /// 获取阅读历史
-  static getHistoryDao(page) async {
+  static getReadHistory(page) async {
     ReadHistoryDbProvider provider = ReadHistoryDbProvider();
     List<Repository> list = await provider.getHistoryData(page);
-    if (list == null || list.length <= 0) {
+    if (list == null) {
       return DataResult(null, false);
     }
     return DataResult(list, true);
   }
 
-  /// 保存阅读历史
-  static saveHistoryDao(String fullName, DateTime dateTime, String data) {
-    ReadHistoryDbProvider provider = ReadHistoryDbProvider();
-    provider.insert(fullName, dateTime, data);
+  ///保存搜索历史
+  static saveSearchKey(String keyword){
+    SearchHistoryDbProvider provider = SearchHistoryDbProvider();
+    provider.insert(keyword);
   }
+
+  ///获取搜索历史
+  static getSearchHistory() async {
+    SearchHistoryDbProvider provider = SearchHistoryDbProvider();
+    List<String> list = await provider.getSearchHistory();
+    if(list == null){
+      return DataResult(null, false);
+    } else {
+      return DataResult(list, true);
+    }
+  }
+
+  ///删除搜索关键词
+  static deleteSearchKey(String searchKey){
+    SearchHistoryDbProvider provider = SearchHistoryDbProvider();
+    provider.deleteByKey(searchKey);
+  }
+
+  ///清空搜索历史
+  static clearSearchHistory(){
+    SearchHistoryDbProvider provider = SearchHistoryDbProvider();
+    provider.clearHistory();
+  }
+
 }

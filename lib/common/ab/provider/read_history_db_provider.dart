@@ -5,7 +5,7 @@ import 'package:github_app_flutter/common/utils/code_utils.dart';
 import 'package:github_app_flutter/model/Repository.dart';
 import 'package:sqflite/sqflite.dart';
 
-/// 本地一度历史表
+/// 本地浏览历史表
 /// Create by zyf
 /// Date: 2019/7/30
 class ReadHistoryDbProvider extends BaseDbProvider {
@@ -105,7 +105,7 @@ class ReadHistoryDbProvider extends BaseDbProvider {
       List<Repository> list = new List();
       for (var providerMap in provider) {
         ReadHistoryDbProvider provider =
-        ReadHistoryDbProvider.fromMap(providerMap);
+            ReadHistoryDbProvider.fromMap(providerMap);
 
         ///使用 compute 的 Isolate 优化 json decode
         var mapData = await compute(CodeUtils.decodeMapResult, provider.data);
