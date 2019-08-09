@@ -7,12 +7,14 @@ class Config {
   static const DEBUG = true;
   static const USE_NATIVE_WEB_VIEW = true;
 
-  ////////////////////////////////常量//////////////////////
+  ///-------------------------------常量---------------------------------
+
   static const TOKEN = "token";
   static const USERNAME = "username";
   static const PWD = "pwd";
   static const USER_BASIC_CODE = "user_basic_code";
   static const USER_INFO = "user_info";
+  static const THEME_COLOR = "theme_color";
 }
 
 class NetConfig {

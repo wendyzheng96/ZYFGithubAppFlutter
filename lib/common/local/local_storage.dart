@@ -7,7 +7,13 @@ class LocalStorage {
 
   static save(String key, value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, value);
+    if(value is int) {
+      prefs.setInt(key, value);
+    } else if(value is bool){
+      prefs.setBool(key, value);
+    } else {
+      prefs.setString(key, value);
+    }
   }
 
   static get(String key) async {

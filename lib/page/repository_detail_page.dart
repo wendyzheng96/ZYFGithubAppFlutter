@@ -162,7 +162,10 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
           child: IconText(
             text,
             icon,
-            ZStyles.smallMainText,
+            TextStyle(
+              color: Color(ZColors.primaryDarkValue),
+              fontSize: 14,
+            ),
             iconSize: 16,
             padding: 4,
             mainAxisAlignment: MainAxisAlignment.center,

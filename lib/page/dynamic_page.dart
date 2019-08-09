@@ -79,7 +79,7 @@ class _DynamicPageState extends State<DynamicPage>
       setState(() {
         _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
       });
-      return res.data??List();
+      return res.data??List<Event>();
     });
   }
 
@@ -105,7 +105,7 @@ class _DynamicPageState extends State<DynamicPage>
                   children: <Widget>[
                     CircleAvatar(
                       radius: 18,
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor: Color(ZColors.imgColor),
                       backgroundImage: NetworkImage(model.actionUserPic),
                     ),
                     Expanded(

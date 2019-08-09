@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:github_app_flutter/common/style/style.dart';
 
 /// 弹框工具类
 /// Create by zyf
@@ -48,6 +49,60 @@ class DialogUtils {
             ),
           );
         });
+  }
+
+  static showColorDialog(
+      BuildContext context, List<Color> colorList, ValueChanged<int> onTap) {
+    DialogUtils.showAppDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Container(
+            width: 270,
+            height: 280,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              //用一个BoxDecoration装饰器提供背景图片
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 5,
+              ),
+              itemBuilder: (context, index) {
+                return RawMaterialButton(
+                  constraints: BoxConstraints(minWidth: 0, minHeight: 0),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.only(top: 10, bottom: 3),
+                        child: CircleAvatar(
+                          backgroundColor: colorList[index],
+                          radius: 25,
+                        ),
+                      ),
+                      Text(
+                        index == 0 ? '默认主题' : '主题$index',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Color(ZColors.textSecondaryValue),
+                        ),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    onTap(index);
+                  },
+                );
+              },
+              itemCount: colorList.length,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   ///列表item dialog

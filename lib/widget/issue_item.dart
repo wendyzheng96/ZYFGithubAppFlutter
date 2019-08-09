@@ -32,7 +32,7 @@ class IssueItem extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 16,
-                backgroundColor: Theme.of(context).primaryColor,
+                backgroundColor: Color(ZColors.imgColor),
                 backgroundImage: NetworkImage(issueItemModel.actionUserPic),
               ),
               Expanded(

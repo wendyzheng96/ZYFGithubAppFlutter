@@ -35,7 +35,7 @@ class EventItem extends StatelessWidget {
             ),
             CircleAvatar(
               radius: 16,
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Color(ZColors.imgColor),
               backgroundImage: NetworkImage(eventViewModel.actionUserPic),
             ),
             Expanded(

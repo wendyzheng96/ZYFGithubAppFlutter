@@ -25,7 +25,7 @@ class UserItem extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 20,
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Color(ZColors.imgColor),
                   backgroundImage: NetworkImage(userItemModel.userPic),
                 ),
                 Expanded(

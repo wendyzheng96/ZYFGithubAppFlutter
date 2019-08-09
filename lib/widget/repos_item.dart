@@ -35,7 +35,7 @@ class ReposItem extends StatelessWidget {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 18,
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Color(ZColors.imgColor),
                     backgroundImage: NetworkImage(reposModel.ownerPic),
                   ),
                   Expanded(

@@ -60,7 +60,7 @@ class _ReposHeaderItemState extends State<ReposHeaderItem> {
       child: Card(
         elevation: 5.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        color: Theme.of(context).primaryColorDark,
+        color: Colors.grey,
         margin: EdgeInsets.all(10),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(4),

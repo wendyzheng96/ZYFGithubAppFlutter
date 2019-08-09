@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/ab/provider/user_followed_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/user_follower_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/user_info_db_provider.dart';
@@ -10,6 +11,7 @@ import 'package:github_app_flutter/common/local/local_storage.dart';
 import 'package:github_app_flutter/common/net/address.dart';
 import 'package:github_app_flutter/common/net/api.dart';
 import 'package:github_app_flutter/common/redux/user_redux.dart';
+import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:redux/redux.dart';
 
@@ -58,6 +60,11 @@ class UserDao {
     var res = await getUserInfoLocal();
     if (res != null && res.result && token != null) {
       store.dispatch(UpdateUserAction(res.data));
+    }
+
+    int themeIndex = await LocalStorage.get(Config.THEME_COLOR);
+    if (themeIndex != null) {
+      CommonUtils.pushTheme(store, themeIndex);
     }
     return DataResult(res.data, (res.result && (token != null)));
   }

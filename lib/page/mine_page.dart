@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:github_app_flutter/common/config/config.dart';
-import 'package:github_app_flutter/common/dao/event_dao.dart';
-import 'package:github_app_flutter/common/style/style.dart';
-import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
-import 'package:github_app_flutter/model/Event.dart';
-import 'package:github_app_flutter/model/EventViewModel.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/widget/base_person_state.dart';
-import 'package:github_app_flutter/widget/event_item.dart';
-import 'package:github_app_flutter/widget/sliver_header_delegate.dart';
-import 'package:github_app_flutter/widget/user_header.dart';
 import 'package:redux/redux.dart';
 
 /// 我的页面

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:github_app_flutter/common/net/address.dart';
+import 'package:github_app_flutter/common/redux/theme_redux.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:redux/redux.dart';
 
 /// 通用工具方法
 /// Create by zyf
@@ -175,4 +177,37 @@ class CommonUtils {
         return Colors.transparent;
     }
   }
+
+  static pushTheme(Store store, int index) {
+    List<Color> colors = getThemeListColor();
+    ThemeData themeData = getThemeData(colors[index]);
+    store.dispatch(RefreshThemeDataAction(themeData));
+  }
+
+  static getThemeData(Color color) {
+    return ThemeData(primarySwatch: color, platform: TargetPlatform.android);
+  }
+
+  static List<Color> getThemeListColor() {
+    List<Color> list = List();
+    list.add(ZColors.primarySwatch);
+    list.add(MaterialColor(
+      0xFF24292E,
+      const <int, Color>{
+        50: const Color(0xFF42464b),
+        100: const Color(0xFF42464b),
+        200: const Color(0xFF42464b),
+        300: const Color(0xFF42464b),
+        400: const Color(0xFF42464b),
+        500: const Color(0xFF24292E),
+        600: const Color(0xFF121917),
+        700: const Color(0xFF121917),
+        800: const Color(0xFF121917),
+        900: const Color(0xFF121917),
+      },
+    ));
+    list.addAll(Colors.primaries);
+    return list;
+  }
+
 }

@@ -41,7 +41,7 @@ class PushHeader extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 16,
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Color(ZColors.imgColor),
                   backgroundImage: NetworkImage(headerModel.actionUserPic),
                 ),
                 Padding(padding: EdgeInsets.only(left: 10)),

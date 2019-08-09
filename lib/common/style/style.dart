@@ -24,6 +24,7 @@ class ZColors {
   static const int textColorWhite = 0xFFFFFFFF;
   static const int textMenuValue = 0xff6c7c90;
 
+  static const int imgColor = 0xFFeeeeee;
   static const int lineColor = 0x55B0C4DE;
   static const int miWhite = 0xffececec;
   static const int subTextColor = 0xff959595;

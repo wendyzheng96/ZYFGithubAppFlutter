@@ -1,5 +1,6 @@
 //全局 redux store 的对象，保存state数据
 import 'package:flutter/material.dart';
+import 'package:github_app_flutter/common/redux/theme_redux.dart';
 import 'package:github_app_flutter/common/redux/user_redux.dart';
 import 'package:github_app_flutter/model/User.dart';
 
@@ -21,6 +22,9 @@ ZYFState appReducer(ZYFState state, action) {
   return ZYFState(
     ///通过 UserReducer 将 GSYState 内的 userInfo 和 action 关联在一起
     userInfo: userReducer(state.userInfo, action),
+
+    ///通过 ThemeDataReducer 将 GSYState 内的 themeData 和 action 关联在一起
+    themeData: themeDataReducer(state.themeData, action),
   );
 }
 

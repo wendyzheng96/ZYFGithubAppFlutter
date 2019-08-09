@@ -103,7 +103,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             CircleAvatar(
               radius: 50,
               backgroundImage: _headImage == null
-                  ? NetworkImage(user.avatarUrl)
+                  ? NetworkImage(user.avatarUrl,)
                   : FileImage(_headImage),
             ),
             CircleAvatar(

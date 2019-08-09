@@ -3,8 +3,11 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:github_app_flutter/common/config/config.dart';
+import 'package:github_app_flutter/common/local/local_storage.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
+import 'package:github_app_flutter/common/utils/dialog_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/model/User.dart';
@@ -41,7 +44,7 @@ class HomeDrawer extends StatelessWidget {
                             username: "", reposName: "");
                       }),
                       _renderItem(Icons.color_lens, '切换主题', () {
-                        CommonUtils.showToast('切换主题');
+                        _showThemeDialog(context, store);
                       }),
                       _renderItem(Icons.local_offer, '关于', () {
                         _showAPPAboutDialog(context);
@@ -78,6 +81,7 @@ class HomeDrawer extends StatelessWidget {
               fontSize: 14,
             )),
         currentAccountPicture: CircleAvatar(
+          backgroundColor: Color(ZColors.imgColor),
           backgroundImage: NetworkImage(user.avatarUrl),
         ),
         onDetailsPressed: () {
@@ -153,7 +157,15 @@ class HomeDrawer extends StatelessWidget {
         onTap: onPressed,
       );
 
-  void _showAPPAboutDialog(BuildContext context) {
+  _showThemeDialog(context, store) {
+    List<Color> list = CommonUtils.getThemeListColor();
+    DialogUtils.showColorDialog(context, list, (index) {
+      CommonUtils.pushTheme(store, index);
+      LocalStorage.save(Config.THEME_COLOR, index);
+    });
+  }
+
+  _showAPPAboutDialog(BuildContext context) {
     showAboutDialog(
         context: context,
         applicationName: 'GithubFlutter',
