@@ -3,6 +3,8 @@ import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
+import 'package:github_app_flutter/model/Repository.dart';
+import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/page/trend_page.dart';
 import 'package:github_app_flutter/widget/drop_down_filter.dart';
 import 'package:github_app_flutter/widget/dynamic_list_view.dart';
@@ -87,6 +89,7 @@ class SearchPageState extends State<SearchPage> {
                       }).toList(),
                       controller: _tabController,
                       indicatorSize: TabBarIndicatorSize.label,
+                      indicatorColor: Colors.white,
                       labelPadding: EdgeInsets.only(bottom: 10),
                       labelStyle:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
@@ -313,7 +316,7 @@ class SearchPageState extends State<SearchPage> {
 
   _renderItem() => (List dataList, BuildContext context, int index) {
         var data = dataList[index];
-        if (searchType == 'user') {
+        if (data is User) {
           return UserItem(
             UserItemModel.fromMap(data),
             onPressed: () {
@@ -321,14 +324,17 @@ class SearchPageState extends State<SearchPage> {
             },
           );
         }
-        ReposViewModel reposModel = ReposViewModel.fromMap(data);
-        return ReposItem(
-          reposModel,
-          onPressed: () {
-            NavigatorUtils.goReposDetail(
-                context, reposModel.ownerName, reposModel.repositoryName);
-          },
-        );
+        if(data is Repository) {
+          ReposViewModel reposModel = ReposViewModel.fromMap(data);
+          return ReposItem(
+            reposModel,
+            onPressed: () {
+              NavigatorUtils.goReposDetail(
+                  context, reposModel.ownerName, reposModel.repositoryName);
+            },
+          );
+        }
+        return null;
       };
 
   ///刷新数据

@@ -43,8 +43,7 @@ class EventItem extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   eventViewModel.actionUser,
-                  style: TextStyle(
-                    color: Color(ZColors.textPrimaryValue),
+                  style: Theme.of(context).textTheme.body1.copyWith(
                     fontSize: 14,
                   ),
                 ),

@@ -84,6 +84,9 @@ class _PushDetailPageState extends State<PushDetailPage>
         if (index == 0) {
           return PushHeader(headerModel);
         }
+        Color color = Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : Color(ZColors.textSecondaryValue);
         PushCodeModel codeModel = PushCodeModel.fromMap(fileList[index - 1]);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +99,7 @@ class _PushDetailPageState extends State<PushDetailPage>
               ),
               title: Text(
                 codeModel.path,
-                style: ZStyles.smallTextSecondary,
+                style: TextStyle(fontSize: 14, color: color),
               ),
               onTap: () {
                 String html = HtmlUtils.generateCode2HTml(

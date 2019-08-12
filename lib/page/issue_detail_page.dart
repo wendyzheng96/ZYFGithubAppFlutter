@@ -72,7 +72,7 @@ class _IssueDetailPageState extends State<IssueDetailPage>
         isLoadComplete: _isComplete,
         needHeader: true,
       ),
-      bottomNavigationBar: (!headerStatus) ? null : _getBottomWidget(),
+      bottomNavigationBar: (!headerStatus) ? null : _getBottomWidget(context),
     );
   }
 
@@ -134,58 +134,56 @@ class _IssueDetailPageState extends State<IssueDetailPage>
   }
 
   ///获取底部控件显示
-  _getBottomWidget() => Container(
-        decoration: BoxDecoration(color: Colors.white, boxShadow: [
+  _getBottomWidget(context) {
+    TextStyle textStyle = TextStyle(
+        fontSize: 14,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : Theme.of(context).primaryColor);
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        boxShadow: [
           BoxShadow(
             blurRadius: 3,
             spreadRadius: 2,
             color: Color.fromARGB(20, 0, 60, 0),
-          )
-        ]),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  '回复',
-                  style: ZStyles.smallMainText,
-                ),
-              ),
+          ),
+        ],
+      ),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: FlatButton(
+              onPressed: () {},
+              child: Text('回复', style: textStyle),
             ),
-            _divider(),
-            Expanded(
-              child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  '编辑',
-                  style: ZStyles.smallMainText,
-                ),
-              ),
+          ),
+          _divider(),
+          Expanded(
+            child: FlatButton(
+              onPressed: () {},
+              child: Text('编辑', style: textStyle),
             ),
-            _divider(),
-            Expanded(
-              child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  '关闭',
-                  style: ZStyles.smallMainText,
-                ),
-              ),
+          ),
+          _divider(),
+          Expanded(
+            child: FlatButton(
+              onPressed: () {},
+              child: Text('关闭', style: textStyle),
             ),
-            _divider(),
-            Expanded(
-              child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  '锁定',
-                  style: ZStyles.smallMainText,
-                ),
-              ),
+          ),
+          _divider(),
+          Expanded(
+            child: FlatButton(
+              onPressed: () {},
+              child: Text('锁定', style: textStyle),
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   _divider() => Container(
         width: 0.3,

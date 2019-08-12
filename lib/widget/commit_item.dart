@@ -64,7 +64,7 @@ class CommitItem extends StatelessWidget {
                   eventViewModel.actionUser,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: ZStyles.normalTextPrimary,
+                  style: Theme.of(context).textTheme.subtitle.copyWith(fontSize: 15),
                 )),
                 Text(
                   eventViewModel.actionTime,
@@ -77,7 +77,7 @@ class CommitItem extends StatelessWidget {
               padding: EdgeInsets.only(top: 10),
               child: Text(
                 eventViewModel.actionTarget,
-                style: ZStyles.smallTextPrimary,
+                style: Theme.of(context).textTheme.body1.copyWith(fontSize: 14),
               ),
             ),
             des

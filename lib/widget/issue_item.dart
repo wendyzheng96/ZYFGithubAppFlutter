@@ -46,8 +46,7 @@ class IssueItem extends StatelessWidget {
                           Expanded(
                             child: Text(
                               issueItemModel.actionUser,
-                              style: TextStyle(
-                                color: Color(ZColors.textPrimaryValue),
+                              style: Theme.of(context).textTheme.body1.copyWith(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),

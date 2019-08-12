@@ -42,7 +42,6 @@ class _DynamicPageState extends State<DynamicPage>
           username = user.login;
           return Scaffold(
             body: Container(
-              color: Colors.white,
               child: DynamicListView.build(
                 itemBuilder: _itemBuilder(),
                 dataRequester: _dataRequester,
@@ -90,7 +89,7 @@ class _DynamicPageState extends State<DynamicPage>
             margin: EdgeInsets.fromLTRB(12, 12, 12, 4),
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
@@ -113,8 +112,7 @@ class _DynamicPageState extends State<DynamicPage>
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
                           model.actionUser,
-                          style: TextStyle(
-                            color: Color(ZColors.textPrimaryValue),
+                          style: Theme.of(context).textTheme.body1.copyWith(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),
@@ -137,8 +135,7 @@ class _DynamicPageState extends State<DynamicPage>
                   ),
                   child: Text(
                     model.actionTarget,
-                    style: TextStyle(
-                      color: Color(ZColors.textPrimaryValue),
+                    style: Theme.of(context).textTheme.body1.copyWith(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),

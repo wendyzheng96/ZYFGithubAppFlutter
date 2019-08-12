@@ -93,7 +93,7 @@ class IssueHeaderItem extends StatelessWidget {
                         ),
                         Text(
                           issueItemModel.issueComment,
-                          style: ZStyles.normalTextPrimary,
+                          style: Theme.of(context).textTheme.body1.copyWith(fontSize: 15),
                         ),
                         Container(height: 8),
                         MarkdownBody(

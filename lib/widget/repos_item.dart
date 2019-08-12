@@ -24,7 +24,7 @@ class ReposItem extends StatelessWidget {
           border: Border(
               bottom: BorderSide(
                   width: 1.0, color: Theme.of(context).dividerColor)),
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
         ),
         child: Container(
           padding: EdgeInsets.all(12),
@@ -99,8 +99,7 @@ class ReposItem extends StatelessWidget {
                     ? null
                     : Text(
                         reposModel.repositoryDes,
-                        style: TextStyle(
-                            color: Color(ZColors.textPrimaryValue),
+                        style: Theme.of(context).textTheme.body1.copyWith(
                             fontSize: 14,
                             height: 1.2),
                       ),

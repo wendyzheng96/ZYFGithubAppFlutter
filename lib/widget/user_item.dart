@@ -33,7 +33,10 @@ class UserItem extends StatelessWidget {
                     padding: EdgeInsets.only(left: 10),
                     child: Text(
                       userItemModel.userName,
-                      style: ZStyles.normalTextPrimary,
+                      style: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .copyWith(fontSize: 15),
                     ),
                   ),
                 ),
@@ -55,11 +58,11 @@ class UserItemModel {
 
   UserItemModel.fromMap(User user) {
     userName = user.login;
-    userPic = user.avatarUrl??"";
+    userPic = user.avatarUrl ?? "";
   }
 
   UserItemModel.fromOrgMap(UserOrg org) {
     userName = org.login;
-    userPic = org.avatarUrl??"";
+    userPic = org.avatarUrl ?? "";
   }
 }

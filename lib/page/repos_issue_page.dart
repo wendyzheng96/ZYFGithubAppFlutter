@@ -208,8 +208,7 @@ class _ReposIssuePageState extends State<ReposIssuePage>
                       children: <Widget>[
                         Text(
                           issue.title,
-                          style: TextStyle(
-                            color: Color(ZColors.textPrimaryValue),
+                          style: Theme.of(context).textTheme.body1.copyWith(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),

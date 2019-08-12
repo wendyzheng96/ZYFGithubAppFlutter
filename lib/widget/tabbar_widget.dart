@@ -103,7 +103,6 @@ class _TabBarState extends State<TabBarWidget>
         persistentFooterButtons:
             _tarWidgetControl == null ? null : _tarWidgetControl.footerButton,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
           title: widget.title,
           bottom: TabBar(
             controller: _tabController,

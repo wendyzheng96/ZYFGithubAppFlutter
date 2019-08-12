@@ -15,6 +15,7 @@ class Config {
   static const USER_BASIC_CODE = "user_basic_code";
   static const USER_INFO = "user_info";
   static const THEME_COLOR = "theme_color";
+  static const IS_NIGHT_THEME = "is_theme_night";
 }
 
 class NetConfig {

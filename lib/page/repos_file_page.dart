@@ -73,6 +73,10 @@ class _ReposFilePagePage extends State<ReposFilePage>
     IconData iconData;
     Widget trailing;
 
+    Color color = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Color(ZColors.textSecondaryValue);
+
     if (model.type == 'file') {
       iconData = Icons.insert_drive_file;
       trailing = null;
@@ -83,7 +87,7 @@ class _ReposFilePagePage extends State<ReposFilePage>
     return Column(
       children: <Widget>[
         ListTile(
-          title: Text(model.name, style: ZStyles.smallTextSecondary),
+          title: Text(model.name, style: TextStyle(color: color, fontSize: 14)),
           leading: Icon(
             iconData,
             size: 24.0,

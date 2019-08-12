@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:github_app_flutter/common/config/config.dart';
+import 'package:github_app_flutter/common/local/local_storage.dart';
 import 'package:github_app_flutter/common/net/address.dart';
 import 'package:github_app_flutter/common/redux/theme_redux.dart';
 import 'package:github_app_flutter/common/style/style.dart';
@@ -178,6 +180,23 @@ class CommonUtils {
     }
   }
 
+  static switchNightOrDayTheme(Store store, bool isToNight) async {
+    int themeIndex = await LocalStorage.get(Config.THEME_COLOR) ?? 0;
+
+    if (isToNight) {
+      ///夜间模式
+      ThemeData nightTheme = ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: getThemeListColor()[themeIndex],
+      );
+      store.dispatch(RefreshThemeDataAction(nightTheme));
+    } else {
+      ///日间模式
+
+      CommonUtils.pushTheme(store, themeIndex);
+    }
+  }
+
   static pushTheme(Store store, int index) {
     List<Color> colors = getThemeListColor();
     ThemeData themeData = getThemeData(colors[index]);
@@ -189,9 +208,7 @@ class CommonUtils {
   }
 
   static List<Color> getThemeListColor() {
-    List<Color> list = List();
-    list.add(ZColors.primarySwatch);
-    list.add(MaterialColor(
+    MaterialColor blackTheme = MaterialColor(
       0xFF24292E,
       const <int, Color>{
         50: const Color(0xFF42464b),
@@ -205,9 +222,104 @@ class CommonUtils {
         800: const Color(0xFF121917),
         900: const Color(0xFF121917),
       },
-    ));
-    list.addAll(Colors.primaries);
+    );
+
+    ///赤红
+    MaterialColor crimson = MaterialColor(
+      0xFFCA4549,
+      const <int, Color>{
+        50: Color(0xFFCA4549),
+        100: const Color(0xFFCA4549),
+        200: const Color(0xFFCA4549),
+        300: const Color(0xFFCA4549),
+        400: const Color(0xFFCA4549),
+        500: const Color(0xFFCA4549),
+        600: const Color(0xFFCA4549),
+        700: const Color(0xFFCA4549),
+        800: const Color(0xFFCA4549),
+        900: const Color(0xFFCA4549),
+      },
+    );
+
+    ///雀茶
+    MaterialColor sparrowTea = MaterialColor(
+      0xFFCA503E,
+      const <int, Color>{
+        50: Color(0xFFCA503E),
+        100: const Color(0xFFCA503E),
+        200: const Color(0xFFCA503E),
+        300: const Color(0xFFCA503E),
+        400: const Color(0xFFCA503E),
+        500: const Color(0xFFCA503E),
+        600: const Color(0xFFCA503E),
+        700: const Color(0xFFCA503E),
+        800: const Color(0xFFCA503E),
+        900: const Color(0xFFCA503E),
+      },
+    );
+
+    ///甚三红
+    MaterialColor pink = MaterialColor(
+      0xFFE77A79,
+      const <int, Color>{
+        50: Color(0xFFF3C2CA),
+        100: const Color(0xFFF3C2CA),
+        200: const Color(0xFFF3C2CA),
+        300: const Color(0xFFF3C2CA),
+        400: const Color(0xFFF3C2CA),
+        500: const Color(0xFFE77A79),
+        600: const Color(0xFFE77A79),
+        700: const Color(0xFFE77A79),
+        800: const Color(0xFFCA4549),
+        900: const Color(0xFFCA4549),
+      },
+    );
+
+    ///千草
+    MaterialColor chigusa = MaterialColor(
+      0xFF4290B3,
+      const <int, Color>{
+        50: Color(0xFF4290B3),
+        100: const Color(0xFF4290B3),
+        200: const Color(0xFF4290B3),
+        300: const Color(0xFF4290B3),
+        400: const Color(0xFF4290B3),
+        500: const Color(0xFF4290B3),
+        600: const Color(0xFF4290B3),
+        700: const Color(0xFF4290B3),
+        800: const Color(0xFF4290B3),
+        900: const Color(0xFF4290B3),
+      },
+    );
+
+    ///铜绿
+    MaterialColor copperGreen = MaterialColor(
+      0xFF549688,
+      const <int, Color>{
+        50: Color(0xFF549688),
+        100: const Color(0xFF549688),
+        200: const Color(0xFF549688),
+        300: const Color(0xFF549688),
+        400: const Color(0xFF549688),
+        500: const Color(0xFF549688),
+        600: const Color(0xFF549688),
+        700: const Color(0xFF549688),
+        800: const Color(0xFF549688),
+        900: const Color(0xFF549688),
+      },
+    );
+
+    List<Color> list = [
+      ZColors.primarySwatch,
+      chigusa,
+      Colors.blueGrey,
+      pink,
+      sparrowTea,
+      crimson,
+      copperGreen,
+      Colors.teal,
+      blackTheme,
+    ];
     return list;
   }
-
 }

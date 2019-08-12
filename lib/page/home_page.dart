@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.trending_up),
-            title: Text('趋势'),
+            title: Text('趋势')
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera),

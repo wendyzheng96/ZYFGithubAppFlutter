@@ -23,17 +23,10 @@ class PushHeader extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
         child: Container(
-          ///背景头像
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                  'https://hbimg.huabanimg.com/96b3ad9260aa2b218393382cb22e0ecbcd1477ea29c20-o3nQgY_fw658'),
-              fit: BoxFit.cover,
-            ),
-          ),
+          color: Theme.of(context).primaryColor,
           child: Container(
             decoration: BoxDecoration(
-              color: Color(0xA0000000),
+              color: Colors.black.withOpacity(0.5),
             ),
             padding: EdgeInsets.all(10),
             child: Row(

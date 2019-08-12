@@ -141,8 +141,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 padding: EdgeInsets.only(left: 16, right: 8),
                 child: Text(content ?? "---",
                     textAlign: TextAlign.end,
-                    style: TextStyle(
-                        color: Color(ZColors.textPrimaryValue), fontSize: 15)),
+                    style: Theme.of(context).textTheme.body1),
               )),
               Icon(
                 ZIcons.REPOS_ITEM_NEXT,

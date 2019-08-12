@@ -185,13 +185,16 @@ class _DropDownFilterState extends State<DropDownFilter>
               AnimatedContainer(
                 width: MediaQuery.of(context).size.width,
                 height: _innerHeight,
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                    blurRadius: 4,
-                    spreadRadius: 2,
-                    color: Color.fromARGB(50, 0, 0, 0),
-                  )
-                ]),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 4,
+                      spreadRadius: 2,
+                      color: Color.fromARGB(50, 0, 0, 0),
+                    )
+                  ],
+                ),
                 curve: Curves.fastOutSlowIn,
                 duration: Duration(milliseconds: 150),
                 child: _innerConList(lists),
@@ -204,6 +207,10 @@ class _DropDownFilterState extends State<DropDownFilter>
   }
 
   Widget _innerConList(FilterButtonModel lists) {
+    TextStyle textStyle = Theme.of(context).textTheme.body1.copyWith(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+        );
     return ListView(
       children: List.generate(lists.contents.length, (i) {
         return FlatButton(
@@ -223,13 +230,10 @@ class _DropDownFilterState extends State<DropDownFilter>
             splashColor: Color(0x559bcdf0),
             child: Text(
               lists.contents[i].name,
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  color: Color(
-                      lists.selectedModel.name == lists.contents[i].name
-                          ? ZColors.primaryDarkValue
-                          : ZColors.textPrimaryValue)),
+              style: lists.selectedModel.name == lists.contents[i].name
+                  ? textStyle.copyWith(
+                      color: Theme.of(context).primaryColorDark)
+                  : textStyle,
             ));
       }),
     );

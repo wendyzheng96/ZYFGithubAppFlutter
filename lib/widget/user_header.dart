@@ -21,11 +21,7 @@ class UserHeaderChart extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: Text(
               userInfo.type == 'Organization' ? '组织成员' : '个人动态',
-              style: TextStyle(
-                color: Color(0xbb000000),
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.title.copyWith(fontSize: 16),
             ),
             margin: EdgeInsets.fromLTRB(12, 10, 0, 10),
           ),
@@ -44,7 +40,7 @@ class UserHeaderChart extends StatelessWidget {
     return (userInfo.login != null)
         ? Card(
             margin: EdgeInsets.symmetric(horizontal: 10.0),
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Container(

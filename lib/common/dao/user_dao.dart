@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/ab/provider/user_followed_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/user_follower_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/user_info_db_provider.dart';
@@ -62,10 +61,8 @@ class UserDao {
       store.dispatch(UpdateUserAction(res.data));
     }
 
-    int themeIndex = await LocalStorage.get(Config.THEME_COLOR);
-    if (themeIndex != null) {
-      CommonUtils.pushTheme(store, themeIndex);
-    }
+    bool isNight = await LocalStorage.get(Config.IS_NIGHT_THEME) ?? false;
+    CommonUtils.switchNightOrDayTheme(store, isNight);
     return DataResult(res.data, (res.result && (token != null)));
   }
 

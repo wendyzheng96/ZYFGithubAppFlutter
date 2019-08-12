@@ -113,7 +113,6 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.endDocked,
               bottomBar: BottomAppBar(
-                color: Colors.white,
                 shape: CircularNotchedRectangle(),
                 child: Row(
                   children: (tarBarControl.footerButton == null)
@@ -156,20 +155,26 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
   }
 
   ///绘制底部状态item
-  _renderBottomItem(String text, IconData icon, VoidCallback onPressed) =>
-      FlatButton(
-          onPressed: onPressed,
-          child: IconText(
-            text,
-            icon,
-            TextStyle(
-              color: Color(ZColors.primaryDarkValue),
-              fontSize: 14,
-            ),
-            iconSize: 16,
-            padding: 4,
-            mainAxisAlignment: MainAxisAlignment.center,
-          ));
+  _renderBottomItem(String text, IconData icon, VoidCallback onPressed){
+    Color color = Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : Theme.of(context).primaryColorDark;
+
+    return FlatButton(
+        onPressed: onPressed,
+        child: IconText(
+          text,
+          icon,
+          TextStyle(
+            color: color,
+            fontSize: 14,
+          ),
+          iconColor: color,
+          iconSize: 16,
+          padding: 4,
+          mainAxisAlignment: MainAxisAlignment.center,
+        ));
+  }
 
   ///绘制底部状态
   List<Widget> _getBottomWidget() {

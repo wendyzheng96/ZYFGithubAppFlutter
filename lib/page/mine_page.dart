@@ -34,7 +34,9 @@ class _MinePageState extends BasePersonState<MinePage>{
       child: StoreBuilder<ZYFState>(
         builder: (context, store) {
           User userInfo = store.state.userInfo;
-          return sliverBuilder(context, userInfo);
+          return Scaffold(
+            body: sliverBuilder(context, userInfo),
+          );
         },
       ),
     );
