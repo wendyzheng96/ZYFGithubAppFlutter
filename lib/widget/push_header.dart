@@ -26,7 +26,7 @@ class PushHeader extends StatelessWidget {
           color: Theme.of(context).primaryColor,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withOpacity(0.4),
             ),
             padding: EdgeInsets.all(10),
             child: Row(

@@ -17,8 +17,7 @@ class EventViewModel {
       this.actionTime, this.actionTarget);
 
   EventViewModel.fromEventMap(Event event) {
-    actionTime = formatDate(
-        event.createdAt.toLocal(), [yyyy, '/', mm, '/', dd, ' ', HH, ":", nn]);
+    actionTime = getTimeAgoStr(event.createdAt);
     actionUser = event.actor.login;
     actionUserPic = event.actor.avatarUrl;
     var other = EventUtils.getActionAndDes(event);

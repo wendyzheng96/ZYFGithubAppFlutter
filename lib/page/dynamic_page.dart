@@ -69,16 +69,14 @@ class _DynamicPageState extends State<DynamicPage>
 
   ///获取数据
   _getData() async {
-    return await EventDao.getEventReceived(username,
-            page: _page)
-        .then((res) {
+    return await EventDao.getEventReceived(username, page: _page).then((res) {
       if (!res.result) {
         _page--;
       }
       setState(() {
         _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
       });
-      return res.data??List<Event>();
+      return res.data ?? List<Event>();
     });
   }
 
@@ -113,9 +111,9 @@ class _DynamicPageState extends State<DynamicPage>
                         child: Text(
                           model.actionUser,
                           style: Theme.of(context).textTheme.body1.copyWith(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ),
                     ),
@@ -136,9 +134,9 @@ class _DynamicPageState extends State<DynamicPage>
                   child: Text(
                     model.actionTarget,
                     style: Theme.of(context).textTheme.body1.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                 ),
                 model.actionDes.isEmpty

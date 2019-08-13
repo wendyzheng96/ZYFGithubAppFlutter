@@ -23,11 +23,16 @@ class HomeDrawer extends StatefulWidget {
   _HomeDrawerState createState() => _HomeDrawerState();
 }
 
-class _HomeDrawerState extends State<HomeDrawer> {
+class _HomeDrawerState extends State<HomeDrawer>
+    with AutomaticKeepAliveClientMixin {
   final Color iconColor = Color(ZColors.textMenuValue);
   final Color tvColor = Color(ZColors.textSecondaryValue);
 
+  ///当前是否处于夜间模式，true：是，false：否
   bool isNight = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -36,52 +41,49 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   void initParams() async {
-    isNight = await LocalStorage.get(Config.IS_NIGHT_THEME);
+    isNight = await LocalStorage.get(Config.IS_NIGHT_THEME) ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
-
-
     return Material(
       child: StoreBuilder<ZYFState>(
         builder: (context, store) {
           User user = store.state.userInfo;
           return Drawer(
-            child: Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: ListView(
-                      padding: const EdgeInsets.only(),
-                      children: <Widget>[
-                        _drawerHeader(user, context),
-                        _renderItem(Icons.feedback, '问题反馈', () {
-                          CommonUtils.showToast('问题反馈');
-                        }),
-                        _renderItem(Icons.history, '浏览历史', () {
-                          NavigatorUtils.gotoCommonList(
-                              context, "浏览历史", "repository", "history",
-                              username: "", reposName: "");
-                        }),
-                        _renderItem(Icons.color_lens, '切换主题', () {
-                          _showThemeDialog(context, store);
-                        }),
-                        _renderItem(Icons.local_offer, '关于', () {
-                          _showAPPAboutDialog(context);
-                        }),
-                      ],
-                    ),
+              child: Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.only(),
+                    children: <Widget>[
+                      _drawerHeader(user, context),
+                      _renderItem(Icons.feedback, '问题反馈', () {
+                        CommonUtils.showToast('问题反馈');
+                      }),
+                      _renderItem(Icons.history, '浏览历史', () {
+                        NavigatorUtils.gotoCommonList(
+                            context, "浏览历史", "repository", "history",
+                            username: "", reposName: "");
+                      }),
+                      _renderItem(Icons.color_lens, '切换主题', () {
+                        _showThemeDialog(context, store);
+                      }),
+                      _renderItem(Icons.local_offer, '关于', () {
+                        _showAPPAboutDialog(context);
+                      }),
+                    ],
                   ),
-                  Divider(
-                    height: 1,
-                  ),
-                  _drawerBottom(context, store),
-                ],
-              ),
-            )
-          );
+                ),
+                Divider(
+                  height: 1,
+                ),
+                _drawerBottom(context, store),
+              ],
+            ),
+          ));
         },
       ),
     );
@@ -91,7 +93,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget _drawerHeader(User user, BuildContext context) => Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage('https://hbimg.huabanimg.com/355a8525e79c1eab56abed0d7c80aa8b4d1524ca2c643-eyl9AG_fw658'),
+            image: AssetImage('static/images/bg_drawer.jpg'),
             fit: BoxFit.cover,
           ),
         ),
@@ -129,7 +131,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               padding: EdgeInsets.fromLTRB(16, 12, 12, 12),
               onPressed: () {
-                NavigatorUtils.pushReplaceNamed(context, LoginPage.sName);
+                DialogUtils.showNormalDialog(context, '确认退出登录？', (bool) {
+                  if (bool) {
+                    NavigatorUtils.pushReplaceNamed(context, LoginPage.sName);
+                  }
+                });
               },
               child: IconText(
                 '退出',
@@ -176,12 +182,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
         onTap: onPressed,
       );
 
+  ///显示切换主题弹框
   _showThemeDialog(context, store) {
     List<Color> list = CommonUtils.getThemeListColor();
     DialogUtils.showColorDialog(context, list, (index) {
       CommonUtils.pushTheme(store, index);
       LocalStorage.save(Config.THEME_COLOR, index);
-      if(isNight){
+      if (isNight) {
         setState(() {
           isNight = false;
         });
@@ -190,38 +197,41 @@ class _HomeDrawerState extends State<HomeDrawer> {
     });
   }
 
+  ///显示关于APP弹框
   _showAPPAboutDialog(BuildContext context) {
     showAboutDialog(
-        context: context,
-        applicationName: 'GithubFlutter',
-        applicationVersion: '1.0',
-        applicationIcon: Image.asset(
-          'static/images/ic_github.png',
-          width: 44,
-          height: 44,
-        ),
-        children: <Widget>[
-          RichText(
-            text: TextSpan(
-              text: '源代码地址：',
-              style: TextStyle(
-                  color: Color(ZColors.textPrimaryValue), fontSize: 16.0),
-              children: <TextSpan>[
-                TextSpan(
-                    text: ' 点击跳转链接',
-                    style: TextStyle(color: Colors.blue),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        CommonUtils.launchOutURL(
-                            "https://github.com/wendyzheng96/ZYFGithubAppFlutter",
-                            context);
-                      }),
-              ],
+      context: context,
+      applicationName: 'GithubFlutter',
+      applicationVersion: '1.0',
+      applicationIcon:
+          Image.asset('static/images/ic_github.png', width: 44, height: 44),
+      children: <Widget>[
+        RichText(
+          text: TextSpan(
+            text: '源代码地址：',
+            style: TextStyle(
+              color: Color(ZColors.textPrimaryValue),
+              fontSize: 16.0,
             ),
-          )
-        ]);
+            children: <TextSpan>[
+              TextSpan(
+                text: ' 点击跳转链接',
+                style: TextStyle(color: Colors.blue),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    CommonUtils.launchOutURL(
+                        "https://github.com/wendyzheng96/ZYFGithubAppFlutter",
+                        context);
+                  },
+              ),
+            ],
+          ),
+        )
+      ],
+    );
   }
 
+  ///切换夜间和日间模式
   _switchNightOrDay(store) async {
     isNight = await LocalStorage.get(Config.IS_NIGHT_THEME) ?? false;
     setState(() {

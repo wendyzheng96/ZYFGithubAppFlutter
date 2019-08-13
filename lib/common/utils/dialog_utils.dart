@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/widget/issue_edit_dialog.dart';
 
 /// 弹框工具类
 /// Create by zyf
 /// Date: 2019/8/2
-///显示加载中进度框
+
 class DialogUtils {
+  ///显示加载中进度框
   static Future<Null> showLoadingDialog(BuildContext context) {
     return showAppDialog(
         context: context,
@@ -51,9 +53,10 @@ class DialogUtils {
         });
   }
 
-  static showColorDialog(
+  ///显示颜色选择框
+  static Future<Null> showColorDialog(
       BuildContext context, List<Color> colorList, ValueChanged<int> onTap) {
-    DialogUtils.showAppDialog(
+    return showAppDialog(
       context: context,
       builder: (context) {
         return Center(
@@ -152,6 +155,64 @@ class DialogUtils {
             ),
           );
         });
+  }
+
+  ///显示编辑弹框
+  static Future<Null> showEditDialog(
+      BuildContext context,
+      String dialogTitle,
+      ValueChanged<String> onTitleChanged,
+      ValueChanged<String> onContentChanged,
+      VoidCallback onPressed, {
+        TextEditingController titleController,
+        TextEditingController contentController,
+        bool needTitle = true,
+      }) {
+    return showAppDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: IssueEditDialog(
+              dialogTitle,
+              onTitleChanged,
+              onContentChanged,
+              onPressed,
+              titleController: titleController,
+              contentController: contentController,
+              needTitle: needTitle,
+            ),
+          );
+        });
+  }
+
+  ///显示一般弹框
+  static Future<Null> showNormalDialog(
+      BuildContext context, String msg, ValueChanged<bool> onPress) {
+    return showAppDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('提示'),
+          content: Text(msg),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () {
+                  ///关闭弹框
+                  Navigator.of(context).pop();
+                  onPress(false);
+                },
+                child: Text('取消')),
+            FlatButton(
+                onPressed: () {
+                  //关闭对话框并返回true
+                  Navigator.of(context).pop();
+                  onPress(true);
+                },
+                child: Text('确认')),
+          ],
+        );
+      },
+    );
   }
 
   ///弹出dialog

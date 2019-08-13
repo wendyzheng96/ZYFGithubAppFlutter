@@ -38,7 +38,7 @@ class ReposDao {
       {String since = 'daily',
       String languageType,
       page = 0,
-      bool needDb = true}) async {
+      bool needDb = false}) async {
     TrendRepositoryDbProvider provider = TrendRepositoryDbProvider();
     String languageTypeDb = languageType ?? "*";
 

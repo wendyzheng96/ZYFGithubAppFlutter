@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:github_app_flutter/common/dao/issue_dao.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/common_utils.dart';
+import 'package:github_app_flutter/common/utils/dialog_utils.dart';
 import 'package:github_app_flutter/model/Repository.dart';
 import 'package:github_app_flutter/page/repos_detail_info_page.dart';
 import 'package:github_app_flutter/page/repos_file_page.dart';
@@ -55,35 +58,6 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
     animationController.forward();
   }
 
-  ///获取分支数据
-  _getBranchList() async {
-    var res = await ReposDao.getBranches(widget.username, widget.reposName);
-    if (res != null && res.result) {
-      setState(() {
-        branchList = res.data;
-      });
-    }
-  }
-
-  ///获取仓库状态，star、watch等
-  _getReposStatus() async {
-    var res =
-        await ReposDao.getRepositoryStatus(widget.username, widget.reposName);
-    bool isWatched = res.data["watch"];
-    bool isStared = res.data["star"];
-    String watchText = isWatched ? 'UnWatch' : 'Watch';
-    String starText = isStared ? 'UnStar' : 'Star';
-    IconData watchIcon =
-        isWatched ? ZIcons.REPOS_ITEM_WATCHED : ZIcons.REPOS_ITEM_WATCH;
-    IconData starIcon = isStared ? Icons.star : Icons.star_border;
-    BottomStatusModel model = BottomStatusModel(
-        watchText, starText, watchIcon, starIcon, isWatched, isStared);
-    setState(() {
-      bottomStatusModel = model;
-      tarBarControl.footerButton = _getBottomWidget();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return ScopedModel<ReposDetailModel>(
@@ -106,9 +80,10 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
                 reposDetailModel.setCurrentIndex(index);
               },
               floatingActionButton: FloatingActionButton(
-                onPressed: () {},
                 child: Icon(Icons.add),
-                backgroundColor: Theme.of(context).primaryColor,
+                onPressed: () {
+                  _createIssue();
+                },
               ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.endDocked,
@@ -154,11 +129,48 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
     return list;
   }
 
+  ///绘制底部状态
+  List<Widget> _getBottomWidget() {
+    List<Widget> bottomWidget = (bottomStatusModel == null)
+        ? []
+        : <Widget>[
+            _renderBottomItem(
+                bottomStatusModel.starText, bottomStatusModel.starIcon, () {
+              DialogUtils.showLoadingDialog(context);
+              ReposDao.doRepositoryStar(
+                      widget.username, widget.reposName, bottomStatusModel.star)
+                  .then((res) {
+                this._getReposStatus();
+                Navigator.pop(context);
+              });
+            }),
+            _renderBottomItem(
+                bottomStatusModel.watchText, bottomStatusModel.watchIcon, () {
+              DialogUtils.showLoadingDialog(context);
+              ReposDao.doRepositoryWatcher(widget.username, widget.reposName,
+                      bottomStatusModel.watch)
+                  .then((res) {
+                this._getReposStatus();
+                Navigator.pop(context);
+              });
+            }),
+            _renderBottomItem('fork', Icons.share, () {
+              DialogUtils.showLoadingDialog(context);
+              ReposDao.createForkDao(widget.username, widget.reposName)
+                  .then((res) {
+                this._getReposStatus();
+                Navigator.pop(context);
+              });
+            }),
+          ];
+    return bottomWidget;
+  }
+
   ///绘制底部状态item
-  _renderBottomItem(String text, IconData icon, VoidCallback onPressed){
+  _renderBottomItem(String text, IconData icon, VoidCallback onPressed) {
     Color color = Theme.of(context).brightness == Brightness.dark
-            ? Colors.white
-            : Theme.of(context).primaryColorDark;
+        ? Colors.white
+        : Theme.of(context).primaryColorDark;
 
     return FlatButton(
         onPressed: onPressed,
@@ -176,18 +188,63 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
         ));
   }
 
-  ///绘制底部状态
-  List<Widget> _getBottomWidget() {
-    List<Widget> bottomWidget = (bottomStatusModel == null)
-        ? []
-        : <Widget>[
-            _renderBottomItem(
-                bottomStatusModel.starText, bottomStatusModel.starIcon, () {}),
-            _renderBottomItem(bottomStatusModel.watchText,
-                bottomStatusModel.watchIcon, () {}),
-            _renderBottomItem('fork', Icons.share, () {}),
-          ];
-    return bottomWidget;
+  ///获取分支数据
+  _getBranchList() async {
+    var res = await ReposDao.getBranches(widget.username, widget.reposName);
+    if (res != null && res.result) {
+      setState(() {
+        branchList = res.data;
+      });
+    }
+  }
+
+  ///获取仓库状态，star、watch等
+  _getReposStatus() async {
+    var res =
+        await ReposDao.getRepositoryStatus(widget.username, widget.reposName);
+    bool isWatched = res.data["watch"];
+    bool isStared = res.data["star"];
+    String watchText = isWatched ? 'UnWatch' : 'Watch';
+    String starText = isStared ? 'UnStar' : 'Star';
+    IconData watchIcon =
+        isWatched ? ZIcons.REPOS_ITEM_WATCHED : ZIcons.REPOS_ITEM_WATCH;
+    IconData starIcon = isStared ? Icons.star : Icons.star_border;
+    BottomStatusModel model = BottomStatusModel(
+        watchText, starText, watchIcon, starIcon, isWatched, isStared);
+    setState(() {
+      bottomStatusModel = model;
+      tarBarControl.footerButton = _getBottomWidget();
+    });
+  }
+
+  ///创建issue
+  _createIssue() {
+    String title = '';
+    String content = '';
+    DialogUtils.showEditDialog(
+      context,
+      'Issue 编译',
+      (titleValue) {
+        title = titleValue;
+      },
+      (contentValue) {
+        content = contentValue;
+      },
+      () {
+        if (title == null || title.isEmpty) {
+          CommonUtils.showToast('请输入标题');
+          return;
+        }
+        if (content == null || content.isEmpty) {
+          CommonUtils.showToast('请输入内容');
+          return;
+        }
+//        DialogUtils.showLoadingDialog(context);
+      },
+      needTitle: true,
+      titleController: TextEditingController(),
+      contentController: TextEditingController(),
+    );
   }
 }
 

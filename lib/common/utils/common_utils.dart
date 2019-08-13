@@ -192,7 +192,6 @@ class CommonUtils {
       store.dispatch(RefreshThemeDataAction(nightTheme));
     } else {
       ///日间模式
-
       CommonUtils.pushTheme(store, themeIndex);
     }
   }

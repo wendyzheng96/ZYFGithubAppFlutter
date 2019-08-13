@@ -290,7 +290,7 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
   }
 
   ///刷新 初始化数据
-  Future<void> onRefresh() async {
+  Future<Null> onRefresh() async {
     _page = 1;
     await _getData();
   }

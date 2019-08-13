@@ -77,7 +77,7 @@ class CommitItem extends StatelessWidget {
               padding: EdgeInsets.only(top: 10),
               child: Text(
                 eventViewModel.actionTarget,
-                style: Theme.of(context).textTheme.body1.copyWith(fontSize: 14),
+                style: Theme.of(context).textTheme.body1,
               ),
             ),
             des

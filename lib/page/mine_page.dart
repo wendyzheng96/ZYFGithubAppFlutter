@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:github_app_flutter/common/dao/user_dao.dart';
+import 'package:github_app_flutter/common/redux/user_redux.dart';
 import 'package:github_app_flutter/common/zyf_state.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/widget/base_person_state.dart';
@@ -40,6 +42,19 @@ class _MinePageState extends BasePersonState<MinePage>{
         },
       ),
     );
+  }
+
+  @override
+  Future<Null> onRefresh() async {
+    super.onRefresh();
+    getUserInfo();
+  }
+
+  getUserInfo() async {
+    var res = await UserDao.getUserInfo(null);
+    if (res != null && res.result) {
+      _getStore().dispatch(UpdateUserAction(res.data));
+    }
   }
 
 }

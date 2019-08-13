@@ -244,7 +244,6 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
         widget.reposName,
         page: page,
         branch: ReposDetailModel.of(context).currentBranch,
-        needDb: page <= 1,
       ).then((res) {
         setState(() {
           if (page == 1) {
@@ -261,7 +260,6 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
         widget.reposName,
         page: page,
         branch: ReposDetailModel.of(context).currentBranch,
-        needDb: page <= 1,
       ).then((res) {
         setState(() {
           if (page == 1) {
