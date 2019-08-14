@@ -292,7 +292,7 @@ class ReposDao {
       List<FileModel> list = List();
       var data = res.data;
       if (data == null || data.length == 0) {
-        return DataResult(null, false);
+        return DataResult(list, true);
       }
       List<FileModel> dirs = [];
       List<FileModel> files = [];
@@ -357,7 +357,7 @@ class ReposDao {
       List<String> list = List();
       var dataList = res.data;
       if (dataList == null || dataList.length == 0) {
-        return DataResult(null, false);
+        return DataResult(list, true);
       }
       for (int i = 0; i < dataList.length; i++) {
         var data = dataList[i];
@@ -427,8 +427,7 @@ class ReposDao {
   }
 
   /// 获取当前仓库所有star用户
-  static getReposStar(username, reposName, page,
-      {needDb = false}) async {
+  static getReposStar(username, reposName, page, {needDb = false}) async {
     String fullName = username + "/" + reposName;
     ReposStarDbProvider provider = ReposStarDbProvider();
     next() async {
@@ -465,8 +464,7 @@ class ReposDao {
   }
 
   /// 获取当前仓库所有star用户
-  static getReposWatcher(username, reposName, page,
-      {needDb = false}) async {
+  static getReposWatcher(username, reposName, page, {needDb = false}) async {
     String fullName = username + "/" + reposName;
     ReposWatcherDbProvider provider = new ReposWatcherDbProvider();
     next() async {
@@ -503,8 +501,7 @@ class ReposDao {
   }
 
   /// 获取仓库的fork分支
-  static getReposForks(username, reposName, page,
-      {needDb = false}) async {
+  static getReposForks(username, reposName, page, {needDb = false}) async {
     String fullName = username + "/" + reposName;
     ReposForkDbProvider provider = ReposForkDbProvider();
     next() async {
@@ -656,7 +653,7 @@ class ReposDao {
   }
 
   ///保存搜索历史
-  static saveSearchKey(String keyword){
+  static saveSearchKey(String keyword) {
     SearchHistoryDbProvider provider = SearchHistoryDbProvider();
     provider.insert(keyword);
   }
@@ -665,7 +662,7 @@ class ReposDao {
   static getSearchHistory() async {
     SearchHistoryDbProvider provider = SearchHistoryDbProvider();
     List<String> list = await provider.getSearchHistory();
-    if(list == null){
+    if (list == null) {
       return DataResult(null, false);
     } else {
       return DataResult(list, true);
@@ -673,15 +670,14 @@ class ReposDao {
   }
 
   ///删除搜索关键词
-  static deleteSearchKey(String searchKey){
+  static deleteSearchKey(String searchKey) {
     SearchHistoryDbProvider provider = SearchHistoryDbProvider();
     provider.deleteByKey(searchKey);
   }
 
   ///清空搜索历史
-  static clearSearchHistory(){
+  static clearSearchHistory() {
     SearchHistoryDbProvider provider = SearchHistoryDbProvider();
     provider.clearHistory();
   }
-
 }

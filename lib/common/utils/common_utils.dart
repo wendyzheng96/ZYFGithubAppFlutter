@@ -35,7 +35,7 @@ class CommonUtils {
   ///复制文字
   static copy(String data, BuildContext context) {
     Clipboard.setData(new ClipboardData(text: data));
-    Fluttertoast.showToast(msg: '已经复制到粘贴板');
+    showToast('已经复制到粘贴板');
   }
 
   ///跳转外部链接
@@ -43,7 +43,7 @@ class CommonUtils {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      Fluttertoast.showToast(msg: "url异常 : $url");
+      showToast("url异常 : $url");
     }
   }
 

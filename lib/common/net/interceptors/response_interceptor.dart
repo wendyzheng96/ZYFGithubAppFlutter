@@ -14,7 +14,9 @@ class ResponseInterceptors extends InterceptorsWrapper {
           options.contentType.primaryType == "text") {
         return ResultData(response.data, true, Code.SUCCESS);
       }
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204) {
         return ResultData(response.data, true, Code.SUCCESS,
             headers: response.headers);
       }

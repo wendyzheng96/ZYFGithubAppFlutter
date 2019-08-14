@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:github_app_flutter/common/ab/provider/issue_comment_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/issue_detail_db_provider.dart';
 import 'package:github_app_flutter/common/ab/provider/repos_issue_db_provider.dart';
@@ -100,7 +102,7 @@ class IssueDao {
 
   /// issue的详请
   static Future<DataResult> getIssueDetail(username, repository, number,
-      {needDb = true}) async {
+      {needDb = false}) async {
     String fullName = username + "/" + repository;
     IssueDetailDbProvider provider = IssueDetailDbProvider();
 
@@ -167,5 +169,94 @@ class IssueDao {
       return dataResult;
     }
     return await next();
+  }
+
+  ///创建issue
+  static createIssue(username, reposName, issue) async {
+    String url = Address.createIssue(username, reposName);
+    var res = await httpManager.netFetch(
+        url,
+        issue,
+        {"Accept": 'application/vnd.github.VERSION.full+json'},
+        Options(method: 'POST'));
+    if (res != null && res.result) {
+      return DataResult(res.data, true);
+    } else {
+      return DataResult(null, false);
+    }
+  }
+
+  /// 回复issue
+  static addIssueComment(username, reposName, number, comment) async {
+    String url = Address.addIssueComment(username, reposName, number);
+    var res = await httpManager.netFetch(
+        url,
+        {"body": comment},
+        {"Accept": 'application/vnd.github.VERSION.full+json'},
+        Options(method: 'POST'));
+    if (res != null && res.result) {
+      return DataResult(res.data, true);
+    } else {
+      return DataResult(null, false);
+    }
+  }
+
+  /// 编辑issue
+  static editIssue(username, reposName, number, issue) async {
+    String url = Address.editIssue(username, reposName, number);
+    var res = await httpManager.netFetch(
+        url,
+        issue,
+        {"Accept": 'application/vnd.github.VERSION.full+json'},
+        Options(method: 'PATCH'));
+    if (res != null && res.result) {
+      return DataResult(res.data, true);
+    } else {
+      return DataResult(null, false);
+    }
+  }
+
+  /// 锁定issue
+  static lockIssue(username, reposName, number, locked) async {
+    String url = Address.lockIssue(username, reposName, number);
+    var res = await httpManager.netFetch(
+        url,
+        null,
+        {"Accept": 'application/vnd.github.VERSION.full+json'},
+        Options(
+            method: locked ? "DELETE" : 'PUT', contentType: ContentType.text),
+        noTip: true);
+    if (res != null && res.result) {
+      return DataResult(res.data, true);
+    } else {
+      return DataResult(null, false);
+    }
+  }
+
+  /// 编辑issue回复
+  static editComment(username, reposName, number, commentId, comment) async {
+    String url = Address.editComment(username, reposName, commentId);
+    var res = await httpManager.netFetch(
+        url,
+        comment,
+        {"Accept": 'application/vnd.github.VERSION.full+json'},
+        new Options(method: 'PATCH'));
+    if (res != null && res.result) {
+      return DataResult(res.data, true);
+    } else {
+      return DataResult(null, false);
+    }
+  }
+
+  /// 删除issue回复
+  static deleteComment(username, reposName, number, commentId) async {
+    String url = Address.editComment(username, reposName, commentId);
+    var res = await httpManager
+        .netFetch(url, null, null, new Options(method: 'DELETE'), noTip: true);
+    if (res != null && res.result) {
+      return DataResult(res.data, true);
+    } else {
+      return DataResult(null, false);
+    }
   }
 }

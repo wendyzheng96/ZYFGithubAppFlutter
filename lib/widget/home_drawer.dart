@@ -46,6 +46,7 @@ class _HomeDrawerState extends State<HomeDrawer>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Material(
       child: StoreBuilder<ZYFState>(
         builder: (context, store) {

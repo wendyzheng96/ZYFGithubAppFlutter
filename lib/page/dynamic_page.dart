@@ -73,9 +73,7 @@ class _DynamicPageState extends State<DynamicPage>
       if (!res.result) {
         _page--;
       }
-      setState(() {
-        _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
-      });
+      _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
       return res.data ?? List<Event>();
     });
   }

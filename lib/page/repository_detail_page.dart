@@ -31,9 +31,6 @@ class RepositoryDetailPage extends StatefulWidget {
 
 class _RepositoryDetailPageState extends State<RepositoryDetailPage>
     with SingleTickerProviderStateMixin {
-  ///动画控制器，用于底部发布 issue 按键动画
-  AnimationController animationController;
-
   ///仓库的详情数据实体
   final ReposDetailModel reposDetailModel = ReposDetailModel();
 
@@ -46,16 +43,13 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
   ///分支列表
   List<String> branchList = List();
 
+  GlobalKey<ReposIssuePageState> issueKey = GlobalKey<ReposIssuePageState>();
+
   @override
   void initState() {
     super.initState();
     _getBranchList();
     _getReposStatus();
-
-    ///悬浮按键动画控制器
-    animationController = new AnimationController(
-        vsync: this, duration: Duration(milliseconds: 800));
-    animationController.forward();
   }
 
   @override
@@ -72,7 +66,11 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
               tabViews: <Widget>[
                 ReposDetailInfoPage(widget.username, widget.reposName),
                 ReposReadmePage(widget.username, widget.reposName),
-                ReposIssuePage(widget.username, widget.reposName),
+                ReposIssuePage(
+                  widget.username,
+                  widget.reposName,
+                  key: issueKey,
+                ),
                 ReposFilePage(widget.username, widget.reposName)
               ],
               title: Text(widget.reposName),
@@ -230,7 +228,7 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
       (contentValue) {
         content = contentValue;
       },
-      () {
+      onPressed: () {
         if (title == null || title.isEmpty) {
           CommonUtils.showToast('请输入标题');
           return;
@@ -239,7 +237,15 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
           CommonUtils.showToast('请输入内容');
           return;
         }
-//        DialogUtils.showLoadingDialog(context);
+        DialogUtils.showLoadingDialog(context);
+        IssueDao.createIssue(widget.username, widget.reposName,
+            {"title": title, "body": content}).then((res) {
+          if (issueKey.currentState != null && issueKey.currentState.mounted) {
+            issueKey.currentState.showRefreshLoading();
+          }
+          Navigator.pop(context);
+          Navigator.pop(context);
+        });
       },
       needTitle: true,
       titleController: TextEditingController(),

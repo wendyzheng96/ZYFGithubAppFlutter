@@ -19,13 +19,13 @@ class ReposIssuePage extends StatefulWidget {
   ///仓库名
   final String reposName;
 
-  ReposIssuePage(this.username, this.reposName);
+  ReposIssuePage(this.username, this.reposName, {Key key}) : super(key: key);
 
   @override
-  _ReposIssuePageState createState() => _ReposIssuePageState();
+  ReposIssuePageState createState() => ReposIssuePageState();
 }
 
-class _ReposIssuePageState extends State<ReposIssuePage>
+class ReposIssuePageState extends State<ReposIssuePage>
     with AutomaticKeepAliveClientMixin {
   final GlobalKey<RefreshIndicatorState> refreshKey =
       GlobalKey<RefreshIndicatorState>();
@@ -131,7 +131,7 @@ class _ReposIssuePageState extends State<ReposIssuePage>
                         setState(() {
                           _searchContent = value;
                         });
-                        if(_searchContent.isEmpty) {
+                        if (_searchContent.isEmpty) {
                           showRefreshLoading();
                         }
                       },
@@ -157,11 +157,13 @@ class _ReposIssuePageState extends State<ReposIssuePage>
                       });
                       showRefreshLoading();
                     },
-                    child: _searchContent.isEmpty?Container():Icon(
-                      Icons.cancel,
-                      size: 16,
-                      color: Colors.grey,
-                    ),
+                    child: _searchContent.isEmpty
+                        ? Container()
+                        : Icon(
+                            Icons.cancel,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
                   ),
                 ],
               ),
@@ -209,9 +211,9 @@ class _ReposIssuePageState extends State<ReposIssuePage>
                         Text(
                           issue.title,
                           style: Theme.of(context).textTheme.body1.copyWith(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                         Container(
                           height: 6,
@@ -268,14 +270,12 @@ class _ReposIssuePageState extends State<ReposIssuePage>
     if (_searchContent == null || _searchContent.length == 0) {
       return await IssueDao.getReposIssues(
               widget.username, widget.reposName, selectType.value,
-              page: _page, needDb: _page <= 1)
+              page: _page)
           .then((res) {
-            if(!res.result) {
-              _page--;
-            }
-        setState(() {
-          _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
-        });
+        if (!res.result) {
+          _page--;
+        }
+        _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
         return res.data ?? List();
       });
     }
@@ -283,9 +283,7 @@ class _ReposIssuePageState extends State<ReposIssuePage>
             _searchContent, widget.username, widget.reposName, selectType.value,
             page: _page)
         .then((res) {
-      setState(() {
-        _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
-      });
+      _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
       return res.data ?? List();
     });
   }

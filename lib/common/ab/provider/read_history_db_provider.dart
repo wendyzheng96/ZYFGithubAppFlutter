@@ -101,8 +101,8 @@ class ReadHistoryDbProvider extends BaseDbProvider {
   Future<List<Repository>> getHistoryData(int page) async {
     Database db = await getDataBase();
     var provider = await _getProvider(db, page);
+    List<Repository> list = List();
     if (provider != null) {
-      List<Repository> list = new List();
       for (var providerMap in provider) {
         ReadHistoryDbProvider provider =
             ReadHistoryDbProvider.fromMap(providerMap);
@@ -112,8 +112,7 @@ class ReadHistoryDbProvider extends BaseDbProvider {
 
         list.add(Repository.fromJson(mapData));
       }
-      return list;
     }
-    return null;
+    return list;
   }
 }

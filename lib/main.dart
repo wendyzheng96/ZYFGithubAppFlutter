@@ -46,7 +46,8 @@ class MyApp extends StatelessWidget {
               WelcomePage.sName: (context) => WelcomePage(),
               HomePage.sName: (context) =>
                   NavigatorUtils.pageContainer(HomePage()),
-              LoginPage.sName: (context) => LoginPage(),
+              LoginPage.sName: (context) =>
+                  NavigatorUtils.pageContainer(LoginPage()),
             },
           );
         }));

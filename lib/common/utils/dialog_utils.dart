@@ -63,7 +63,7 @@ class DialogUtils {
           child: Container(
             width: 270,
             height: 280,
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.white,
               //用一个BoxDecoration装饰器提供背景图片
               borderRadius: BorderRadius.circular(10),
@@ -121,17 +121,16 @@ class DialogUtils {
         context: context,
         builder: (BuildContext context) {
           return Center(
-            child: new Container(
+            child: Container(
               width: width,
               height: height,
-              padding: new EdgeInsets.all(4.0),
-              margin: new EdgeInsets.all(20.0),
-              decoration: new BoxDecoration(
+              padding: EdgeInsets.all(4.0),
+              decoration: BoxDecoration(
                 color: Colors.white,
                 //用一个BoxDecoration装饰器提供背景图片
                 borderRadius: BorderRadius.all(Radius.circular(4.0)),
               ),
-              child: new ListView.builder(
+              child: ListView.builder(
                   itemCount: commitMaps.length,
                   itemBuilder: (context, index) {
                     return RaisedButton(
@@ -159,28 +158,26 @@ class DialogUtils {
 
   ///显示编辑弹框
   static Future<Null> showEditDialog(
-      BuildContext context,
-      String dialogTitle,
-      ValueChanged<String> onTitleChanged,
-      ValueChanged<String> onContentChanged,
-      VoidCallback onPressed, {
-        TextEditingController titleController,
-        TextEditingController contentController,
-        bool needTitle = true,
-      }) {
+    BuildContext context,
+    String dialogTitle,
+    ValueChanged<String> onTitleChanged,
+    ValueChanged<String> onContentChanged, {
+    @required VoidCallback onPressed,
+    TextEditingController titleController,
+    TextEditingController contentController,
+    bool needTitle = true,
+  }) {
     return showAppDialog(
         context: context,
         builder: (BuildContext context) {
-          return Center(
-            child: IssueEditDialog(
-              dialogTitle,
-              onTitleChanged,
-              onContentChanged,
-              onPressed,
-              titleController: titleController,
-              contentController: contentController,
-              needTitle: needTitle,
-            ),
+          return IssueEditDialog(
+            dialogTitle,
+            onTitleChanged,
+            onContentChanged,
+            onPressed,
+            titleController: titleController,
+            contentController: contentController,
+            needTitle: needTitle,
           );
         });
   }
@@ -224,13 +221,6 @@ class DialogUtils {
     return showDialog<T>(
         context: context,
         barrierDismissible: barrierDismissible,
-        builder: (context) {
-          return MediaQuery(
-            ///不受系统字体缩放影响
-            data: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                .copyWith(textScaleFactor: 1),
-            child: SafeArea(child: builder(context)),
-          );
-        });
+        builder: builder);
   }
 }

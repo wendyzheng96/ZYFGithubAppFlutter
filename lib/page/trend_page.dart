@@ -52,21 +52,25 @@ class _TrendPageState extends State<TrendPage>
               margin: EdgeInsets.only(top: 44),
               child: RefreshIndicator(
                 key: refreshIndicatorKey,
-                child: ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: trendList.length,
-                  itemBuilder: (context, index) {
-                    ReposViewModel repoModel =
-                        ReposViewModel.fromTrendMap(trendList[index]);
-                    return ReposItem(
-                      repoModel,
-                      onPressed: () {
-                        NavigatorUtils.goReposDetail(context,
-                            repoModel.ownerName, repoModel.repositoryName);
-                      },
-                    );
-                  },
-                ),
+                child: (trendList == null || trendList.length == 0)
+                    ? Center(child: Text('暂无数据'))
+                    : ListView.builder(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        itemCount: trendList.length,
+                        itemBuilder: (context, index) {
+                          ReposViewModel repoModel =
+                              ReposViewModel.fromTrendMap(trendList[index]);
+                          return ReposItem(
+                            repoModel,
+                            onPressed: () {
+                              NavigatorUtils.goReposDetail(
+                                  context,
+                                  repoModel.ownerName,
+                                  repoModel.repositoryName);
+                            },
+                          );
+                        },
+                      ),
                 onRefresh: _getTrendRepos,
               ),
             ),

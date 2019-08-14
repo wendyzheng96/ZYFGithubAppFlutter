@@ -23,64 +23,68 @@ class IssueItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.all(12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CircleAvatar(
-                radius: 16,
-                backgroundColor: Color(ZColors.imgColor),
-                backgroundImage: NetworkImage(issueItemModel.actionUserPic),
-              ),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              issueItemModel.actionUser,
-                              style: Theme.of(context).textTheme.body1.copyWith(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
+    return InkWell(
+      onTap: onPressed,
+      onLongPress: onLongPress,
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(12),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 16,
+                  backgroundColor: Color(ZColors.imgColor),
+                  backgroundImage: NetworkImage(issueItemModel.actionUserPic),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                issueItemModel.actionUser,
+                                style: Theme.of(context).textTheme.body1.copyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
-                          ),
-                          Text(
-                            issueItemModel.actionTime,
-                            style: TextStyle(
-                              color: Color(ZColors.textHintValue),
-                              fontSize: 12,
+                            Text(
+                              issueItemModel.actionTime,
+                              style: TextStyle(
+                                color: Color(ZColors.textHintValue),
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Container(height: 8),
-                      MarkdownBody(data: issueItemModel.issueComment,
-                      onTapLink: (String source){
-                        CommonUtils.launchUrl(context, source);
-                      },),
-                    ],
+                          ],
+                        ),
+                        Container(height: 8),
+                        MarkdownBody(data: issueItemModel.issueComment,
+                          onTapLink: (String source){
+                            CommonUtils.launchUrl(context, source);
+                          },),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Container(
-          margin: EdgeInsets.only(left: 54),
-          child: Divider(
-            height: 1.0,
-            color: Theme.of(context).dividerColor,
-          ),
-        )
-      ],
+          Container(
+            margin: EdgeInsets.only(left: 54),
+            child: Divider(
+              height: 1.0,
+              color: Theme.of(context).dividerColor,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

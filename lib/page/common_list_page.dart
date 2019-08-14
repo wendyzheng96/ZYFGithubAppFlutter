@@ -94,58 +94,67 @@ class _CommonListPageState extends State<CommonListPage>
 
   _getData() async {
     switch (widget.dataType) {
+
+      ///用户仓库
       case 'user_repos':
-        ///用户仓库
         return await ReposDao.getUserRepos(widget.username, _page, null)
             .then((res) {
           return res.data;
         });
+
+      ///用户star
       case 'user_star':
-        ///用户star
         return await ReposDao.getStarRepos(widget.username, _page, null)
             .then((res) {
           return res.data;
         });
+
+      ///用户关注人列表
       case 'followed':
-        ///用户关注人列表
         return await UserDao.getFollowedList(widget.username, _page)
             .then((res) {
           return res.data;
         });
+
+      ///用户粉丝列表
       case 'follower':
-        ///用户粉丝列表
         return await UserDao.getFollowerList(widget.username, _page)
             .then((res) {
           return res.data;
         });
+
+      ///仓库收藏人列表
       case 'repo_star':
-        ///仓库收藏人列表
         return await ReposDao.getReposStar(
                 widget.username, widget.reposName, _page)
             .then((res) {
           return res.data;
         });
+
+      ///仓库订阅人列表
       case 'repo_watcher':
-        ///仓库订阅人列表
         return await ReposDao.getReposWatcher(
                 widget.username, widget.reposName, _page)
             .then((res) {
           return res.data;
         });
+
+      ///仓库分支表
       case 'repo_fork':
-        ///仓库分支表
         return await ReposDao.getReposForks(
                 widget.username, widget.reposName, _page)
             .then((res) {
           return res.data;
         });
+
+      ///用户阅读历史表
       case 'history':
-        ///用户阅读历史表
         return await ReposDao.getReadHistory(_page).then((res) {
           return res.data;
         });
+
+      ///标签相关仓库表
       case 'topics':
-        ///标签相关仓库表
         return await ReposDao.searchTopicRepos(widget.username, page: _page)
             .then((res) {
           return res.data;

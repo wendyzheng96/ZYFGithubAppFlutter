@@ -19,9 +19,9 @@ class IssueHeaderItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color labelColor;
-    if(issueItemModel.state == 'open') {
+    if (issueItemModel.state == 'open') {
       labelColor = Colors.green;
-    } else if(issueItemModel.state == 'closed'){
+    } else if (issueItemModel.state == 'closed') {
       labelColor = Colors.redAccent;
     } else {
       labelColor = Colors.grey;
@@ -93,12 +93,15 @@ class IssueHeaderItem extends StatelessWidget {
                         ),
                         Text(
                           issueItemModel.issueComment,
-                          style: Theme.of(context).textTheme.body1.copyWith(fontSize: 15),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle
+                              .copyWith(fontSize: 15),
                         ),
                         Container(height: 8),
                         MarkdownBody(
                           data: issueItemModel.issueDesHtml,
-                          onTapLink: (source){
+                          onTapLink: (source) {
                             CommonUtils.launchUrl(context, source);
                           },
                         ),
@@ -110,7 +113,9 @@ class IssueHeaderItem extends StatelessWidget {
             ),
           ),
         ),
-        Divider(),
+        Divider(
+          height: 1,
+        ),
       ],
     );
   }

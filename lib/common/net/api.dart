@@ -63,7 +63,7 @@ class HttpManager {
           e.type == DioErrorType.RECEIVE_TIMEOUT) {
         errorResponse.statusCode = Code.NETWORK_TIMEOUT;
       }
-      return new ResultData(
+      return ResultData(
           Code.errorHandleFunction(errorResponse.statusCode, e.message, noTip),
           false,
           errorResponse.statusCode);
