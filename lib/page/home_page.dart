@@ -3,6 +3,7 @@ import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
 import 'package:github_app_flutter/page/dynamic_page.dart';
 import 'package:github_app_flutter/page/mine_page.dart';
+import 'package:github_app_flutter/page/notify_page.dart';
 import 'package:github_app_flutter/page/search_page.dart';
 import 'package:github_app_flutter/page/trend_page.dart';
 import 'package:github_app_flutter/widget/home_drawer.dart';
@@ -107,7 +108,9 @@ class _HomePageState extends State<HomePage> {
         return IconButton(
           icon: const Icon(Icons.notifications),
           tooltip: '通知',
-          onPressed: () {},
+          onPressed: () {
+            NavigatorUtils.navigatorRouter(context, NotifyPage());
+          },
         );
       default:
         return null;

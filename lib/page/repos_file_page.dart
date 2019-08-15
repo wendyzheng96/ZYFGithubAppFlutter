@@ -16,13 +16,13 @@ class ReposFilePage extends StatefulWidget {
   ///仓库名
   final String reposName;
 
-  ReposFilePage(this.username, this.reposName);
+  ReposFilePage(this.username, this.reposName, {Key key}) : super(key: key);
 
   @override
-  _ReposFilePagePage createState() => _ReposFilePagePage();
+  ReposFilePageState createState() => ReposFilePageState();
 }
 
-class _ReposFilePagePage extends State<ReposFilePage>
+class ReposFilePageState extends State<ReposFilePage>
     with AutomaticKeepAliveClientMixin {
   final GlobalKey<RefreshIndicatorState> refreshKey =
       GlobalKey<RefreshIndicatorState>();

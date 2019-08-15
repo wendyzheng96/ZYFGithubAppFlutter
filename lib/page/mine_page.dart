@@ -44,13 +44,9 @@ class _MinePageState extends BasePersonState<MinePage>{
     );
   }
 
-  @override
-  Future<Null> onRefresh() async {
-    super.onRefresh();
-    getUserInfo();
-  }
 
-  getUserInfo() async {
+  @override
+  Future refreshData() async {
     var res = await UserDao.getUserInfo(null);
     if (res != null && res.result) {
       _getStore().dispatch(UpdateUserAction(res.data));

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
-import 'package:github_app_flutter/model/TrendingRepoModel.dart';
 import 'package:github_app_flutter/widget/drop_down_filter.dart';
+import 'package:github_app_flutter/widget/dynamic_list_view.dart';
 import 'package:github_app_flutter/widget/repos_item.dart';
 
 /// 趋势页面
@@ -24,8 +24,6 @@ class _TrendPageState extends State<TrendPage>
   TrendTypeModel selectTime;
   TrendTypeModel selectLanguage;
 
-  List<TrendingRepoModel> trendList = List();
-
   @override
   bool get wantKeepAlive => true;
 
@@ -36,8 +34,6 @@ class _TrendPageState extends State<TrendPage>
       selectTime = trendTime()[0];
       selectLanguage = languageType()[0];
     });
-    showRefreshLoading();
-    _getTrendRepos();
   }
 
   @override
@@ -50,28 +46,22 @@ class _TrendPageState extends State<TrendPage>
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(top: 44),
-              child: RefreshIndicator(
-                key: refreshIndicatorKey,
-                child: (trendList == null || trendList.length == 0)
-                    ? Center(child: Text('暂无数据'))
-                    : ListView.builder(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: trendList.length,
-                        itemBuilder: (context, index) {
-                          ReposViewModel repoModel =
-                              ReposViewModel.fromTrendMap(trendList[index]);
-                          return ReposItem(
-                            repoModel,
-                            onPressed: () {
-                              NavigatorUtils.goReposDetail(
-                                  context,
-                                  repoModel.ownerName,
-                                  repoModel.repositoryName);
-                            },
-                          );
-                        },
-                      ),
-                onRefresh: _getTrendRepos,
+              child: DynamicListView.build(
+                itemBuilder: (List dataList, context, index) {
+                  ReposViewModel repoModel =
+                      ReposViewModel.fromTrendMap(dataList[index]);
+                  return ReposItem(
+                    repoModel,
+                    onPressed: () {
+                      NavigatorUtils.goReposDetail(context, repoModel.ownerName,
+                          repoModel.repositoryName);
+                    },
+                  );
+                },
+                dataRequester: _dataRequester,
+                initRequester: _initRequester,
+                isLoadComplete: true,
+                refreshKey: refreshIndicatorKey,
               ),
             ),
             _renderHeadItems(),
@@ -92,7 +82,6 @@ class _TrendPageState extends State<TrendPage>
                 onSelect: (TrendTypeModel trendModel) {
                   selectTime = trendModel;
                   showRefreshLoading();
-                  _getTrendRepos();
                 }),
             FilterButtonModel(
                 selectedModel: selectLanguage,
@@ -100,7 +89,6 @@ class _TrendPageState extends State<TrendPage>
                 onSelect: (TrendTypeModel trendModel) {
                   selectLanguage = trendModel;
                   showRefreshLoading();
-                  _getTrendRepos();
                 }),
           ],
         ),
@@ -114,14 +102,22 @@ class _TrendPageState extends State<TrendPage>
     });
   }
 
+  ///刷新数据
+  _initRequester() async {
+    return await _getTrendRepos();
+  }
+
+  ///加载更多
+  _dataRequester() async {
+    return await _getTrendRepos();
+  }
+
   ///获取趋势数据
-  Future<void> _getTrendRepos() async {
+  _getTrendRepos() async {
     return await ReposDao.getTrendRepos(
             since: selectTime.value, languageType: selectLanguage.value)
         .then((res) {
-      setState(() {
-        trendList = res.data ?? List();
-      });
+      return res.data ?? List();
     });
   }
 }

@@ -163,6 +163,9 @@ class _IssueEditDialogState extends State<IssueEditDialog> {
   }
 
   Widget renderBottomBtn() {
+    Color color = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Theme.of(context).primaryColorDark;
     return Row(
       children: <Widget>[
         Expanded(
@@ -189,7 +192,7 @@ class _IssueEditDialogState extends State<IssueEditDialog> {
             child: Text(
               '确认',
               style: TextStyle(
-                color: Theme.of(context).primaryColorDark,
+                color: color,
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),

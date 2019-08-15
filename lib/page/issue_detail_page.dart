@@ -132,10 +132,11 @@ class _IssueDetailPageState extends State<IssueDetailPage>
             page: _page)
         .then((res) {
       if (!res.result) {
-        CommonUtils.showToast(res.errorMsg);
         _page--;
       }
-      _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
+      setState(() {
+        _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
+      });
       return res.data ?? List<Issue>();
     });
   }
@@ -325,67 +326,20 @@ class _IssueDetailPageState extends State<IssueDetailPage>
 
   ///issue回复操作框
   _showCommentDialog(Issue issue) {
-    DialogUtils.showAppDialog(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.white,
-            ),
-            margin: EdgeInsets.symmetric(horizontal: 50),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                _renderChooseItem('编辑', () {
-                  _editCommit(issue.id.toString(), issue.body);
-                }),
-                Divider(
-                  height: 1,
-                ),
-                _renderChooseItem('删除', () {
-                  _deleteCommit(issue.id.toString());
-                }),
-                Divider(
-                  height: 1,
-                ),
-                _renderChooseItem('复制', () {
-                  CommonUtils.copy(issue.body, context);
-                  Navigator.pop(context);
-                }),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  ///操作框item
-  _renderChooseItem(text, onPressed) {
-    return RawMaterialButton(
-      padding: EdgeInsets.symmetric(vertical: 12),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      child: Flex(
-        direction: Axis.horizontal,
-        children: <Widget>[
-          Expanded(
-            child: Text(
-              'text',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15),
-            ),
-          ),
-        ],
-      ),
-      onPressed: onPressed,
-    );
+    List<String> optionList = ['编辑', '删除', '复制'];
+    DialogUtils.showListDialog(context, optionList, onTap: (index) {
+      if (index == 0) {
+        _editCommit(issue.id.toString(), issue.body);
+      } else if (index == 1) {
+        _deleteCommit(issue.id.toString());
+      } else if (index == 2) {
+        CommonUtils.copy(issue.body, context);
+      }
+    });
   }
 
   ///编辑issue回复
   _editCommit(String id, String content) {
-    Navigator.pop(context);
     String contentData = content;
     contentControl = TextEditingController(text: contentData);
     DialogUtils.showEditDialog(
@@ -420,7 +374,6 @@ class _IssueDetailPageState extends State<IssueDetailPage>
 
   ///删除issue回复
   _deleteCommit(String id) {
-    Navigator.pop(context);
     DialogUtils.showLoadingDialog(context);
     IssueDao.deleteComment(
       widget.username,

@@ -17,6 +17,10 @@ class ReposItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color color = Theme.of(context).brightness == Brightness.dark
+        ? Color(ZColors.miWhite)
+        : Color(ZColors.textPrimaryValue);
+
     return GestureDetector(
       child: Container(
         margin: EdgeInsets.only(bottom: 10),
@@ -97,12 +101,9 @@ class ReposItem extends StatelessWidget {
                 child: (reposModel.repositoryDes == null ||
                         reposModel.repositoryDes.isEmpty)
                     ? null
-                    : Text(
-                        reposModel.repositoryDes,
-                        style: Theme.of(context).textTheme.body1.copyWith(
-                            fontSize: 14,
-                            height: 1.2),
-                      ),
+                    : Text(reposModel.repositoryDes,
+                        style:
+                            TextStyle(color: color, fontSize: 14, height: 1.2)),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -176,7 +176,7 @@ class EventUtils {
                 " " +
                 event.payload.commits[i].sha.substring(0, 4));
           }
-          DialogUtils.showCommitOptionDialog(context, list, (index) {
+          DialogUtils.showListDialog(context, list, onTap: (index) {
             NavigatorUtils.goPushDetailPage(context, owner, repositoryName,
                 event.payload.commits[index].sha, true);
           });

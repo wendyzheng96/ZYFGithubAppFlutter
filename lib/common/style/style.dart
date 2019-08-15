@@ -70,7 +70,7 @@ class ZStyles {
   );
 
   static const smallerTextWhite70 = TextStyle(
-    color: Colors.white70,
+    color: Color(0xccffffff),
     fontSize: smallerTextSize,
   );
 

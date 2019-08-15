@@ -108,6 +108,52 @@ class DialogUtils {
     );
   }
 
+  static Future<Null> showListDialog(BuildContext context, List<String> list,
+      {ValueChanged<int> onTap}) {
+    return DialogUtils.showAppDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.white,
+            ),
+            margin: EdgeInsets.symmetric(horizontal: 50),
+            child: ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return RawMaterialButton(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    child: Flex(
+                      direction: Axis.horizontal,
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            list[index],
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      onTap(index);
+                    },
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider(height: 1);
+                },
+                itemCount: list.length),
+          ),
+        );
+      },
+    );
+  }
+
   ///列表item dialog
   static Future<Null> showCommitOptionDialog(
     BuildContext context,

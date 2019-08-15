@@ -9,6 +9,7 @@ import 'package:github_app_flutter/page/repos_detail_info_page.dart';
 import 'package:github_app_flutter/page/repos_file_page.dart';
 import 'package:github_app_flutter/page/repos_issue_page.dart';
 import 'package:github_app_flutter/page/repos_readme_page.dart';
+import 'package:github_app_flutter/widget/common_option_widget.dart';
 import 'package:github_app_flutter/widget/icon_text.dart';
 import 'package:github_app_flutter/widget/tabbar_widget.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -31,6 +32,9 @@ class RepositoryDetailPage extends StatefulWidget {
 
 class _RepositoryDetailPageState extends State<RepositoryDetailPage>
     with SingleTickerProviderStateMixin {
+  ///标题栏右侧显示控制
+  final OptionControl _optionControl = OptionControl();
+
   ///仓库的详情数据实体
   final ReposDetailModel reposDetailModel = ReposDetailModel();
 
@@ -43,7 +47,13 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
   ///分支列表
   List<String> branchList = List();
 
-  GlobalKey<ReposIssuePageState> issueKey = GlobalKey<ReposIssuePageState>();
+  GlobalKey<ReposDetailInfoPageState> infoKey = GlobalKey();
+
+  GlobalKey<ReposReadmePageState> readmeKey = GlobalKey();
+
+  GlobalKey<ReposIssuePageState> issueKey = GlobalKey();
+
+  GlobalKey<ReposFilePageState> fileKey = GlobalKey();
 
   @override
   void initState() {
@@ -58,22 +68,35 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
         model: reposDetailModel,
         child: ScopedModelDescendant<ReposDetailModel>(
             builder: (context, child, model) {
+          Widget rightContent =
+              (model.repository != null && model.repository.htmlUrl != null)
+                  ? CommonOptionWidget(
+                      _optionControl,
+                      otherList: [
+                        OptionModel('分支', 'branch', (model) {
+                          _showBranchesDialog();
+                        })
+                      ],
+                    )
+                  : Container();
+
           return TabBarWidget(
               indicatorColor: Colors.white,
               resizeToAvoidBottomPadding: false,
               type: TabBarWidget.TOP_TAB,
               tabItems: _renderTabItems(),
               tabViews: <Widget>[
-                ReposDetailInfoPage(widget.username, widget.reposName),
-                ReposReadmePage(widget.username, widget.reposName),
-                ReposIssuePage(
-                  widget.username,
-                  widget.reposName,
-                  key: issueKey,
-                ),
-                ReposFilePage(widget.username, widget.reposName)
+                ReposDetailInfoPage(
+                    widget.username, widget.reposName, _optionControl,
+                    key: infoKey),
+                ReposReadmePage(widget.username, widget.reposName,
+                    key: readmeKey),
+                ReposIssuePage(widget.username, widget.reposName,
+                    key: issueKey),
+                ReposFilePage(widget.username, widget.reposName, key: fileKey)
               ],
               title: Text(widget.reposName),
+              actions: <Widget>[rightContent],
               onPageChanged: (index) {
                 reposDetailModel.setCurrentIndex(index);
               },
@@ -251,6 +274,27 @@ class _RepositoryDetailPageState extends State<RepositoryDetailPage>
       titleController: TextEditingController(),
       contentController: TextEditingController(),
     );
+  }
+
+  ///仓库分支信息
+  _showBranchesDialog() {
+    if (branchList == null || branchList.length == 0) {
+      return;
+    }
+    DialogUtils.showListDialog(context, branchList, onTap: (index) {
+      setState(() {
+        reposDetailModel.setCurrentBranch(branchList[index]);
+      });
+      if (infoKey.currentState != null && infoKey.currentState.mounted) {
+        infoKey.currentState.showRefreshLoading();
+      }
+      if (readmeKey.currentState != null && readmeKey.currentState.mounted) {
+        readmeKey.currentState.refreshReadme();
+      }
+      if (fileKey.currentState != null && fileKey.currentState.mounted) {
+        fileKey.currentState.showRefreshLoading();
+      }
+    });
   }
 }
 

@@ -46,21 +46,24 @@ class IconText extends StatelessWidget {
               maxLines: 1,
             ),
           );
-    return Container(
-      child: Row(
-        textBaseline: TextBaseline.alphabetic,
-        mainAxisAlignment: mainAxisAlignment,
-        mainAxisSize: mainAxisSize,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            iconData,
-            size: iconSize,
-            color: iconColor??Theme.of(context).primaryColor,
-          ),
-          Padding(padding: EdgeInsets.all(padding)),
-          showText,
-        ],
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        child: Row(
+          textBaseline: TextBaseline.alphabetic,
+          mainAxisAlignment: mainAxisAlignment,
+          mainAxisSize: mainAxisSize,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              iconData,
+              size: iconSize,
+              color: iconColor ?? Theme.of(context).primaryColor,
+            ),
+            Padding(padding: EdgeInsets.all(padding)),
+            showText,
+          ],
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:github_app_flutter/common/config/config.dart';
+import 'package:github_app_flutter/common/dao/issue_dao.dart';
 import 'package:github_app_flutter/common/local/local_storage.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
@@ -52,39 +53,40 @@ class _HomeDrawerState extends State<HomeDrawer>
         builder: (context, store) {
           User user = store.state.userInfo;
           return Drawer(
-              child: Container(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.only(),
-                    children: <Widget>[
-                      _drawerHeader(user, context),
-                      _renderItem(Icons.feedback, '问题反馈', () {
-                        CommonUtils.showToast('问题反馈');
-                      }),
-                      _renderItem(Icons.history, '浏览历史', () {
-                        NavigatorUtils.gotoCommonList(
-                            context, "浏览历史", "repository", "history",
-                            username: "", reposName: "");
-                      }),
-                      _renderItem(Icons.color_lens, '切换主题', () {
-                        _showThemeDialog(context, store);
-                      }),
-                      _renderItem(Icons.local_offer, '关于', () {
-                        _showAPPAboutDialog(context);
-                      }),
-                    ],
+            child: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.only(),
+                      children: <Widget>[
+                        _drawerHeader(user, context),
+                        _renderItem(Icons.feedback, '问题反馈', () {
+                          _feedback(user);
+                        }),
+                        _renderItem(Icons.history, '浏览历史', () {
+                          NavigatorUtils.gotoCommonList(
+                              context, "浏览历史", "repository", "history",
+                              username: "", reposName: "");
+                        }),
+                        _renderItem(Icons.color_lens, '切换主题', () {
+                          _showThemeDialog(context, store);
+                        }),
+                        _renderItem(Icons.local_offer, '关于', () {
+                          _showAPPAboutDialog(context);
+                        }),
+                      ],
+                    ),
                   ),
-                ),
-                Divider(
-                  height: 1,
-                ),
-                _drawerBottom(context, store),
-              ],
+                  Divider(
+                    height: 1,
+                  ),
+                  _drawerBottom(context, store),
+                ],
+              ),
             ),
-          ));
+          );
         },
       ),
     );
@@ -168,20 +170,43 @@ class _HomeDrawerState extends State<HomeDrawer>
         ],
       );
 
-  Widget _renderItem(IconData iconData, String title, VoidCallback onPressed) =>
-      ListTile(
-        leading: Icon(
-          iconData,
-          color: iconColor,
-          size: 22,
-        ),
-        title: Text(
-          title,
-          style: Theme.of(context).textTheme.body2,
-        ),
-        contentPadding: EdgeInsets.only(left: 30),
-        onTap: onPressed,
-      );
+  _renderItem(IconData iconData, String title, VoidCallback onPressed) {
+    return ListTile(
+      leading: Icon(
+        iconData,
+        color: iconColor,
+        size: 22,
+      ),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.body2,
+      ),
+      contentPadding: EdgeInsets.only(left: 30),
+      onTap: onPressed,
+    );
+  }
+
+  ///问题反馈
+  _feedback(User user) {
+    String content = '';
+    DialogUtils.showEditDialog(context, '问题反馈', null, (contentValue) {
+      content = contentValue;
+    }, onPressed: () {
+      if (content == null || content.isEmpty) {
+        CommonUtils.showToast('请输入内容');
+        return;
+      }
+      DialogUtils.showLoadingDialog(context);
+      IssueDao.createIssue(user.login, 'ZYFGithubAppFlutter',
+          {"title": '问题反馈', "body": content}).then((res) {
+        if (res.result) {
+          CommonUtils.showToast('反馈成功');
+        }
+        Navigator.pop(context);
+        Navigator.pop(context);
+      });
+    }, needTitle: false, contentController: TextEditingController());
+  }
 
   ///显示切换主题弹框
   _showThemeDialog(context, store) {

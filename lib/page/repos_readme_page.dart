@@ -16,13 +16,13 @@ class ReposReadmePage extends StatefulWidget {
   ///仓库名
   final String reposName;
 
-  ReposReadmePage(this.username, this.reposName);
+  ReposReadmePage(this.username, this.reposName, {Key key}) : super(key: key);
 
   @override
-  _ReposReadmePageState createState() => _ReposReadmePageState();
+  ReposReadmePageState createState() => ReposReadmePageState();
 }
 
-class _ReposReadmePageState extends State<ReposReadmePage>
+class ReposReadmePageState extends State<ReposReadmePage>
     with AutomaticKeepAliveClientMixin {
   bool isShow = false;
 
@@ -62,28 +62,28 @@ class _ReposReadmePageState extends State<ReposReadmePage>
   }
 
   Widget emptyWidget() => Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      SpinKitCircle(
-        color: Theme.of(context).primaryColor,
-        size: 30,
-      ),
-      Container(
-        padding: EdgeInsets.only(left: 10),
-        child: Text(
-          '努力加载中...',
-          style: TextStyle(
-            color: Color(ZColors.textSecondaryValue),
-            fontSize: 14,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SpinKitCircle(
+            color: Theme.of(context).primaryColor,
+            size: 30,
           ),
-        ),
-      )
-    ],
-  );
+          Container(
+            padding: EdgeInsets.only(left: 10),
+            child: Text(
+              '努力加载中...',
+              style: TextStyle(
+                color: Color(ZColors.textSecondaryValue),
+                fontSize: 14,
+              ),
+            ),
+          )
+        ],
+      );
 
   refreshReadme() {
     ReposDao.getReposReadme(widget.username, widget.reposName,
-        ReposDetailModel.of(context).currentBranch)
+            ReposDetailModel.of(context).currentBranch)
         .then((res) {
       if (res != null && res.result) {
         if (isShow) {
@@ -147,7 +147,7 @@ class _ReposReadmePageState extends State<ReposReadmePage>
               String srcString = srcMatch.group(0);
               if (srcString != null && srcString.contains("http")) {
                 String newSrc = srcString.substring(
-                    srcString.indexOf("http"), srcString.length - 1) +
+                        srcString.indexOf("http"), srcString.length - 1) +
                     "?raw=true";
 
                 ///增加点击
@@ -158,7 +158,7 @@ class _ReposReadmePageState extends State<ReposReadmePage>
           mdDataCode = mdDataCode.replaceAll(imageTag, match);
         }
       }
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
     }
     return mdDataCode;

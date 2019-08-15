@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/dao/user_dao.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
@@ -31,6 +32,9 @@ class _CommonListPageState extends State<CommonListPage>
     with AutomaticKeepAliveClientMixin {
   int _page = 1;
 
+  ///是否加载完成
+  bool _isComplete = false;
+
   @override
   bool get wantKeepAlive => true;
 
@@ -46,6 +50,7 @@ class _CommonListPageState extends State<CommonListPage>
           itemBuilder: _itemBuilder(),
           dataRequester: _dataRequester,
           initRequester: _initRequester,
+          isLoadComplete: _isComplete,
         ),
       ),
     );
@@ -99,6 +104,7 @@ class _CommonListPageState extends State<CommonListPage>
       case 'user_repos':
         return await ReposDao.getUserRepos(widget.username, _page, null)
             .then((res) {
+          _showComplete(res);
           return res.data;
         });
 
@@ -106,6 +112,7 @@ class _CommonListPageState extends State<CommonListPage>
       case 'user_star':
         return await ReposDao.getStarRepos(widget.username, _page, null)
             .then((res) {
+          _showComplete(res);
           return res.data;
         });
 
@@ -113,6 +120,7 @@ class _CommonListPageState extends State<CommonListPage>
       case 'followed':
         return await UserDao.getFollowedList(widget.username, _page)
             .then((res) {
+          _showComplete(res);
           return res.data;
         });
 
@@ -120,6 +128,7 @@ class _CommonListPageState extends State<CommonListPage>
       case 'follower':
         return await UserDao.getFollowerList(widget.username, _page)
             .then((res) {
+          _showComplete(res);
           return res.data;
         });
 
@@ -128,6 +137,7 @@ class _CommonListPageState extends State<CommonListPage>
         return await ReposDao.getReposStar(
                 widget.username, widget.reposName, _page)
             .then((res) {
+          _showComplete(res);
           return res.data;
         });
 
@@ -136,6 +146,7 @@ class _CommonListPageState extends State<CommonListPage>
         return await ReposDao.getReposWatcher(
                 widget.username, widget.reposName, _page)
             .then((res) {
+          _showComplete(res);
           return res.data;
         });
 
@@ -144,12 +155,14 @@ class _CommonListPageState extends State<CommonListPage>
         return await ReposDao.getReposForks(
                 widget.username, widget.reposName, _page)
             .then((res) {
+          _showComplete(res);
           return res.data;
         });
 
       ///用户阅读历史表
       case 'history':
         return await ReposDao.getReadHistory(_page).then((res) {
+          _showComplete(res);
           return res.data;
         });
 
@@ -157,8 +170,18 @@ class _CommonListPageState extends State<CommonListPage>
       case 'topics':
         return await ReposDao.searchTopicRepos(widget.username, page: _page)
             .then((res) {
+          _showComplete(res);
           return res.data;
         });
     }
+  }
+
+  _showComplete(res) {
+    if (!res.result) {
+      _page--;
+    }
+    setState(() {
+      _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
+    });
   }
 }

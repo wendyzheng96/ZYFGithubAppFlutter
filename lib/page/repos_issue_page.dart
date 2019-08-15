@@ -275,7 +275,9 @@ class ReposIssuePageState extends State<ReposIssuePage>
         if (!res.result) {
           _page--;
         }
-        _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
+        setState(() {
+          _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
+        });
         return res.data ?? List();
       });
     }
@@ -283,7 +285,9 @@ class ReposIssuePageState extends State<ReposIssuePage>
             _searchContent, widget.username, widget.reposName, selectType.value,
             page: _page)
         .then((res) {
-      _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
+      setState(() {
+        _isComplete = (res.result && res.data.length < Config.PAGE_SIZE);
+      });
       return res.data ?? List();
     });
   }

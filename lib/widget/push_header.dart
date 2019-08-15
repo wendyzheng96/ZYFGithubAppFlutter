@@ -56,7 +56,10 @@ class PushHeader extends StatelessWidget {
                           ),
                           Text(
                             headerModel.pushTime,
-                            style: ZStyles.smallerTextWhite70,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70
+                            ),
                           )
                         ],
                       ),

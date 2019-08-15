@@ -7,6 +7,7 @@ import 'package:github_app_flutter/model/EventViewModel.dart';
 import 'package:github_app_flutter/model/RepoCommit.dart';
 import 'package:github_app_flutter/page/repository_detail_page.dart';
 import 'package:github_app_flutter/widget/commit_item.dart';
+import 'package:github_app_flutter/widget/common_option_widget.dart';
 import 'package:github_app_flutter/widget/event_item.dart';
 import 'package:github_app_flutter/widget/repos_header_item.dart';
 import 'package:github_app_flutter/widget/select_item_widget.dart';
@@ -21,13 +22,17 @@ class ReposDetailInfoPage extends StatefulWidget {
 
   final String reposName;
 
-  ReposDetailInfoPage(this.username, this.reposName, {Key key})
+  final OptionControl optionControl;
+
+  ReposDetailInfoPage(this.username, this.reposName, this.optionControl,
+      {Key key})
       : super(key: key);
+
   @override
-  _ReposDetailInfoPageState createState() => _ReposDetailInfoPageState();
+  ReposDetailInfoPageState createState() => ReposDetailInfoPageState();
 }
 
-class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
+class ReposDetailInfoPageState extends State<ReposDetailInfoPage>
     with AutomaticKeepAliveClientMixin<ReposDetailInfoPage> {
   final GlobalKey<RefreshIndicatorState> refreshKey =
       GlobalKey<RefreshIndicatorState>();
@@ -154,12 +159,13 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
         return opacityLoadingProgress(
             isPerformingRequest, Theme.of(context).primaryColor);
       }
+
       ///提交
       EventViewModel model = EventViewModel.fromCommitMap(commitList[index]);
       return CommitItem(
         model,
         needImage: false,
-        onPressed: (){
+        onPressed: () {
           NavigatorUtils.goPushDetailPage(context, widget.username,
               widget.reposName, commitList[index].sha, false);
         },
@@ -169,12 +175,18 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
       return opacityLoadingProgress(
           isPerformingRequest, Theme.of(context).primaryColor);
     }
+
     ///动态
     EventViewModel model = EventViewModel.fromEventMap(eventList[index]);
-    return EventItem(model, index, eventList.length, onPressed: (){
-      EventUtils.actionUtils(context, eventList[index],
-          widget.username + "/" + widget.reposName);
-    },);
+    return EventItem(
+      model,
+      index,
+      eventList.length,
+      onPressed: () {
+        EventUtils.actionUtils(context, eventList[index],
+            widget.username + "/" + widget.reposName);
+      },
+    );
   }
 
   ///加载更多布局
@@ -207,6 +219,9 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
             ReposDetailModel.of(context).currentBranch)
         .then((res) {
       if (res != null && res.result) {
+        setState(() {
+          widget.optionControl.url = res.data.htmlUrl;
+        });
         ReposDetailModel.of(context).repository = res.data;
         return res.next();
       }
@@ -216,6 +231,9 @@ class _ReposDetailInfoPageState extends State<ReposDetailInfoPage>
         if (!isShow) {
           return;
         }
+        setState(() {
+          widget.optionControl.url = res.data.htmlUrl;
+        });
         ReposDetailModel.of(context).repository = res.data;
       }
     });

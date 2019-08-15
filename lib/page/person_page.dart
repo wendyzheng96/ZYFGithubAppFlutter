@@ -36,12 +36,6 @@ class _PersonPageState extends BasePersonState<PersonPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    getUserInfo();
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
@@ -56,7 +50,8 @@ class _PersonPageState extends BasePersonState<PersonPage> {
     );
   }
 
-  getUserInfo() async {
+  @override
+  Future refreshData() async {
     var res = await UserDao.getUserInfo(username, needDb: true);
     if (res != null && res.result) {
       setState(() {

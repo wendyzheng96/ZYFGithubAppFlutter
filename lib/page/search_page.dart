@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/repos_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
-import 'package:github_app_flutter/common/utils/navigator_utils.dart';
-import 'package:github_app_flutter/model/Repository.dart';
-import 'package:github_app_flutter/model/User.dart';
+import 'package:github_app_flutter/page/search_list_page.dart';
 import 'package:github_app_flutter/page/trend_page.dart';
 import 'package:github_app_flutter/widget/drop_down_filter.dart';
-import 'package:github_app_flutter/widget/dynamic_list_view.dart';
-import 'package:github_app_flutter/widget/repos_item.dart';
-import 'package:github_app_flutter/widget/user_item.dart';
 
 /// 搜索页面
 /// Create by zyf
@@ -20,21 +14,17 @@ class SearchPage extends StatefulWidget {
 }
 
 class SearchPageState extends State<SearchPage> {
-  final GlobalKey<RefreshIndicatorState> refreshKey =
-      GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<SearchListPageState> reposKey = GlobalKey();
+
+  final GlobalKey<SearchListPageState> personKey = GlobalKey();
 
   final TextEditingController inputController = TextEditingController();
 
-  final List<TrendTypeModel> types = [
-    TrendTypeModel("仓库", null),
-    TrendTypeModel("用户", "user"),
-  ];
+  final PageController pageController = PageController();
 
   TabController _tabController;
 
   String _searchContent = '';
-
-  int _page = 1;
 
   String searchType;
 
@@ -55,10 +45,8 @@ class SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: types.length,
-      vsync: ScaffoldState(),
-    );
+    _tabController =
+        TabController(length: types.length, vsync: ScaffoldState());
     _getSearchKeys();
   }
 
@@ -67,10 +55,9 @@ class SearchPageState extends State<SearchPage> {
     return Scaffold(
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          flexibleSpace: _searchWidget(),
-        ),
+            automaticallyImplyLeading: false,
+            elevation: 0,
+            flexibleSpace: _searchWidget()),
         body: Stack(
           children: <Widget>[
             Offstage(
@@ -95,17 +82,22 @@ class SearchPageState extends State<SearchPage> {
                           TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                       onTap: (index) {
                         searchType = types[index].value;
-                        showRefreshLoading();
+                        pageController.jumpToPage(index);
                       },
                     ),
                   ),
                   Expanded(
-                    child: DynamicListView.build(
-                      itemBuilder: _renderItem(),
-                      dataRequester: _dataRequester,
-                      initRequester: _initRequester,
-                      isLoadDataFirst: false,
-                      refreshKey: refreshKey,
+                    child: PageView(
+                      children: <Widget>[
+                        SearchListPage(_searchContent, types[0].value,
+                            key: reposKey),
+                        SearchListPage(_searchContent, types[1].value,
+                            key: personKey),
+                      ],
+                      controller: pageController,
+                      onPageChanged: (index) {
+                        _tabController.animateTo(index);
+                      },
                     ),
                   ),
                 ],
@@ -116,7 +108,7 @@ class SearchPageState extends State<SearchPage> {
   }
 
   _searchWidget() => Container(
-        padding: EdgeInsets.fromLTRB(16, 28, 0, 0),
+        padding: EdgeInsets.fromLTRB(16, 26, 0, 0),
         color: Theme.of(context).primaryColor,
         child: Row(
           children: <Widget>[
@@ -157,7 +149,7 @@ class SearchPageState extends State<SearchPage> {
                             if (_searchContent.isEmpty) {
                               ///清空搜索框
                               isShowResult = false;
-                              showRefreshLoading();
+                              showRefreshData();
                             }
                           });
                         },
@@ -168,7 +160,7 @@ class SearchPageState extends State<SearchPage> {
                         textInputAction: TextInputAction.search,
                         onEditingComplete: () {
                           FocusScope.of(context).requestFocus(FocusNode());
-                          showRefreshLoading();
+                          showRefreshData();
                         },
                       ),
                     ),
@@ -183,7 +175,7 @@ class SearchPageState extends State<SearchPage> {
                           _searchContent = "";
                           isShowResult = false;
                         });
-                        showRefreshLoading();
+                        showRefreshData();
                       },
                       child: _searchContent.isEmpty
                           ? Container()
@@ -217,7 +209,7 @@ class SearchPageState extends State<SearchPage> {
       );
 
   ///搜索历史
-  _searchHistoryWidget(){
+  _searchHistoryWidget() {
     return Container(
       child: Column(
         children: <Widget>[
@@ -225,12 +217,12 @@ class SearchPageState extends State<SearchPage> {
             children: <Widget>[
               Expanded(
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(16, 10, 10, 6),
-                    child: Text(
-                      '搜索历史',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                  )),
+                padding: EdgeInsets.fromLTRB(16, 10, 10, 6),
+                child: Text(
+                  '搜索历史',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              )),
               RawMaterialButton(
                 child: Text(
                   '清空',
@@ -278,12 +270,10 @@ class SearchPageState extends State<SearchPage> {
                           color: Color(ZColors.textHintValue),
                           size: 16,
                         ),
-                        constraints:
-                        BoxConstraints(minHeight: 0, minWidth: 0),
-                        materialTapTargetSize:
-                        MaterialTapTargetSize.shrinkWrap,
+                        constraints: BoxConstraints(minHeight: 0, minWidth: 0),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         padding:
-                        EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       ),
                     ],
                   ),
@@ -296,7 +286,7 @@ class SearchPageState extends State<SearchPage> {
                     setState(() {
                       _searchContent = searchKeyList[index];
                     });
-                    showRefreshLoading();
+                    showRefreshData();
                   },
                 );
               },
@@ -314,62 +304,20 @@ class SearchPageState extends State<SearchPage> {
     );
   }
 
-  _renderItem() => (List dataList, BuildContext context, int index) {
-        var data = dataList[index];
-        if (data is User) {
-          return UserItem(
-            UserItemModel.fromMap(data),
-            onPressed: () {
-              NavigatorUtils.goPersonPage(context, data.login);
-            },
-          );
-        }
-        if(data is Repository) {
-          ReposViewModel reposModel = ReposViewModel.fromMap(data);
-          return ReposItem(
-            reposModel,
-            onPressed: () {
-              NavigatorUtils.goReposDetail(
-                  context, reposModel.ownerName, reposModel.repositoryName);
-            },
-          );
-        }
-        return null;
-      };
-
   ///刷新数据
-  showRefreshLoading() {
+  showRefreshData() {
     setState(() {
       isShowResult = _searchContent.isNotEmpty;
+      pageController.jumpToPage(0);
     });
-    Future.delayed(const Duration(seconds: 0), () {
-      refreshKey.currentState.show().then((e) {});
-      return true;
-    });
-  }
-
-  _initRequester() async {
     _saveSearchKey(_searchContent);
     _getSearchKeys();
-    _page = 1;
-    return await _getSearchResult();
-  }
-
-  _dataRequester() async {
-    _page++;
-    return await _getSearchResult();
-  }
-
-  ///获取搜索结果
-  _getSearchResult() async {
-    if (_searchContent == null || _searchContent.isEmpty) {
-      return List();
+    if (reposKey.currentState != null && reposKey.currentState.mounted) {
+      reposKey.currentState.showRefreshLoading();
     }
-    return await ReposDao.searchRepositoryDao(_searchContent, null,
-            'best%20match', 'desc', searchType, _page, Config.PAGE_SIZE)
-        .then((res) {
-      return res.data ?? List();
-    });
+    if (personKey.currentState != null && personKey.currentState.mounted) {
+      personKey.currentState.showRefreshLoading();
+    }
   }
 
   ///获取搜索历史
@@ -393,22 +341,24 @@ class SearchPageState extends State<SearchPage> {
 
   ///删除关键词
   _deleteSearchKey(int index) async {
-    await ReposDao.deleteSearchKey(searchKeyList[index]).then(
-        setState(() {
-          searchKeyList.removeAt(index);
-        })
-    );
+    await ReposDao.deleteSearchKey(searchKeyList[index]).then(setState(() {
+      searchKeyList.removeAt(index);
+    }));
   }
 
   ///清空搜索历史
   _clearHistory() async {
-    await ReposDao.clearSearchHistory().then(
-        setState(() {
-          searchKeyList.clear();
-        })
-    );
+    await ReposDao.clearSearchHistory().then(setState(() {
+      searchKeyList.clear();
+    }));
   }
 }
+
+///搜索类型
+List<TrendTypeModel> types = [
+  TrendTypeModel("仓库", null),
+  TrendTypeModel("用户", "user"),
+];
 
 ///排序类型
 List<TrendTypeModel> orderType = [

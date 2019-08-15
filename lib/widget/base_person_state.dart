@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/event_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
+import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/common/utils/event_utils.dart';
 import 'package:github_app_flutter/common/utils/navigator_utils.dart';
+import 'package:github_app_flutter/common/utils/time_utils.dart';
 import 'package:github_app_flutter/model/Event.dart';
 import 'package:github_app_flutter/model/EventViewModel.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:github_app_flutter/widget/event_item.dart';
+import 'package:github_app_flutter/widget/icon_text.dart';
 import 'package:github_app_flutter/widget/sliver_header_delegate.dart';
 import 'package:github_app_flutter/widget/user_header.dart';
 
@@ -37,6 +40,9 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
   @protected
   String getUsername();
 
+  @protected
+  Future refreshData();
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +62,7 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
     });
   }
 
-  final double headerSize = 180;
+  final double headerSize = 190;
   final double bottomSize = 50;
   @protected
   sliverBuilder(BuildContext context, User userInfo) {
@@ -73,7 +79,7 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
               delegate: SliverHeaderDelegate(
                   minHeight: headerSize,
                   maxHeight: headerSize,
-                  child: _userInfoTop(userInfo))),
+                  child: _userInfo(userInfo))),
 
           ///悬停item
           SliverPersistentHeader(
@@ -123,75 +129,98 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
   }
 
   //用户信息详情
-  Widget _userInfoTop(User user) => Container(
+  _userInfo(User user) {
+    return Container(
+        padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
         color: Theme.of(context).primaryColor,
-        child: Column(
+        child: ListView(
           children: <Widget>[
+            Row(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(right: 20),
+                  padding: EdgeInsets.all(3),
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage: NetworkImage(user.avatarUrl ?? ""),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white70,
+                    borderRadius: BorderRadius.circular(43),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      user.login ?? "---",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 6, bottom: 8),
+                      child: Text(
+                        user.email ?? "---",
+                        style: ZStyles.smallerTextWhite70,
+                      ),
+                    ),
+                    IconText(
+                      user.location ?? "---",
+                      Icons.location_on,
+                      ZStyles.smallerTextWhite70,
+                      padding: 4,
+                      iconColor: Colors.white,
+                      iconSize: 14,
+                    ),
+                    Container(
+                      height: 6,
+                    ),
+                    IconText(
+                      user.company ?? "---",
+                      Icons.group,
+                      ZStyles.smallerTextWhite70,
+                      padding: 4,
+                      iconColor: Colors.white,
+                      iconSize: 14,
+                    ),
+                  ],
+                )
+              ],
+            ),
             Container(
-              margin: EdgeInsets.only(top: 10, bottom: 10),
-              padding: EdgeInsets.all(4),
-              child: CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(user.avatarUrl ?? ""),
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: IconText(
+                user.blog ?? "---",
+                Icons.link,
+                TextStyle(
+                    fontSize: 13,
+                    color: Colors.white.withOpacity(0.8),
+                    decoration: TextDecoration.underline),
+                iconColor: Colors.white,
+                iconSize: 14,
+                padding: 4,
+                onPressed: (){
+                  CommonUtils.launchOutURL(user.blog, context);
+                },
               ),
-              decoration: BoxDecoration(
-                  color: Colors.white70,
-                  borderRadius: BorderRadius.circular(44)),
             ),
             Text(
-              user.login ?? "---",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 6, bottom: 6),
-              child: Text(
-                user.email ?? "---",
-                style: ZStyles.smallerTextWhite70,
-              ),
+              user.bio ?? "---",
+              style: ZStyles.smallerTextWhite70,
             ),
             Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Icon(
-                    Icons.location_on,
-                    size: 14,
-                    color: Colors.white,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 4),
-                    child: Text(
-                      user.location ?? "---",
-                      maxLines: 1,
-                      style: ZStyles.smallerTextWhite70,
-                    ),
-                  ),
-                  Container(
-                    width: 20,
-                  ),
-                  Icon(
-                    Icons.group,
-                    size: 14,
-                    color: Colors.white,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 4),
-                    child: Text(
-                      user.company ?? "---",
-                      maxLines: 1,
-                      style: ZStyles.smallerTextWhite70,
-                    ),
-                  ),
-                ],
+              padding: EdgeInsets.only(top: 8),
+              child: Text(
+                '创建于 ${getDateStr(user.createdAt)}',
+                style: ZStyles.smallerTextWhite70,
               ),
             )
           ],
-        ),
-      );
+        ));
+  }
 
   //悬停模块
   Widget _userModules(User user) => Container(
@@ -293,6 +322,7 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
   Future<Null> onRefresh() async {
     _page = 1;
     await _getData();
+    refreshData();
   }
 
   /// 加载更多数据
@@ -307,8 +337,7 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
 
   /// 获取数据
   _getData() async {
-    await EventDao.getEventDao(getUsername(), page: _page, needDb: _page <= 1)
-        .then((res) {
+    await EventDao.getEventDao(getUsername(), page: _page).then((res) {
       setState(() {
         if (res.result) {
           if (_page == 1) {
@@ -319,7 +348,10 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
         } else {
           _page--;
         }
-        _isComplete = (res.data != null && res.data.length < Config.PAGE_SIZE);
+        setState(() {
+          _isComplete =
+              (res.data != null && res.data.length < Config.PAGE_SIZE);
+        });
       });
     });
   }

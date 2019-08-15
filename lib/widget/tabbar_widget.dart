@@ -22,6 +22,8 @@ class TabBarWidget extends StatefulWidget {
 
   final Widget title;
 
+  final List<Widget> actions;
+
   final Widget drawer;
 
   final Widget floatingActionButton;
@@ -42,6 +44,7 @@ class TabBarWidget extends StatefulWidget {
     this.backgroundColor,
     this.indicatorColor,
     this.title,
+    this.actions,
     this.drawer,
     this.bottomBar,
     this.floatingActionButton,
@@ -104,6 +107,7 @@ class _TabBarState extends State<TabBarWidget>
             _tarWidgetControl == null ? null : _tarWidgetControl.footerButton,
         appBar: AppBar(
           title: widget.title,
+          actions: widget.actions,
           bottom: TabBar(
             controller: _tabController,
             tabs: widget.tabItems,

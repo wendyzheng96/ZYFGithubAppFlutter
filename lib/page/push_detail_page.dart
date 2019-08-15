@@ -85,7 +85,7 @@ class _PushDetailPageState extends State<PushDetailPage>
           return PushHeader(headerModel);
         }
         Color color = Theme.of(context).brightness == Brightness.dark
-            ? Colors.white
+            ? Color(ZColors.miWhite)
             : Color(ZColors.textSecondaryValue);
         PushCodeModel codeModel = PushCodeModel.fromMap(fileList[index - 1]);
         return Column(
