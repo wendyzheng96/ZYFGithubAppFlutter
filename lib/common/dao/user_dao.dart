@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:github_app_flutter/common/ab/provider/user_followed_db_provider.dart';
@@ -11,6 +12,7 @@ import 'package:github_app_flutter/common/net/address.dart';
 import 'package:github_app_flutter/common/net/api.dart';
 import 'package:github_app_flutter/common/redux/user_redux.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
+import 'package:github_app_flutter/model/Notification.dart';
 import 'package:github_app_flutter/model/User.dart';
 import 'package:redux/redux.dart';
 
@@ -216,6 +218,62 @@ class UserDao {
       return dataResult;
     }
     return await next();
+  }
+
+  /// 组织成员
+  static getMemberDao(username, page) async {
+    String url = Address.getMember(username) + Address.getPageParams("?", page);
+    var res = await httpManager.netFetch(url, null, null, null);
+    if (res != null && res.result) {
+      List<User> list = new List();
+      var data = res.data;
+      if (data == null || data.length == 0) {
+        return DataResult(list, true);
+      }
+      for (int i = 0; i < data.length; i++) {
+        list.add(new User.fromJson(data[i]));
+      }
+      return DataResult(list, true);
+    } else {
+      return DataResult(null, false);
+    }
+  }
+
+  ///获取用户相关通知
+  static getNotify(bool all, bool participating, page) async {
+    String tag = (!all && !participating) ? '?' : '&';
+    String url = Address.getNotification(all, participating) +
+        Address.getPageParams(tag, page);
+    var res = await httpManager.netFetch(url, null, null, null);
+    if (res != null && res.result) {
+      List<Notification> list = List();
+      var data = res.data;
+      if (data == null || data.length == 0) {
+        return DataResult(list, true);
+      }
+      for (int i = 0; i < data.length; i++) {
+        list.add(Notification.fromJson(data[i]));
+      }
+      return DataResult(list, true);
+    } else {
+      return DataResult(null, false);
+    }
+  }
+
+  /// 设置单个通知已读
+  static setNotificationAsRead(id) async {
+    String url = Address.setNotificationAsRead(id);
+    var res = await httpManager
+        .netFetch(url, null, null, Options(method: "PATCH"), noTip: true);
+    return res;
+  }
+
+  /// 设置所有通知已读
+  static setAllNotificationAsRead() async {
+    String url = Address.setAllNotificationAsRead();
+    var res = await httpManager.netFetch(
+        url, null, null, Options(method: "PUT", contentType: ContentType.text));
+    return DataResult(res.data, res.result);
   }
 
   ///清除用户信息

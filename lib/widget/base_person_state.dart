@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_app_flutter/common/config/config.dart';
 import 'package:github_app_flutter/common/dao/event_dao.dart';
+import 'package:github_app_flutter/common/dao/user_dao.dart';
 import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/common/utils/event_utils.dart';
@@ -13,6 +14,7 @@ import 'package:github_app_flutter/widget/event_item.dart';
 import 'package:github_app_flutter/widget/icon_text.dart';
 import 'package:github_app_flutter/widget/sliver_header_delegate.dart';
 import 'package:github_app_flutter/widget/user_header.dart';
+import 'package:github_app_flutter/widget/user_item.dart';
 
 /// 用户信息基础布局
 /// Create by zyf
@@ -30,9 +32,9 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
   ///是否加载完成
   bool _isComplete = false;
 
-  int _page = 1;
+  int page = 1;
 
-  List<Event> eventList = List();
+  List dataList = List();
 
   @override
   bool get wantKeepAlive => true;
@@ -41,7 +43,7 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
   String getUsername();
 
   @protected
-  Future refreshData();
+  String getUserType();
 
   @override
   void initState() {
@@ -54,20 +56,13 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
     });
   }
 
-  ///显示刷新
-  showRefreshLoading() {
-    Future.delayed(const Duration(seconds: 0), () {
-      refreshKey.currentState.show().then((e) {});
-      return true;
-    });
-  }
-
   final double headerSize = 190;
   final double bottomSize = 50;
+
   @protected
   sliverBuilder(BuildContext context, User userInfo) {
     final double chartSize =
-        (userInfo.login != null && userInfo.type == "Organization") ? 70 : 200;
+        (userInfo.login != null && userInfo.type == "Organization") ? 50 : 200;
     return RefreshIndicator(
       key: refreshKey,
       child: CustomScrollView(
@@ -103,23 +98,8 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
                   ))),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                if (index == eventList.length) {
-                  return opacityLoadingProgress(
-                      isPerformingRequest, Theme.of(context).primaryColor);
-                }
-                EventViewModel model =
-                    EventViewModel.fromEventMap(eventList[index]);
-                return EventItem(
-                  model,
-                  index,
-                  eventList.length,
-                  onPressed: () {
-                    EventUtils.actionUtils(context, eventList[index], "");
-                  },
-                );
-              },
-              childCount: eventList.length + 1,
+              _renderItem(),
+              childCount: dataList.length + 1,
             ),
           ),
         ],
@@ -202,8 +182,10 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
                 iconColor: Colors.white,
                 iconSize: 14,
                 padding: 4,
-                onPressed: (){
-                  CommonUtils.launchOutURL(user.blog, context);
+                onPressed: () {
+                  if (user.blog != null && user.blog.isNotEmpty) {
+                    CommonUtils.launchOutURL(user.blog, context);
+                  }
                 },
               ),
             ),
@@ -262,7 +244,7 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
         margin: EdgeInsets.only(bottom: 6),
       );
 
-  Widget _getFunText(String name, num, onPressed) => Expanded(
+  _getFunText(String name, num, onPressed) => Expanded(
         child: RawMaterialButton(
           constraints: BoxConstraints(minWidth: 0, minHeight: bottomSize),
           onPressed: onPressed,
@@ -293,6 +275,34 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
         ),
       );
 
+  _renderItem() => (BuildContext context, int index) {
+        if (index == dataList.length) {
+          return opacityLoadingProgress(
+              isPerformingRequest, Theme.of(context).primaryColor);
+        }
+        var data = dataList[index];
+        if (data is Event) {
+          EventViewModel model = EventViewModel.fromEventMap(dataList[index]);
+          return EventItem(
+            model,
+            index,
+            dataList.length,
+            onPressed: () {
+              EventUtils.actionUtils(context, dataList[index], "");
+            },
+          );
+        }
+        if (data is User) {
+          return UserItem(
+            UserItemModel.fromMap(data),
+            onPressed: () {
+              NavigatorUtils.goPersonPage(context, data.login);
+            },
+          );
+        }
+        return null;
+      };
+
   ///加载更多布局
   Widget opacityLoadingProgress(isPerformingRequest, loadingColor) {
     return _isComplete
@@ -318,41 +328,55 @@ abstract class BasePersonState<T extends StatefulWidget> extends State<T>
           );
   }
 
+  ///显示刷新
+  showRefreshLoading() {
+    Future.delayed(const Duration(seconds: 0), () {
+      refreshKey.currentState.show().then((e) {});
+      return true;
+    });
+  }
+
   ///刷新 初始化数据
   Future<Null> onRefresh() async {
-    _page = 1;
-    await _getData();
-    refreshData();
+    page = 1;
+    await getData();
   }
 
   /// 加载更多数据
   _loadMore() async {
     if (!_isComplete) {
       this.setState(() => isPerformingRequest = true);
-      _page++;
-      await _getData();
+      page++;
+      await getData();
       this.setState(() => isPerformingRequest = false);
     }
   }
 
   /// 获取数据
-  _getData() async {
-    await EventDao.getEventDao(getUsername(), page: _page).then((res) {
-      setState(() {
-        if (res.result) {
-          if (_page == 1) {
-            eventList = res.data;
-          } else {
-            eventList.addAll(res.data);
-          }
-        } else {
-          _page--;
-        }
-        setState(() {
-          _isComplete =
-              (res.data != null && res.data.length < Config.PAGE_SIZE);
-        });
+  getData() async {
+    if (getUserType() != null && getUserType() == "Organization") {
+      await UserDao.getMemberDao(getUsername(), page).then((res) {
+        setListData(res);
       });
+      return;
+    }
+    await EventDao.getEventDao(getUsername(), page: page).then((res) {
+      setListData(res);
+    });
+  }
+
+  setListData(res) {
+    setState(() {
+      if (res.result) {
+        if (page == 1) {
+          dataList = res.data;
+        } else {
+          dataList.addAll(res.data);
+        }
+      } else {
+        page--;
+      }
+      _isComplete = (res.data != null && res.data.length < Config.PAGE_SIZE);
     });
   }
 }

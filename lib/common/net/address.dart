@@ -24,6 +24,11 @@ class Address {
     return "${host}users/$username";
   }
 
+  ///组织成员
+  static getMember(username) {
+    return "${host}orgs/$username/members";
+  }
+
   ///获取用户的star get
   static userStar(username, sort) {
     sort ??= 'updated';
@@ -203,6 +208,27 @@ class Address {
         "/" +
         "readme" +
         ((curBranch == null) ? "" : ("?ref=" + curBranch));
+  }
+
+  ///通知 get
+  static getNotification(all, participating) {
+    if ((all == null && participating == null) ||
+        (all == false && participating == false)) {
+      return "${host}notifications";
+    }
+    all ??= false;
+    participating ??= false;
+    return "${host}notifications?all=$all&participating=$participating";
+  }
+
+  ///patch
+  static setNotificationAsRead(threadId) {
+    return "${host}notifications/threads/$threadId";
+  }
+
+  ///put
+  static setAllNotificationAsRead() {
+    return "${host}notifications";
   }
 
   ///处理分页参数

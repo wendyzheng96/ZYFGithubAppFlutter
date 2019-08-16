@@ -15,11 +15,10 @@ import 'package:redux/redux.dart';
 /// Date: 2019/7/16
 class CommonUtils {
   ///获取用户头像地址
-  static String getUserChartUrl(String username) {
-    return Address.graphicHost +
-        ZColors.primaryValueString.replaceAll("#", "") +
-        "/" +
-        username;
+  static String getUserChartUrl(String username, Color color) {
+    String colorValue =
+        color.value.toRadixString(16).padLeft(8, '0').substring(2);
+    return Address.graphicHost + colorValue + "/" + username;
   }
 
   ///toast提示

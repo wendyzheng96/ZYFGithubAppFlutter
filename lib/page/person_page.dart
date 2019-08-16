@@ -36,6 +36,11 @@ class _PersonPageState extends BasePersonState<PersonPage> {
   }
 
   @override
+  String getUserType() {
+    return userInfo.type;
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
@@ -51,7 +56,7 @@ class _PersonPageState extends BasePersonState<PersonPage> {
   }
 
   @override
-  Future refreshData() async {
+  Future<Null> onRefresh() async {
     var res = await UserDao.getUserInfo(username, needDb: true);
     if (res != null && res.result) {
       setState(() {
@@ -59,5 +64,8 @@ class _PersonPageState extends BasePersonState<PersonPage> {
         optionControl.url = res.data.htmlUrl;
       });
     }
+    page =1;
+    await getData();
   }
+
 }

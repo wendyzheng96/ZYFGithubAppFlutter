@@ -86,7 +86,7 @@ class NavigatorUtils {
   }
 
   ///issue详情
-  static goIssueDetail(
+  static Future goIssueDetail(
       BuildContext context, String userName, String reposName, String num,
       {bool needRightLocalIcon = false}) {
     return navigatorRouter(

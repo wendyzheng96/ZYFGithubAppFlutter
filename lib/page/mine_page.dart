@@ -15,14 +15,21 @@ class MinePage extends StatefulWidget {
   _MinePageState createState() => _MinePageState();
 }
 
-class _MinePageState extends BasePersonState<MinePage>{
-
+class _MinePageState extends BasePersonState<MinePage> {
   @override
   String getUsername() {
     if (_getStore()?.state?.userInfo == null) {
       return null;
     }
     return _getStore()?.state?.userInfo?.login;
+  }
+
+  @override
+  String getUserType() {
+    if (_getStore()?.state?.userInfo == null) {
+      return null;
+    }
+    return _getStore()?.state?.userInfo?.type;
   }
 
   Store<ZYFState> _getStore() {
@@ -44,13 +51,13 @@ class _MinePageState extends BasePersonState<MinePage>{
     );
   }
 
-
   @override
-  Future refreshData() async {
+  Future<Null> onRefresh() async {
     var res = await UserDao.getUserInfo(null);
     if (res != null && res.result) {
       _getStore().dispatch(UpdateUserAction(res.data));
     }
+    page = 1;
+    await getData();
   }
-
 }

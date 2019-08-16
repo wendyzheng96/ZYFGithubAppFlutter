@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:github_app_flutter/common/style/style.dart';
 import 'package:github_app_flutter/common/utils/common_utils.dart';
 import 'package:github_app_flutter/model/User.dart';
 
@@ -14,13 +15,19 @@ class UserHeaderChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String text;
+    if (userInfo == null || userInfo.type == null) {
+      text = '';
+    } else {
+      text = userInfo.type == 'Organization' ? '组织成员' : '个人动态';
+    }
     return Container(
       child: Column(
         children: <Widget>[
           Container(
             alignment: Alignment.topLeft,
             child: Text(
-              userInfo.type == 'Organization' ? '组织成员' : '个人动态',
+              text,
               style: Theme.of(context).textTheme.title.copyWith(fontSize: 16),
             ),
             margin: EdgeInsets.fromLTRB(12, 10, 0, 10),
@@ -48,7 +55,8 @@ class UserHeaderChart extends StatelessWidget {
                 width: width,
                 height: height,
                 child: SvgPicture.network(
-                  CommonUtils.getUserChartUrl(userInfo.login),
+                  CommonUtils.getUserChartUrl(
+                      userInfo.login, Color(ZColors.primaryValue)),
                   width: width,
                   height: height - 10,
                   allowDrawingOutsideViewBox: true,

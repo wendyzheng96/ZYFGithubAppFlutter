@@ -22,17 +22,20 @@ class DynamicListView extends StatefulWidget {
   ///是否一开始就加载数据
   final bool isLoadDataFirst;
 
-  DynamicListView.build(
-      {Key key,
-      @required this.itemBuilder,
-      @required this.dataRequester,
-      @required this.initRequester,
-      this.isLoadComplete = false,
-      this.dividerColor,
-      this.refreshKey,
-      this.needHeader = false,
-      this.isLoadDataFirst = true})
-      : assert(itemBuilder != null),
+  final String emptyText;
+
+  DynamicListView.build({
+    Key key,
+    @required this.itemBuilder,
+    @required this.dataRequester,
+    @required this.initRequester,
+    this.isLoadComplete = false,
+    this.dividerColor,
+    this.refreshKey,
+    this.needHeader = false,
+    this.isLoadDataFirst = true,
+    this.emptyText,
+  })  : assert(itemBuilder != null),
         assert(dataRequester != null),
         assert(initRequester != null),
         super(key: key);
@@ -109,9 +112,10 @@ class DynamicListViewState extends State<DynamicListView> {
   ///实际上这里可以根据你的需要做更多的处理
   ///比如多个头部，是否需要空页面，是否需要显示加载更多。
   _getListCount() {
-    if(_dataList == null){
+    if (_dataList == null) {
       _dataList = List();
     }
+
     ///是否需要头部
     if (needHeader) {
       ///如果需要头部，用Item 0 的 Widget 作为ListView的头部
@@ -148,7 +152,7 @@ class DynamicListViewState extends State<DynamicListView> {
   Widget _getEmpty() => Container(
         height: 400,
         child: Center(
-          child: Text('暂无数据'),
+          child: Text(widget.emptyText??'暂无数据'),
         ),
       );
 
